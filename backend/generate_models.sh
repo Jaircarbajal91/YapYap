@@ -1,4 +1,4 @@
-npx sequelize-cli model:generate --name User --attributes username:string,email:string,password:string,alias:string,image_id:integer
+npx sequelize-cli model:generate --name User --attributes username:string,email:string,hashedPassword:string,alias:string,image_id:integer
 npx sequelize-cli model:generate --name ChatMember --attributes user_id:integer,chat_id:integer,dm_id:integer
 npx sequelize-cli model:generate --name Group --attributes group_name:string,image_id:integer
 npx sequelize-cli model:generate --name Image --attributes type:string,url:string
