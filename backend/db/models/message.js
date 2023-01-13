@@ -14,11 +14,26 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Message.init({
-    message: DataTypes.STRING,
-    sender_id: DataTypes.INTEGER,
-    channel_id: DataTypes.INTEGER,
-    image_id: DataTypes.INTEGER,
-    dm_id: DataTypes.INTEGER
+    message: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1, 256],
+      }
+    },
+    sender_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    channel_id: {
+      type: DataTypes.INTEGER
+    },
+    image_id: {
+      type: DataTypes.INTEGER
+    },
+    dm_id: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'Message',

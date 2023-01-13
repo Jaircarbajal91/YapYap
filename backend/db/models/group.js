@@ -14,7 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Group.init({
-    group_name: DataTypes.STRING,
+    group_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [3, 20]
+      }
+    },
     image_id: DataTypes.INTEGER
   }, {
     sequelize,

@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   ChatMember.init({
-    user_id: DataTypes.INTEGER,
+    user_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
     chat_id: DataTypes.INTEGER,
     dm_id: DataTypes.INTEGER
   }, {
