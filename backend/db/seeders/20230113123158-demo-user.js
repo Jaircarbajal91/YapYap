@@ -12,6 +12,24 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    return queryInterface.bulkInsert("Users", [
+      {
+        username: "Demo_User",
+        email: "demo@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "demolition",
+      },
+      {
+        username: "kevbot",
+        email: "kevbot@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password")
+      },
+      {
+        username: "jairbot",
+        email: "jairbot@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password")
+      }
+    ])
   },
 
   async down (queryInterface, Sequelize) {
@@ -21,5 +39,9 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    const Op = Sequelize.Op;
+    return queryInterface.bulkDelete("Users", {
+      username: { [Op.in]: ["Demo_User", "kevbot", "jairbot"] }
+  }, {});
   }
 };
