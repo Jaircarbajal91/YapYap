@@ -1,5 +1,5 @@
 'use strict';
-const { Model, Validator } = require('sequelize');
+const { Model, Validator, ValidationErrorItemOrigin } = require('sequelize');
 const bcrypt = require('bcryptjs');
 
 module.exports = (sequelize, DataTypes) => {
@@ -32,13 +32,13 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
 
-    static async signup({ username, email, password, firstName, lastName }) {
+    static async signup({ username, email, password, alias, image_id }) {
       const hashedPassword = bcrypt.hashSync(password);
       const user = await User.create({
-        firstName,
-        lastName,
         username,
         email,
+        alias,
+        image_id,
         hashedPassword
       });
       return await User.scope('currentUser').findByPk(user.id);
@@ -50,20 +50,60 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      User.hasMany(models.ChatMember, {
+        foreignKey: "user_id",
+        onDelete: "CASCADE"
+      });
+      User.hasMany(models.Message, { foreignKey: "sender_id" });
     }
   }
   User.init({
     username: {
       type: DataTypes.STRING,
-      
+      allowNull: false,
+      validate: {
+        len: [4, 20],
+        isNotEmail(value) {
+          if (Validator.isEmail(value)) throw new Error("Username cannot be an email.");
+        }
+      }
     },
-    email: DataTypes.STRING,
-    password: DataTypes.STRING,
-    alias: DataTypes.STRING,
-    image_id: DataTypes.INTEGER
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    hashedPassword: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [60, 60]
+      }
+    },
+    alias: {
+      type: DataTypes.STRING,
+      validate: {
+        len: [4, 20],
+      }
+    },
+    image_id: {
+      type: DataTypes.INTEGER
+    }
   }, {
     sequelize,
     modelName: 'User',
+    defaultScope: {
+      attributes: {
+        exclude: ['hashedPassword', 'username', 'createdAt', 'updatedAt']
+      }
+    },
+    scopes: {
+      currentUser: {
+        attributes: { exclude: ['hashedPassword'] }
+      },
+      loginUser: {
+        attributes: {},
+      }
+    }
   });
   return User;
 };

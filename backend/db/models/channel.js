@@ -14,8 +14,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Channel.init({
-    channel_name: DataTypes.STRING,
-    group_id: DataTypes.INTEGER
+    channel_name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [3, 20]
+      }
+    },
+    group_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Channel',

@@ -10,18 +10,22 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       channel_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(20),
+        allowNull: false
       },
       group_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
       }
     });
   },

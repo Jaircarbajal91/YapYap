@@ -14,7 +14,10 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   DirectMessage.init({
-    message_id: DataTypes.INTEGER
+    message_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    }
   }, {
     sequelize,
     modelName: 'DirectMessage',
