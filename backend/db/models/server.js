@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Group extends Model {
+  class Server extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,10 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Server.hasMany(models.ChatMember, {
+        foreignKey: "chat_id",
+        onDelete: "CASCADE",
+      });
     }
   }
-  Group.init({
-    group_name: {
+  Server.init({
+    server_name: {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
@@ -24,7 +28,7 @@ module.exports = (sequelize, DataTypes) => {
     image_id: DataTypes.INTEGER
   }, {
     sequelize,
-    modelName: 'Group',
+    modelName: 'Server',
   });
-  return Group;
+  return Server;
 };
