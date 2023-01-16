@@ -21,7 +21,7 @@ const validateLogin = [
 router.post('/login', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
     const user = await User.login({ credential, password });
-
+    console.log("credential", credential, "password", password);
     if (!user) {
         const err = new Error("Login Failed");
         err.status = 401;

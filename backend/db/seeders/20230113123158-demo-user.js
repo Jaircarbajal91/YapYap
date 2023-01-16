@@ -13,7 +13,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    return queryInterface.bulkInsert("User", [
+    return queryInterface.bulkInsert("Users", [
       {
         username: "Demo_User",
         email: "demo@yapyap.io",
@@ -41,7 +41,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete("User", {
+    return queryInterface.bulkDelete("Users", {
       username: { [Op.in]: ["Demo_User", "kevbot", "jairbot"] }
   }, {});
   }
