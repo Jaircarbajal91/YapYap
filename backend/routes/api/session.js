@@ -18,7 +18,7 @@ const validateLogin = [
 ];
 
 // Log in
-router.post('/', validateLogin, async (req, res, next) => {
+router.post('/login', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
     const user = await User.login({ credential, password });
 
@@ -39,16 +39,15 @@ router.post('/', validateLogin, async (req, res, next) => {
 });
 
 // Log out
-router.delete('/', (_req, res) => {
+router.delete('/delete', (_req, res) => {
     res.clearCookie("token");
     return res.json({ message: "successfully logged out" });
 });
 
 // Restore session user
-router.get('/', restoreUser, (req, res) => {
+router.get('/restore', restoreUser, (req, res) => {
     const user = req.user;
     return user ? res.json({ user: user.toSafeObject() }) : res.json({});
 })
 
 module.exports = router;
-
