@@ -26,18 +26,16 @@ if (process.env.NODE_ENV === "production") {
       path.resolve(__dirname, "../../frontend", "build", "index.html")
     );
   });
-}
+};
 
 // Add an XSRF-TOKEN cookie in development
 if (process.env.NODE_ENV !== "production") {
   router.get("/api/csrf/restore", (req, res) => {
     res.cookie("XSRF-TOKEN", req.csrfToken());
-    return res.status(201).json({});
+    return res.status(201).json({ csrfToken: req.csrfToken()});
   });
-}
+};
 
-router.get("/", async (req, res) => {
-  return res.json("Meetup");
-});
+router.get("/", async (req, res) => res.json("YapYap API"));
 
 module.exports = router;

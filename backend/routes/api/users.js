@@ -22,18 +22,17 @@ const validateSignup = [
     handleValidationErrors
 ];
 
-const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in to access this information.")) : next();
+const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in or register to access this information.")) : next();
 
 // Register / Sign Up
 router.post('/join', validateSignup, async (req, res) => {
     const { username, email, password, alias, image_id } = req.body;
     const user = await User.signup({ username, email, password, alias, image_id });
     const token = await setTokenCookie(res, user);
-    const userJSON = user.toJSON();
-    delete userJSON.createdAt;
-    delete userJSON.updatedAt;
-    userJSON.token = token;
-    return res.json(userJSON);
+    user.token = token;
+    delete user.dataValues.createdAt;
+    delete user.dataValues.updatedAt;
+    return res.json(user);
 });
 
 // Get Current User
