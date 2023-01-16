@@ -32,11 +32,10 @@ router.post('/', validateLogin, async (req, res, next) => {
 
     const token = setTokenCookie(res, user);
 
-    const userJSON = user.toJSON();
-    delete userJSON.createdAt;
-    delete userJSON.updatedAt;
-    userJSON.token = token;
-    return res.json(userJSON);
+    user.token = token;
+    delete user.dataValues.createdAt;
+    delete user.dataValues.updatedAt;
+    return res.json(user);
 });
 
 // Log out
