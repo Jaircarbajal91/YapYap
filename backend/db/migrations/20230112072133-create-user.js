@@ -18,7 +18,7 @@ module.exports = {
         allowNull: false
       },
       hashedPassword: {
-        type: Sequelize.STRING.BINARY(60),
+        type: Sequelize.STRING(60).BINARY,
         allowNull: false,
       },
       alias: {
