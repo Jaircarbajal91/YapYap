@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { csrfFetch } from '../store/csrf';
 import { Redirect } from 'react-router-dom';
 import { login } from '../store/session';
 import './LoginForm.css';
@@ -11,6 +12,13 @@ const LoginForm = ({ sessionUser }) => {
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState([]);
+
+
+  // useEffect(() => {
+  //   const user = csrfFetch('http://127.0.0.1:8000/api/users/current')
+  //     .then(data => data.json())
+  //     .then(data => console.log(data))
+  // }, [])
 
   const onLogin = async (e) => {
     e.preventDefault();
