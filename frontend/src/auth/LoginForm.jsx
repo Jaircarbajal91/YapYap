@@ -14,7 +14,7 @@ const LoginForm = ({ sessionUser }) => {
 
   const onLogin = async (e) => {
     e.preventDefault();
-    const data = await dispatch(login(credential, password));
+    const data = await dispatch(login({credential, password}));
     console.log(data)
     if (data) {
       setErrors(data);
@@ -36,6 +36,7 @@ const LoginForm = ({ sessionUser }) => {
   if (sessionUser) return (
     <Redirect to="/" />
   );
+
 
   return (
     <div className="login-form-container">
