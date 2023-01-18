@@ -1,24 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { csrfFetch } from '../store/csrf';
-import { Redirect } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import { login } from '../store/session';
 import './LoginForm.css';
 
 
-const LoginForm = ({ sessionUser }) => {
+const LoginForm = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
-  const session = useSelector(state => state.session);
+  const sessionUser = useSelector(state => state.session.user);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState([]);
-
-
-  // useEffect(() => {
-  //   const user = csrfFetch('http://127.0.0.1:8000/api/users/current')
-  //     .then(data => data.json())
-  //     .then(data => console.log(data))
-  // }, [])
 
   const onLogin = async (e) => {
     e.preventDefault();
@@ -27,9 +21,15 @@ const LoginForm = ({ sessionUser }) => {
       setErrors(data);
     } else {
       return (
-        <Redirect to="/" />
+        <Redirect to="/app" />
       )
     }
+  };
+
+  const demoLogin = async e => {
+    e.preventDefault();
+    dispatch(login({credential: 'Demo_User', password: 'password'}));
+    return <Redirect to="/app" />
   };
 
   const updateCredential = (e) => {
@@ -40,9 +40,9 @@ const LoginForm = ({ sessionUser }) => {
     setPassword(e.target.value);
   };
 
-  if (sessionUser) return (
-    <Redirect to="/" />
-  );
+  if (sessionUser) {
+    return <Redirect to="/app" />
+  }
 
 
   return (
@@ -77,6 +77,7 @@ const LoginForm = ({ sessionUser }) => {
         </div>
         <div className="login-form__footer">
           <button className="login-form__footer__button" type="submit">Log In</button>
+          <button className='demo_login_button' onClick={demoLogin}>Demo</button>
         </div>
       </form>
     </div>
