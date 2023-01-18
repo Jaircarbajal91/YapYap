@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { csrfFetch } from '../store/csrf';
-import { Redirect } from 'react-router-dom';
+import { useHistory, Redirect } from 'react-router-dom';
 import { login } from '../store/session';
 import './LoginForm.css';
 
@@ -23,7 +23,6 @@ const LoginForm = ({ sessionUser }) => {
   const onLogin = async (e) => {
     e.preventDefault();
     const data = await dispatch(login({credential, password}));
-    console.log(data)
     if (data) {
       setErrors(data);
     } else {
