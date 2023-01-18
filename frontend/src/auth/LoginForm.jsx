@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { csrfFetch } from '../store/csrf';
 import { useHistory, Redirect } from 'react-router-dom';
 import { login } from '../store/session';
-import './LoginForm.css';
 
 
 const LoginForm = () => {

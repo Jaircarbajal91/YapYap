@@ -2,7 +2,6 @@ import { React, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import { login } from "../../store/session";
-import "./splash.css"
 
 const Splash = () => {
     const history = useHistory();

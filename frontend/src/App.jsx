@@ -4,12 +4,14 @@ import { useSelector } from 'react-redux'
 import LoginForm from './auth/LoginForm'
 import Logout from './auth/Logout';
 import Splash from './components/splash';
-import './App.css'
 
 function App() {
   const sessionUser = useSelector(session => session.user)
   return (
     <div className="App">
+      <h1 className="text-8xl font-bold underline">
+        Hello world!
+      </h1>
         <Switch>
           <Route path='/login' exact={true}>
             <LoginForm />
