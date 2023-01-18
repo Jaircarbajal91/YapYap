@@ -7,18 +7,12 @@ import './LoginForm.css';
 
 
 const LoginForm = ({ sessionUser }) => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const session = useSelector(state => state.session);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState([]);
-
-
-  // useEffect(() => {
-  //   const user = csrfFetch('http://127.0.0.1:8000/api/users/current')
-  //     .then(data => data.json())
-  //     .then(data => console.log(data))
-  // }, [])
 
   const onLogin = async (e) => {
     e.preventDefault();
@@ -30,6 +24,12 @@ const LoginForm = ({ sessionUser }) => {
         <Redirect to="/" />
       )
     }
+  };
+
+  const demoLogin = async e => {
+    e.preventDefault();
+    const data = await dispatch(login({credential: 'Demo_User', password: 'password'}));
+    history.push('/');
   };
 
   const updateCredential = (e) => {
@@ -77,6 +77,7 @@ const LoginForm = ({ sessionUser }) => {
         </div>
         <div className="login-form__footer">
           <button className="login-form__footer__button" type="submit">Log In</button>
+          <button className='demo_login_button' onClick={demoLogin}>Demo</button>
         </div>
       </form>
     </div>

@@ -15,6 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "chat_id",
         onDelete: "CASCADE",
       });
+      Server.hasMany(models.Channel, { foreignKey: "server_id", onDelete: "CASCADE" });
+      Server.hasOne(models.Image, { foreignKey: "id", sourceKey: "image_id", onDelete: "CASCADE" });
     }
   }
   Server.init({

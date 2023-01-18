@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Channel.hasMany(models.Message, { foreignKey: "channel_id", onDelete: "CASCADE" });
+      Channel.hasMany(models.ChatMember, { foreignKey: "channel_id", onDelete: "CASCADE" });
+      Channel.belongsTo(models.Server, { foreignKey: "server_id" });
     }
   }
   Channel.init({
@@ -21,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
         len: [3, 20]
       }
     },
-    group_id: {
+    server_id: {
       type: DataTypes.INTEGER,
       allowNull: false
     }
