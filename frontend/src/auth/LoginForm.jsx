@@ -6,10 +6,10 @@ import { login } from '../store/session';
 import './LoginForm.css';
 
 
-const LoginForm = ({ sessionUser }) => {
+const LoginForm = () => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const session = useSelector(state => state.session);
+  const sessionUser = useSelector(state => state.session.user);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState([]);
@@ -21,15 +21,15 @@ const LoginForm = ({ sessionUser }) => {
       setErrors(data);
     } else {
       return (
-        <Redirect to="/" />
+        <Redirect to="/app" />
       )
     }
   };
 
   const demoLogin = async e => {
     e.preventDefault();
-    const data = await dispatch(login({credential: 'Demo_User', password: 'password'}));
-    history.push('/');
+    dispatch(login({credential: 'Demo_User', password: 'password'}));
+    return <Redirect to="/app" />
   };
 
   const updateCredential = (e) => {
@@ -40,9 +40,9 @@ const LoginForm = ({ sessionUser }) => {
     setPassword(e.target.value);
   };
 
-  if (sessionUser) return (
-    <Redirect to="/" />
-  );
+  if (sessionUser) {
+    return <Redirect to="/app" />
+  }
 
 
   return (

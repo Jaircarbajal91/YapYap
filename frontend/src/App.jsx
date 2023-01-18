@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom';
 import { useSelector } from 'react-redux'
 import LoginForm from './auth/LoginForm'
 import Logout from './auth/Logout';
+import Splash from './components/splash';
 import './App.css'
 
 function App() {
@@ -10,9 +11,18 @@ function App() {
   return (
     <div className="App">
         <Switch>
-          <Route path='/' exact={true}>
-            <LoginForm sessionUser={sessionUser} />
+          <Route path='/login' exact={true}>
+            <LoginForm />
             <Logout />
+          </Route>
+          <Route path="/app">
+            Logged In App with Servers
+          </Route>
+          <Route path="/" exact={true}>
+            <Splash />
+          </Route>
+          <Route path="*">
+            Page Not Found
           </Route>
         </Switch>
     </div>
