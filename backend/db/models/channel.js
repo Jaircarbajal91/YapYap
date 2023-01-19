@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Channel.hasMany(models.Message, { foreignKey: "channel_id", onDelete: "CASCADE" });
-      Channel.hasMany(models.ChatMember, { foreignKey: "channel_id", onDelete: "CASCADE" });
       Channel.belongsTo(models.Server, { foreignKey: "server_id" });
     }
   }
