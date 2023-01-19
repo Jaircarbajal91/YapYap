@@ -24,14 +24,7 @@ const validateSignup = [
   handleValidationErrors,
 ];
 
-const checkAuth = (req, res, next) => {
-  if (!req.user) {
-    const err = new Error("You must be logged in to access this information");
-    next(err);
-  } else {
-    next();
-  }
-};
+const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in or register to access this information")) : next();
 
 // Sign up
 router.post("/join", validateSignup, async (req, res) => {
@@ -45,15 +38,11 @@ router.post("/join", validateSignup, async (req, res) => {
   });
 
   const token = await setTokenCookie(res, user);
-  const userJSON = user.toJSON();
-  userJSON.token = token;
-  return res.json(userJSON);
+  user.dataValues.token = token;
+  return res.json(user);
 });
 
 // Get the Current User
-router.get("/current", checkAuth, async (req, res, next) => {
-  const user = await User.findByPk(req.user.id);
-  return res.json(user);
-});
+router.get("/current", checkAuth, async (req, res, next) => res.json(await User.findByPk(req.user.id)));
 
 module.exports = router;
