@@ -5,10 +5,10 @@ import { useHistory, Redirect } from 'react-router-dom';
 import { login } from '../store/session';
 
 
-const LoginForm = () => {
+const LoginForm = ({sessionUser}) => {
   const history = useHistory();
   const dispatch = useDispatch();
-  const sessionUser = useSelector(state => state.session.user);
+  // const sessionUser = useSelector(state => state.session.user);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState([]);
@@ -46,7 +46,7 @@ const LoginForm = () => {
   console.log(sessionUser)
 
 
-  return (
+  return sessionUser && (
     <div className="login-form-container">
       <form className="login-form" onSubmit={onLogin}>
         <div className="login-form__header">

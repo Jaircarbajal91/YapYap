@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { Route, Switch } from 'react-router-dom';
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import {restoreUser} from './store/session';
 import LoginForm from './auth/LoginForm'
 import Logout from './auth/Logout';
 import Splash from './components/splash';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
-  const sessionUser = useSelector(session => session.user)
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  const sessionUser = useSelector(state => state.session.user)
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(restoreUser()).then(() => setIsLoaded(true));
+  }, [dispatch]);
   return (
     <div className="App">
       {/* <h1 className="text-8xl font-bold underline">
@@ -14,14 +22,14 @@ function App() {
       </h1> */}
         <Switch>
           <Route path='/login' exact={true}>
-            <LoginForm />
-            <Logout />
+            <LoginForm sessionUser={sessionUser} />
           </Route>
-          <Route path="/app">
+          <ProtectedRoute path="/app">
             Logged In App with Servers
-          </Route>
+            <Logout />
+          </ProtectedRoute>
           <Route path="/" exact={true}>
-            <Splash />
+            <Splash sessionUser={sessionUser} />
           </Route>
           <Route path="*">
             Page Not Found

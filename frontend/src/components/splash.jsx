@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
 import DemoButton from "./demoButton";
 
-const Splash = () => {
+const Splash = ({ sessionUser }) => {
     // const history = useHistory();
     // const dispatch = useDispatch();
-    const sessionUser = useSelector(state => state.session.user);
+
 
     if (sessionUser) return <Redirect to="/app" />;
     console.log(sessionUser)
