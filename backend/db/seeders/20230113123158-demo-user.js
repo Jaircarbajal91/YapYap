@@ -29,7 +29,97 @@ module.exports = {
         username: "jairbot",
         email: "jairbot@yapyap.io",
         hashedPassword: bcrypt.hashSync("password")
-      }
+      },
+      {
+        username: "JohnSmith",
+        email: "JohnSmith@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "JohnS",
+        },
+        {
+        username: "EmilyBrown",
+        email: "EmilyBrown@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "EmiB",
+        },
+        {
+        username: "MichaelJohnson",
+        email: "MichaelJohnson@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "MikeJ",
+        },
+        {
+        username: "JessicaWilliams",
+        email: "JessicaWilliams@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "JessW",
+        },
+        {
+        username: "MatthewJones",
+        email: "MatthewJones@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "MattJ",
+        },
+        {
+        username: "AshleySmith",
+        email: "AshleySmith@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "AshS",
+        },
+        {
+        username: "DavidJohnson",
+        email: "DavidJohnson@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "DaveJ",
+        },
+        {
+        username: "EmilyJones",
+        email: "EmilyJones@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "EmiJ",
+        },
+        {
+        username: "JacobSmith",
+        email: "JacobSmith@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "JakeS",
+        },
+        {
+        username: "NicholasWilliams",
+        email: "NicholasWilliams@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "NickW",
+        },
+        {
+        username: "JoshuaBrown",
+        email: "JoshuaBrown@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "JoshB",
+        },
+        {
+        username: "MadisonJohnson",
+        email: "MadisonJohnson@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "MadJ",
+        },
+        {
+        username: "AlyssaJones",
+        email: "AlyssaJones@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "AlyJ",
+        },
+        {
+        username: "MatthewSmith",
+        email: "MatthewSmith@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "MattS",
+        },
+        {
+        username: "RachelWilliams",
+        email: "RachelWilliams@yapyap.io",
+        hashedPassword: bcrypt.hashSync("password"),
+        alias: "RachW",
+        }
     ])
   },
 
