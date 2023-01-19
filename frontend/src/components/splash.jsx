@@ -9,9 +9,9 @@ const Splash = () => {
     const sessionUser = useSelector(state => state.session.user);
 
     if (sessionUser) return <Redirect to="/app" />;
-
+    console.log(sessionUser)
     return (
-        <div className="container">
+        <div className="container2">
             <div className="top_section">
                 <div className="top_links">
                     <DemoButton />

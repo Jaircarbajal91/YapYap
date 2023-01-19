@@ -43,6 +43,8 @@ const LoginForm = () => {
     return <Redirect to="/app" />
   }
 
+  console.log(sessionUser)
+
 
   return (
     <div className="login-form-container">

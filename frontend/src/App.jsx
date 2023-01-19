@@ -9,9 +9,9 @@ function App() {
   const sessionUser = useSelector(session => session.user)
   return (
     <div className="App">
-      <h1 className="text-8xl font-bold underline">
+      {/* <h1 className="text-8xl font-bold underline">
         Hello world!
-      </h1>
+      </h1> */}
         <Switch>
           <Route path='/login' exact={true}>
             <LoginForm />
