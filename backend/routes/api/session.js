@@ -30,8 +30,8 @@ router.post('/login', validateLogin, async (req, res, next) => {
     }
 
     const token = await setTokenCookie(res, user);
-
     user.dataValues.token = token;
+    user.save()
     return res.json(user);
 });
 
@@ -44,7 +44,6 @@ router.delete('/delete', (_req, res) => {
 // Restore session user
 router.get('/restore', restoreUser, (req, res) => {
     const user = req.user;
-    console.log(user)
     return user ? res.json({ user: user.toSafeObject() }) : res.json({});
 })
 
