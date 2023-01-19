@@ -27,7 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         len: [3, 20]
       }
     },
-    image_id: DataTypes.INTEGER
+    image_id: DataTypes.INTEGER,
+    owner_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Server',

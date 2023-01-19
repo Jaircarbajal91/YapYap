@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    chat_id: DataTypes.INTEGER,
+    server_id: DataTypes.INTEGER,
     dm_id: DataTypes.INTEGER
   }, {
     sequelize,
