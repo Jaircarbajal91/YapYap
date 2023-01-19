@@ -15,9 +15,14 @@ module.exports = {
         unique: true
       },
       email: {
+<<<<<<< Updated upstream
         type: Sequelize.STRING,
         allowNull: false,
         unique: true
+=======
+        type: Sequelize.STRING(256),
+        allowNull: false
+>>>>>>> Stashed changes
       },
       hashedPassword: {
         type: Sequelize.STRING(60).BINARY,
