@@ -119,7 +119,16 @@ module.exports = {
         email: "RachelWilliams@yapyap.io",
         hashedPassword: bcrypt.hashSync("password"),
         alias: "RachW",
-        }
+        },
+        {username: "JaneDoe", email: "JaneDoe@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "JaneD"},
+        {username: "BobBuilder", email: "BobBuilder@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "BobB"},
+        {username: "SamanthaS", email: "SamanthaS@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "Samantha"},
+        {username: "MichaelM", email: "MichaelM@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "Michael"},
+        {username: "EmilyE", email: "EmilyE@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "Emily"},
+        {username: "JoshuaJ", email: "JoshuaJ@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "Joshua"},
+        {username: "AshleyA", email: "AshleyA@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "Ashley"},
+        {username: "MatthewM", email: "MatthewM@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "Matthew"},
+        {username: "DanielD", email: "DanielD@yapyap.io", hashedPassword: bcrypt.hashSync("password"), alias: "Daniel"},
     ])
   },
 
@@ -132,7 +141,7 @@ module.exports = {
      */
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete("Users", {
-      username: { [Op.in]: ["Demo_User", "kevbot", "jairbot"] }
+      username: { [Op.in]: ["Demo_User", "kevbot", "jairbot", "JohnSmith", "EmilyBrown", "MichaelJohnson", "JessicaWilliams", "MatthewJones", "AshleySmith", "DavidJohnson", "EmilyJones", "JacobSmith", "NicholasWilliams", "JoshuaBrown", "MadisonJohnson", "AlyssaJones", "MatthewSmith", "RachelWilliams"] }
   }, {});
   }
 };

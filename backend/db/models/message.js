@@ -20,9 +20,8 @@ module.exports = (sequelize, DataTypes) => {
   Message.init({
     message: {
       type: DataTypes.STRING,
-      allowNull: false,
       validate: {
-        len: [1, 256],
+        len: [0, 256],
       }
     },
     sender_id: {
