@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       ChatMember.belongsTo(models.User, { foreignKey: "user_id" });
-      ChatMember.belongsTo(models.Server, { foreignKey: "chat_id" });
+      ChatMember.belongsTo(models.Server, { foreignKey: "server_id" });
     }
   }
   ChatMember.init({
@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    chat_id: DataTypes.INTEGER,
+    server_id: DataTypes.INTEGER,
     dm_id: DataTypes.INTEGER
   }, {
     sequelize,

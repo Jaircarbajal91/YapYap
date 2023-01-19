@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Server.hasMany(models.ChatMember, {
-        foreignKey: "chat_id",
+        foreignKey: "server_id",
         onDelete: "CASCADE",
       });
       Server.hasMany(models.Channel, { foreignKey: "server_id", onDelete: "CASCADE" });
@@ -27,7 +27,11 @@ module.exports = (sequelize, DataTypes) => {
         len: [3, 20]
       }
     },
-    image_id: DataTypes.INTEGER
+    image_id: DataTypes.INTEGER,
+    owner_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'Server',

@@ -16,6 +16,10 @@ module.exports = {
       image_id: {
         type: Sequelize.INTEGER
       },
+      owner_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

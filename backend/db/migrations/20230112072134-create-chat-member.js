@@ -13,7 +13,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      chat_id: {
+      server_id: {
         type: Sequelize.INTEGER
       },
       dm_id: {

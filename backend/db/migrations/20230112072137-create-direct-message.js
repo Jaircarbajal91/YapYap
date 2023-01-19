@@ -9,9 +9,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      message_id: {
+      serial_number: {
         type: Sequelize.INTEGER,
-        allowNull: false
       },
       createdAt: {
         allowNull: false,

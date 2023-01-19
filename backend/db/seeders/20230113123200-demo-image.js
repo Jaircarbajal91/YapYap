@@ -12,6 +12,14 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
+    return queryInterface.bulkInsert("Images", [
+      { type: "message", url: "https://sampleURL.com/image1.jpg" },
+      { type: "user", url: "https://sampleURL.com/image2.jpg" },
+      { type: "server", url: "https://sampleURL.com/image3.jpg" },
+      { type: "message", url: "https://sampleURL.com/image4.jpg" },
+      { type: "user", url: "https://sampleURL.com/image5.jpg" },
+      { type: "server", url: "https://sampleURL.com/image6.jpg" },
+    ]);
   },
 
   async down (queryInterface, Sequelize) {
@@ -21,5 +29,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
+    return queryInterface.bulkDelete("Images", null, {});
   }
 };
