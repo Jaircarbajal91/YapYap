@@ -30,8 +30,6 @@ router.post('/join', validateSignup, async (req, res) => {
     const user = await User.signup({ username, email, password, alias, image_id });
     const token = await setTokenCookie(res, user);
     user.token = token;
-    delete user.dataValues.createdAt;
-    delete user.dataValues.updatedAt;
     return res.json(user);
 });
 

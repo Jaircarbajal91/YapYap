@@ -20,9 +20,9 @@ const validateLogin = [
 // Log in
 router.post('/login', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
-    console.log("credential in session.js", credential, "password in session.js", password );
+    // console.log("credential in session.js", credential, "password in session.js", password );
     const user = await User.login({ credential, password });
-    console.log("credential", credential, "password", password);
+    // console.log("credential", credential, "password", password);
     if (!user) {
         const err = new Error("Login Failed");
         err.status = 401;
@@ -31,11 +31,9 @@ router.post('/login', validateLogin, async (req, res, next) => {
         return next(err);
     }
 
-    const token = setTokenCookie(res, user);
+    const token = await setTokenCookie(res, user);
 
-    user.token = token;
-    delete user.dataValues.createdAt;
-    delete user.dataValues.updatedAt;
+    user.dataValues.token = token;
     return res.json(user);
 });
 
@@ -47,6 +45,7 @@ router.delete('/delete', (_req, res) => {
 
 // Restore session user
 router.get('/restore', restoreUser, (req, res) => {
+    console.log(req)
     const user = req.user;
     return user ? res.json({ user: user.toSafeObject() }) : res.json({});
 })
