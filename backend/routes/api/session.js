@@ -20,9 +20,7 @@ const validateLogin = [
 // Log in
 router.post('/login', validateLogin, async (req, res, next) => {
     const { credential, password } = req.body;
-    // console.log("credential in session.js", credential, "password in session.js", password );
     const user = await User.login({ credential, password });
-    // console.log("credential", credential, "password", password);
     if (!user) {
         const err = new Error("Login Failed");
         err.status = 401;
@@ -45,8 +43,8 @@ router.delete('/delete', (_req, res) => {
 
 // Restore session user
 router.get('/restore', restoreUser, (req, res) => {
-    console.log(req)
     const user = req.user;
+    console.log(user)
     return user ? res.json({ user: user.toSafeObject() }) : res.json({});
 })
 

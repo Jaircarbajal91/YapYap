@@ -10,7 +10,7 @@ const setTokenCookie = (res, user) => {
         secret,
         { expiresIn: parseInt(expiresIn) }
     );
-        
+
     const isProduction = process.env.NODE_ENV === "production";
 
     // set the token cookie
@@ -25,7 +25,6 @@ const setTokenCookie = (res, user) => {
 };
 
 const restoreUser = (req, res, next) => {
-    // token parsed from cookies
     const token = req.cookies.token;
     req.user = null;
 

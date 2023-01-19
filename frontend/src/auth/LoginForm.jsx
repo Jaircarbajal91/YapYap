@@ -43,9 +43,6 @@ const LoginForm = ({sessionUser}) => {
     return <Redirect to="/app" />
   }
 
-  console.log(sessionUser)
-
-
   return sessionUser && (
     <div className="login-form-container">
       <form className="login-form" onSubmit={onLogin}>
