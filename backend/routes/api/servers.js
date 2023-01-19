@@ -7,16 +7,17 @@ const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in 
 
 // Get all servers for current user
 router.get("/", checkAuth, async (req, res) => {
-    const owner_id = req.user.id;
+    const user_id = req.user.id;
     const servers = await ChatMember.findAll({
         include: [{ model: Server}],
-        where: { owner_id }
+        where: { user_id }
     });
     const result = [];
     servers.forEach(server => {
-        result.push(server.dataValues.Server.dataValues)
+        console.log("server", server);
+        server.Server && result.push(server.Server)
     });
-    return res.json({Servers: result});
+    return res.json({ Servers: result });
 });
 
 
