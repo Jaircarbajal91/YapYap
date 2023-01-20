@@ -43,17 +43,16 @@ const LoginForm = ({sessionUser}) => {
     return <Redirect to="/app" />
   }
 
-  return sessionUser && (
-    <div className="login-form-container">
-      <form className="login-form" onSubmit={onLogin}>
-        <div className="login-form__header">
-          <h1 className="login-form__header__title">Log In</h1>
+  return !sessionUser && (
+    <div >
+      <form  onSubmit={onLogin}>
+        <div >
+          <h1 >Log In</h1>
         </div>
-        <div className="login-form__body">
-          <div className="login-form__body__input">
-            <label className="login-form__body__input__label">Email/Username: </label>
+        <div >
+          <div >
+            <label >Email/Username: </label>
             <input
-              className="login-form__body__input__input"
               type="text"
               name="email"
               placeholder="Email/Username"
@@ -61,10 +60,9 @@ const LoginForm = ({sessionUser}) => {
               onChange={updateCredential}
             />
           </div>
-          <div className="login-form__body__input">
-            <label className="login-form__body__input__label">Password: </label>
+          <div >
+            <label >Password: </label>
             <input
-              className="login-form__body__input__input"
               type="password"
               name="password"
               placeholder="Password"
@@ -73,9 +71,9 @@ const LoginForm = ({sessionUser}) => {
             />
           </div>
         </div>
-        <div className="login-form__footer">
-          <button className="login-form__footer__button" type="submit">Log In</button>
-          <button className='demo_login_button' onClick={demoLogin}>Demo</button>
+        <div >
+          <button type="submit">Log In</button>
+          <button onClick={demoLogin}>Demo</button>
         </div>
       </form>
     </div>

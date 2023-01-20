@@ -16,6 +16,7 @@ module.exports = {
       demoButtonHover: "#36393F",
       hero: '#404EED',
       white: '#FFFFFF',
+      black: '#000000',
     },
     fontFamily: {
       sans: ['gg sans', 'Inter', 'sans-serif'],

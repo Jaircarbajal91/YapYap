@@ -1,6 +1,7 @@
 import { React, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Redirect, useHistory } from "react-router-dom";
+import Navbar from "./Navbar";
 import DemoButton from "./demoButton";
 import { csrfFetch } from "../store/csrf";
 
@@ -10,6 +11,7 @@ const Splash = ({ sessionUser }) => {
     return (
         <div className="top_section h-screen">
             <div className="flex flex-row justify-evenly relative items-end w-full h-4/6 bg-hero gap-x-2 bg-[url('../../assets/svg/splash1.svg')] bg-bottom bg-no-repeat">
+                <Navbar />
                 <img className="absolute max-w-xxl -left-20 -ml-20 z-10 w-2/5" src="../../assets/svg/splash2.svg" alt="" />
                 <div className="flex flex-col items-center justify-center text-center h-full w-2/5">
                     <h1 className="text-white  text-5xl font-black font-header mb-10">IMAGINE A PLACE...</h1>
