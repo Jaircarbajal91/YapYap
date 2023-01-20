@@ -18,12 +18,7 @@ module.exports = {
       },
       owner_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id"
-        },
-        onDelete: "CASCADE",
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

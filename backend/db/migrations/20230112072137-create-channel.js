@@ -15,12 +15,7 @@ module.exports = {
       },
       server_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Servers",
-          key: "id"
-        },
-        onDelete: "CASCADE",
+        allowNull: false
       },
       createdAt: {
         allowNull: false,

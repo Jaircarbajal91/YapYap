@@ -11,9 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Image.belongsTo(models.User, { foreignKey: "image_id", onDelete: "CASCADE" });
-      Image.belongsTo(models.Message, { foreignKey: "image_id", onDelete: "CASCADE" });
-      Image.belongsTo(models.Server, { foreignKey: "image_id", onDelete: "CASCADE" });
+      Image.belongsTo(models.User, { foreignKey: "image_id" });
+      Image.belongsTo(models.Message, { foreignKey: "image_id" });
+      Image.belongsTo(models.Server, { foreignKey: "image_id" });
     }
   }
   Image.init({

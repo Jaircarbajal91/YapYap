@@ -14,31 +14,16 @@ module.exports = {
       },
       sender_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: "Users",
-          key: "id"
-        },
-        onDelete: "CASCADE",
+        allowNull: false
       },
       channel_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "Channels",
-          key: "id"
-        },
-        onDelete: "CASCADE",
       },
       image_id: {
         type: Sequelize.INTEGER,
       },
       dm_id: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "DirectMessages",
-          key: "id"
-        },
-        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
