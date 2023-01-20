@@ -55,4 +55,5 @@ router.put("/update/:channel_id", checkAuth, async (req, res) => {
     return res.json(channel);
 });
 
-modules.exports = router;
+
+module.exports = router;

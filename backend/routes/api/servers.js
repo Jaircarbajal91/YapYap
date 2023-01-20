@@ -17,15 +17,17 @@ router.get("/", checkAuth, async (req, res) => {
     const result = [];
     chatMembers.forEach(chatMember => {
         const server = chatMember.dataValues.Server;
-        server && result.push(server);
+        if (server) result.push(server);
     });
     return res.json({ Servers: result });
 });
 
 
 // Create a server
+// works
 router.post("/create", checkAuth, async (req, res) => {
-    const { server_name, image_id, owner_id } = req.body;
+    const owner_id = req.user.id;
+    const { server_name, image_id } = req.body;
     const server = await Server.create({ server_name, image_id, owner_id });
     return res.json(server);
 });
@@ -40,19 +42,36 @@ router.post("/:server_id/create-channel", checkAuth, async (req, res) => {
 
 
 // Delete a server
+// works
+// cascade delete on server deletes all channels and messages => not working
 router.delete("/delete/:server_id", checkAuth, async (req, res) => {
     const { server_id } = req.params;
     const server = await Server.findByPk(server_id);
+    const isOwner = await Server.findOne({
+        where: {
+            owner_id: req.user.id,
+            id: server_id
+        }
+    });
+    if (!isOwner) return res.status(401).json({ message: "You are not authorized to delete this server." });
     await server.destroy();
     return res.json({ message: `successfully deleted ${server.dataValues.server_name}` });
 });
 
 
 // Update a server
+// works
 router.put("/update/:server_id", checkAuth, async (req, res) => {
     const { server_id } = req.params;
     const { server_name, image_id } = req.body;
     const server = await Server.findByPk(server_id);
+    const isOwner = await Server.findOne({
+        where: {
+            owner_id: req.user.id,
+            id: server_id
+        }
+    });
+    if (!isOwner) return res.status(401).json({ message: "You are not authorized to update this server." });
     try {
         server_name && (server.server_name = server_name);
         await server.save();

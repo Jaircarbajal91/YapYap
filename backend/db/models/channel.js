@@ -11,21 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Channel.hasMany(models.Message, { foreignKey: "channel_id", onDelete: "CASCADE" });
-      Channel.belongsTo(models.Server, { foreignKey: "server_id" });
     }
   }
   Channel.init({
     channel_name: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        len: [3, 20]
-      }
     },
     server_id: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: { model: 'Servers', key: 'id' },
+      onDelete: 'CASCADE',
     }
   }, {
     sequelize,

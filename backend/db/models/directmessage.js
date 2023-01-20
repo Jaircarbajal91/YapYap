@@ -11,14 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      DirectMessage.hasMany(models.Message, { foreignKey: "dm_id", sourceKey: "id", onDelete: "CASCADE" });
-      DirectMessage.hasMany(models.ChatMember, { foreignKey: "dm_id", onDelete: "CASCADE" });
     }
   }
   DirectMessage.init({
-    serial_number: {
-      type: DataTypes.INTEGER,
-    }
+    serial_number: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'DirectMessage',

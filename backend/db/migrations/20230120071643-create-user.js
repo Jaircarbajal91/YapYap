@@ -10,34 +10,27 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       username: {
-        type: Sequelize.STRING(20),
-        allowNull: false,
-        unique: true
+        type: Sequelize.STRING
       },
       email: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true
+        type: Sequelize.STRING
       },
       hashedPassword: {
-        type: Sequelize.STRING(60).BINARY,
-        allowNull: false,
+        type: Sequelize.STRING
       },
       alias: {
-        type: Sequelize.STRING(20),
+        type: Sequelize.STRING
       },
       image_id: {
         type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+        type: Sequelize.DATE
       }
     });
   },

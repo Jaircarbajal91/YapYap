@@ -2,37 +2,30 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Servers', {
+    await queryInterface.createTable('DMMembers', {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      server_name: {
-        type: Sequelize.STRING,
-        allowNull: false
-      },
-      image_id: {
+      user_id: {
         type: Sequelize.INTEGER
       },
-      owner_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+      dm_id: {
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+        type: Sequelize.DATE
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Servers');
+    await queryInterface.dropTable('DMMembers');
   }
 };

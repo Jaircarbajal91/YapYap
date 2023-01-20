@@ -11,32 +11,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Message.belongsTo(models.User, { foreignKey: "sender_id" });
-      Message.belongsTo(models.DirectMessage, { foreignKey: "dm_id" });
-      Message.belongsTo(models.Channel, { foreignKey: "channel_id" });
-      Message.hasMany(models.Image, { foreignKey: "id", sourceKey: "image_id", onDelete: "CASCADE" });
     }
   }
   Message.init({
-    message: {
-      type: DataTypes.STRING,
-      validate: {
-        len: [0, 256],
-      }
-    },
-    sender_id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    channel_id: {
-      type: DataTypes.INTEGER
-    },
-    image_id: {
-      type: DataTypes.INTEGER
-    },
-    dm_id: {
-      type: DataTypes.INTEGER
-    }
+    message: DataTypes.STRING,
+    sender_id: DataTypes.INTEGER,
+    channel_id: DataTypes.INTEGER,
+    image_id: DataTypes.INTEGER,
+    dm_id: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Message',

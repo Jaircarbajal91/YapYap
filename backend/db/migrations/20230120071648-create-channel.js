@@ -10,22 +10,18 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       channel_name: {
-        type: Sequelize.STRING(20),
-        allowNull: false
+        type: Sequelize.STRING
       },
       server_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+        type: Sequelize.INTEGER
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.literal("CURRENT_TIMESTAMP")
+        type: Sequelize.DATE
       }
     });
   },
