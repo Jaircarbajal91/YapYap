@@ -44,7 +44,7 @@ const LoginForm = ({sessionUser}) => {
   }
 
   return !sessionUser && (
-    <div >
+    <div className="w-screen h-screen bg-[url('../../assets/svg/login.svg')] bg-center bg-no-repeat bg-cover">
       <form  onSubmit={onLogin}>
         <div >
           <h1 >Log In</h1>
