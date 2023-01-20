@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DMMember.hasMany(models.User, { foreignKey: "user_id" });
+      DMMember.hasMany(models.DirectMessage, { foreignKey: "dm_id" });
     }
   }
   DMMember.init({

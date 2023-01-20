@@ -11,11 +11,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Image.belongsTo(models.User, { foreignKey: "user_id" });
+      Image.belongsTo(models.Server, { foreignKey: "server_id" });
+      Image.belongsTo(models.Message, { foreignKey: "message_id" });
     }
   }
   Image.init({
     type: DataTypes.STRING,
-    url: DataTypes.STRING
+    url: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        len: [1, 255]
+      }
+    }
   }, {
     sequelize,
     modelName: 'Image',

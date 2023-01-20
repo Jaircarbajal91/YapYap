@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      DirectMessage.belongsToMany(models.User, { through: "DMMembers", foreignKey: "dm_id", otherKey: "user_id" });
+      DirectMessage.hasMany(models.Message, { foreignKey: "dm_id", onDelete: "CASCADE" });
     }
   }
   DirectMessage.init({

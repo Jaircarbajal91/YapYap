@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      ServerMember.hasMany(models.Server, { foreignKey: "server_id" });
+      ServerMember.hasMany(models.User, { foreignKey: "user_id" });
     }
   }
   ServerMember.init({
