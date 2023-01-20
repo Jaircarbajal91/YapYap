@@ -11,12 +11,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Server.hasMany(models.ChatMember, {
-        foreignKey: "server_id",
-        onDelete: "CASCADE",
-      });
-      Server.hasMany(models.Channel, { foreignKey: "server_id", onDelete: "CASCADE" });
-      Server.hasOne(models.Image, { foreignKey: "id", sourceKey: "image_id", onDelete: "CASCADE" });
+      Server.belongsToMany(models.User, { through: "ChatMember", foreignKey: "server_id"})
+      Server.hasMany(models.Channel, { foreignKey: "server_id" });
+      Server.hasOne(models.Image, { foreignKey: "id", sourceKey: "image_id" });
+      Server.belongsTo(models.User, { foreignKey: "owner_id", onDelete: "CASCADE" });
     }
   }
   Server.init({

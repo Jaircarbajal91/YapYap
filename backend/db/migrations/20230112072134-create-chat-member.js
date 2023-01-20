@@ -11,13 +11,28 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: "Users",
+          key: "id"
+        },
+        onDelete: "CASCADE",
       },
       server_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Servers",
+          key: "id"
+        },
+        onDelete: "CASCADE",
       },
       dm_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: {
+          model: "DirectMessages",
+          key: "id"
+        },
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
