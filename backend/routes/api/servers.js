@@ -14,7 +14,6 @@ router.get("/", checkAuth, async (req, res) => {
     });
     const result = [];
     servers.forEach(server => {
-        console.log("server", server);
         server.Server && result.push(server.Server)
     });
     return res.json({ Servers: result });

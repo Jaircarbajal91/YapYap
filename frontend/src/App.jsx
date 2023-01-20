@@ -17,9 +17,6 @@ function App() {
   }, [dispatch]);
   return (
     <div className="App">
-      {/* <h1 className="text-8xl font-bold underline">
-        Hello world!
-      </h1> */}
         <Switch>
           <Route path='/login' exact={true}>
             <LoginForm sessionUser={sessionUser} />
