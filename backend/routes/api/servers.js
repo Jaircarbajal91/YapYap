@@ -1,5 +1,5 @@
 const express = require('express');
-const { Server, ChatMember } = require("../../db/models");
+const { Server, ChatMember, Channel } = require("../../db/models");
 
 const router = express.Router();
 
@@ -8,14 +8,16 @@ const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in 
 // Get all servers for current user
 router.get("/", checkAuth, async (req, res) => {
     const user_id = req.user.id;
-    const servers = await ChatMember.findAll({
-        include: [{ model: Server}],
+    // find all servers that the user is a member or, the channels in those servers
+    const chatMembers = await ChatMember.findAll({
+        include: [{ model: Server, include: [{ model: Channel }] }],
         where: { user_id }
     });
+
     const result = [];
-    servers.forEach(server => {
-        console.log("server", server);
-        server.Server && result.push(server.Server)
+    chatMembers.forEach(chatMember => {
+        const server = chatMember.dataValues.Server;
+        server && result.push(server);
     });
     return res.json({ Servers: result });
 });
@@ -25,9 +27,15 @@ router.get("/", checkAuth, async (req, res) => {
 router.post("/create", checkAuth, async (req, res) => {
     const { server_name, image_id, owner_id } = req.body;
     const server = await Server.create({ server_name, image_id, owner_id });
-    delete server.dataValues.createdAt;
-    delete server.dataValues.updatedAt;
     return res.json(server);
+});
+
+// Create a channel in active server
+router.post("/:server_id/create-channel", checkAuth, async (req, res) => {
+    const { server_id } = req.params;
+    const { channel_name } = req.body;
+    const channel = await Channel.create({ server_id, channel_name });
+    return res.json(channel);
 });
 
 
