@@ -10,7 +10,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       serial_number: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
       },
       createdAt: {
         allowNull: false,

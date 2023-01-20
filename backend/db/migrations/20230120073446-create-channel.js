@@ -10,10 +10,14 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       channel_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(30),
+        allowNull: false,
       },
       server_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: "Servers"},
+        onDelete: "CASCADE",
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

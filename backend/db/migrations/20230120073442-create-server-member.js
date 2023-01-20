@@ -10,10 +10,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       user_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: "Users"},
+        onDelete: "CASCADE",
+        allowNull: false,
       },
       server_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: "Servers"},
+        onDelete: "CASCADE",
+        allowNull: false,
       },
       createdAt: {
         allowNull: false,

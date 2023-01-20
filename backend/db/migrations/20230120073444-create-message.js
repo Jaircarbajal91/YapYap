@@ -10,19 +10,26 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       message: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING(256)
       },
       sender_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: "Users"},
+        onDelete: "CASCADE",
+        allowNull: false,
       },
       channel_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: "Channels"},
+        onDelete: "CASCADE",
       },
       image_id: {
         type: Sequelize.INTEGER
       },
       dm_id: {
-        type: Sequelize.INTEGER
+        type: Sequelize.INTEGER,
+        references: { model: "DirectMessages"},
+        onDelete: "CASCADE",
       },
       createdAt: {
         allowNull: false,
