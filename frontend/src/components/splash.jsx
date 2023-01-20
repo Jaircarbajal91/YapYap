@@ -9,14 +9,17 @@ const Splash = ({ sessionUser }) => {
     if (sessionUser) return <Redirect to="/app" />;
     return (
         <div className="top_section h-screen">
-            <h1>hello</h1>
-            <div className="flex justify-evenly items-end w-full h-4/6 bg-indigo-700 bg-[url('../../assets/svg/splash1.svg')]">
-                <img className="z-10 w-3/5" src="../../assets/svg/splash2.svg" alt="" />
-                <h1>Imagine a Place</h1>
-                <img className="z-10 w-3/5" src="../../assets/svg/splash3.svg" alt="" />
+            <div className="flex flex-row justify-evenly relative items-end w-full h-4/6 bg-hero gap-x-2 bg-[url('../../assets/svg/splash1.svg')] bg-bottom bg-no-repeat">
+                <img className="absolute max-w-xxl -left-20 -ml-20 z-10 w-2/5" src="../../assets/svg/splash2.svg" alt="" />
+                <div className="flex flex-col items-center justify-center text-center h-full w-2/5">
+                    <h1 className="text-white  text-5xl font-black font-header mb-10">IMAGINE A PLACE...</h1>
+                    <p className="text-white text-center font-sans font-normal mb-10 text-lg tracking-wide leading-loose">...where you can belong to a school club, a gaming group, or a worldwide art community. Where just you and a handful of friends can spend time together. A place that makes it easy to talk every day and hang out more often.</p>
+                    <DemoButton />
+                </div>
+                <img className="absolute max-w-2xl -right-8 z-10 w-2/5" src="../../assets/svg/splash3.svg" alt="" />
             </div>
             <div className="top_links">
-                <DemoButton />
+
             </div>
         </div>
     )
