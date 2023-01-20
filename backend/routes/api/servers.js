@@ -26,6 +26,7 @@ router.post("/create", checkAuth, async (req, res) => {
     const owner_id = req.user.id;
     const { server_name, image_id } = req.body;
     const server = await Server.create({ server_name, image_id, owner_id });
+    await ChatMember.create({ user_id: owner_id, server_id: server.id });
     return res.json(server);
 });
 
