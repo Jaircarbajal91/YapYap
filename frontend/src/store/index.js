@@ -2,11 +2,13 @@ import { legacy_createStore as createStore, combineReducers, applyMiddleware, co
 import thunk from "redux-thunk";
 import logger from "redux-logger";
 import sessionReducer from "./session";
+import messagesReducer from "./messages";
 import serversReducer from "./servers";
 
 const rootReducer = combineReducers({
     session: sessionReducer,
     servers: serversReducer,
+    messages: messagesReducer,
 });
 
 let enhancer;
