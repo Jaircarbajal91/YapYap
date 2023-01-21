@@ -5,12 +5,14 @@ import {restoreUser} from './store/session';
 import LoginForm from './auth/LoginForm'
 import Logout from './auth/Logout';
 import Splash from './components/splash';
+import Servers from './components/Servers';
+import { getServers } from './store/servers';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  const sessionUser = useSelector(state => state.session.user)
+  const sessionUser = useSelector(state => state.session.user);
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(restoreUser()).then(() => setIsLoaded(true));
@@ -22,7 +24,7 @@ function App() {
             <LoginForm sessionUser={sessionUser} />
           </Route>
           <ProtectedRoute path="/app">
-            Logged In App with Servers
+            <Servers sessionUser={sessionUser} />
             <Logout />
           </ProtectedRoute>
           <Route path="/" exact={true}>
