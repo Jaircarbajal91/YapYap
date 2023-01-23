@@ -21,15 +21,15 @@ const addMessage = message => {
 }
 
 
-const getMessages = channelId => async dispatch => {
-    const response = await csrfFetch(`/api/channels/${channelId}`);
+export const getMessages = channelId => async dispatch => {
+    const response = await csrfFetch(`/api/messages/${channelId}`);
     const data = await response.json();
     if (response.ok) {
-        dispatch(setMessages(data.Messages));
+        dispatch(setMessages(data));
     }
 }
 
-const sendMessage = (message, senderId, {channel_id, dm_id, image_id}) => async dispatch => {
+export const sendMessage = (message, senderId, {channel_id, dm_id, image_id}) => async dispatch => {
     const response = await csrfFetch(`/api/messages`, {
         method: "POST",
         body: JSON.stringify({

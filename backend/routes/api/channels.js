@@ -1,5 +1,5 @@
 const express = require('express');
-const { Channel, ChatMember, Message, User } = require("../../db/models");
+const { Channel, Message, User } = require("../../db/models");
 const router = express.Router();
 
 const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in or register to access this information.")) : next();
@@ -7,6 +7,8 @@ const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in 
 // Get all messages for a channel with user info attached
 router.get("/:channel_id", async (req, res) => {
     const { channel_id } = req.params;
+    console.log(channel_id)
+    console.log("hitting messages route")
     const messages = await Message.findAll({ include: [{ model: User }], where: { channel_id } });
     return res.json({ Messages: messages });
 });

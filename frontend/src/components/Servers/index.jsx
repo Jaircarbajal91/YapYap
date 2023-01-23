@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getServers } from "../../store/servers";
-import { getChannels } from "../../store/channels";
+import Messages from "../Messages";
+import { getMessages } from "../../store/messages";
 import { useDispatch, useSelector } from "react-redux";
 
 
@@ -24,10 +25,11 @@ const Servers = ({ sessionUser }) => {
         setChannelsLoaded(targetServer.Channels)
     }
 
-    const selectChannel = e => {
+    const selectChannel = async e => {
         e.preventDefault();
         // display the messages of the channel that was clicked
         setChannelId(e.target.id);
+        console.log(channelId)
     }
 
 
@@ -41,12 +43,12 @@ const Servers = ({ sessionUser }) => {
             )})}
             {channelsLoaded && channelsLoaded.map(channel => {
                 return (
-                    <button key={channel.id} id={channel.id} className="text-lg">
+                    <button onClick={selectChannel} key={channel.id} id={channel.id} className="text-lg">
                         {channel.channel_name}
                     </button>
                 )
             })}
-            {channelId && <Messages channelSelected={channelSelected} />}
+            {channelId && <Messages channelId={channelId} />}
         </div>
     )
 }
