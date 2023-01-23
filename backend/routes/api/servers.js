@@ -5,7 +5,7 @@ const router = express.Router();
 
 const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in or register to access this information.")) : next();
 
-// Get all servers for current user
+// Get all servers for current user with channels attached
 router.get("/", checkAuth, async (req, res) => {
     const user_id = req.user.id;
     const chatMembers = await ChatMember.findAll({

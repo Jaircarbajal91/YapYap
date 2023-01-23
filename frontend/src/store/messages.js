@@ -1,5 +1,5 @@
 import { csrfFetch } from "./csrf";
-const Heap = require("mnemonist/heap")
+// const Heap = require("mnemonist/heap")
 
 const SET_MESSAGES = "messages/setMessages";
 const ADD_MESSAGE = "messages/addMessage";
@@ -22,14 +22,29 @@ const addMessage = message => {
 
 
 const getMessages = channelId => async dispatch => {
-    const response = await csrfFetch(`/api/channels/channelId`);
+    const response = await csrfFetch(`/api/channels/${channelId}`);
     const data = await response.json();
     if (response.ok) {
         dispatch(setMessages(data.Messages));
     }
 }
 
-
+const sendMessage = (message, senderId, {channel_id, dm_id, image_id}) => async dispatch => {
+    const response = await csrfFetch(`/api/messages`, {
+        method: "POST",
+        body: JSON.stringify({
+            message,
+            senderId,
+            channel_id,
+            dm_id,
+            image_id,
+        }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+        dispatch(addMessage(data));
+    }
+}
 
 
 
@@ -43,6 +58,13 @@ const messagesReducer = (state = initialState, action) => {
             });
             console.log(newState)
         }
+        case ADD_MESSAGE: {
+            const newState = {...state};
+            newState[action.payload.id] = action.payload;
+            return newState;
+        }
+        default:
+            return state;
     }
 }
 

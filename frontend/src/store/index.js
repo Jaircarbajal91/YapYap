@@ -4,11 +4,13 @@ import logger from "redux-logger";
 import sessionReducer from "./session";
 import messagesReducer from "./messages";
 import serversReducer from "./servers";
+import channelsReducer from "./channels";
 
 const rootReducer = combineReducers({
     session: sessionReducer,
     servers: serversReducer,
     messages: messagesReducer,
+    channels: channelsReducer,
 });
 
 let enhancer;
