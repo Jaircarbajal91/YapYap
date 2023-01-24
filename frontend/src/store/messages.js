@@ -22,7 +22,7 @@ const addMessage = message => {
 
 
 export const getMessages = channelId => async dispatch => {
-    const response = await csrfFetch(`/api/messages/${channelId}`);
+    const response = await csrfFetch(`/api/channels/${channelId}`);
     const data = await response.json();
     if (response.ok) {
         dispatch(setMessages(data));

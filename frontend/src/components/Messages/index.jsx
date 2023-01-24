@@ -6,14 +6,14 @@ import { getMessages } from '../../store/messages';
 
 export default function Messages({ channelId }) {
     const dispatch = useDispatch();
-    const messages = useSelector(state => state.messages);
+    const messages = Object.values(useSelector(state => state.messages));
     console.log(channelId);
     const [isLoaded, setIsLoaded] = useState(false);
 
     useEffect(() => {
-        dispatch(getMessages(channelId))
-            .then(() => setIsLoaded(true));
-        console.log("dispatched")
+        const messages = dispatch(getMessages(channelId));
+        setIsLoaded(true);  
+        console.log("messages", messages);
     }, [dispatch, channelId]);
 
     return isLoaded && (
