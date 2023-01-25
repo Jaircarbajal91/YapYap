@@ -36,7 +36,6 @@ const updateServer = (server) => {
 
 export const getServers = () => async (dispatch) => {
     const response = await csrfFetch("/api/servers");
-    // console.log("response", response)
     const data = await response.json();
     if (response.ok) {
         dispatch(setServers(data.Servers));
@@ -91,12 +90,10 @@ const serversReducer = (state = initialState, action) => {
     switch(action.type) {
         case SET_SERVERS: {
             const newState = {};
-            // console.log(action.payload)
             action.payload.forEach(server => {
                 newState[server.id] = server;
             }
             );
-            // console.log(newState)
             return newState;
         };
         case ADD_SERVER: {

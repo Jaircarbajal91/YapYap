@@ -11,8 +11,6 @@ const Servers = ({ sessionUser }) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [channelsLoaded, setChannelsLoaded] = useState(servers?.[0]?.Channels);
     const [messagesLoaded, setMessagesLoaded] = useState([]);
-    const [channelId, setChannelId] = useState(servers?.[0]?.Channels?.[0]);
-    console.log(servers)
 
 
     useEffect(() => {
@@ -30,7 +28,6 @@ const Servers = ({ sessionUser }) => {
         e.preventDefault();
         // display the messages of the channel that was clicked
         const messages = await dispatch(getMessages(e.target.id));
-        console.log(messages)
         setMessagesLoaded(messages);
     }
 

@@ -24,7 +24,6 @@ const addMessage = message => {
 export const getMessages = channelId => async dispatch => {
     const response = await csrfFetch(`/api/channels/${channelId}`);
     const data = await response.json();
-    console.log(data)
     if (response.ok) {
         dispatch(setMessages(data));
     }
@@ -54,7 +53,6 @@ const messagesReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_MESSAGES: {
             const newState = {};
-            console.log("PAYLOAD------",action.payload)
             action.payload.forEach(message => {
                 newState[message.id] = message;
             });
