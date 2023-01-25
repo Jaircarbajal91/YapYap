@@ -14,58 +14,57 @@ const setMessages = messages => {
 };
 
 const addMessage = message => {
-    return {
-        type: ADD_MESSAGE,
-        payload: message,
-    }
-}
-
+	return {
+		type: ADD_MESSAGE,
+		payload: message,
+	};
+};
 
 export const getMessages = channelId => async dispatch => {
-    const response = await csrfFetch(`/api/channels/${channelId}`);
-    const data = await response.json();
-    if (response.ok) {
-        dispatch(setMessages(data));
-    }
-}
+	const response = await csrfFetch(`/api/channels/${channelId}`);
+	const data = await response.json();
+	if (response.ok) {
+		dispatch(setMessages(data));
+	}
+};
 
-export const sendMessage = (message, senderId, {channel_id, dm_id, image_id}) => async dispatch => {
-    const response = await csrfFetch(`/api/messages`, {
-        method: "POST",
-        body: JSON.stringify({
-            message,
-            senderId,
-            channel_id,
-            dm_id,
-            image_id,
-        }),
-    });
-    const data = await response.json();
-    if (response.ok) {
-        dispatch(addMessage(data));
-    }
-}
-
-
+export const sendMessage =
+	(message, senderId, { channel_id, dm_id, image_id }) =>
+	async dispatch => {
+		const response = await csrfFetch(`/api/messages`, {
+			method: "POST",
+			body: JSON.stringify({
+				message,
+				senderId,
+				channel_id,
+				dm_id,
+				image_id,
+			}),
+		});
+		const data = await response.json();
+		if (response.ok) {
+			dispatch(addMessage(data));
+		}
+	};
 
 const initialState = {};
 const messagesReducer = (state = initialState, action) => {
-    switch (action.type) {
-        case SET_MESSAGES: {
-            const newState = {};
-            action.payload.forEach(message => {
-                newState[message.id] = message;
-            });
-            return newState;
-        }
-        case ADD_MESSAGE: {
-            const newState = {...state};
-            newState[action.payload.id] = action.payload;
-            return newState;
-        }
-        default:
-            return state;
-    }
-}
+	switch (action.type) {
+		case SET_MESSAGES: {
+			const newState = {};
+			action.payload.forEach(message => {
+				newState[message.id] = message;
+			});
+			return newState;
+		}
+		case ADD_MESSAGE: {
+			const newState = { ...state };
+			newState[action.payload.id] = action.payload;
+			return newState;
+		}
+		default:
+			return state;
+	}
+};
 
 export default messagesReducer;
