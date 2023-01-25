@@ -7,11 +7,11 @@ const checkAuth = (req, res, next) => !req.user ? next(new Error("Please log in 
 // Get all messages for a channel with user info attached
 router.get("/:channel_id", async (req, res) => {
     const { channel_id } = req.params;
-    console.log(channel_id)
+    console.log("CHANNEL----------------", channel_id)
     // console.log("hitting messages route")
     const messages = await Message.findAll({ include: [{ model: User }], where: { channel_id } });
-    console.log(messages)
-    return res.json({ Messages: messages });
+    console.log("MESSAGES----------------", messages)
+    return res.json(messages);
 });
 
 // Create a channel
