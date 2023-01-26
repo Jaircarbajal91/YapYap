@@ -17,6 +17,13 @@ module.exports = {
       hero: '#404EED',
       white: '#FFFFFF',
       black: '#000000',
+      gray: '#36393F',
+      lightGray: '#ABACB0',
+      darkGray: '#212225',
+      lightRed: '#ED4346',
+      torqoise: '#0AACEF',
+      navy: '#4853C6',
+      yellow: '#FFC61A',
     },
     fontFamily: {
       sans: ['gg sans', 'Inter', 'sans-serif'],
