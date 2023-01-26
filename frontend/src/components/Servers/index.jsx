@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { getServers } from "../../store/servers";
-// import Messages from "../Messages";
+import Messages from "../Messages";
 import { getMessages } from "../../store/messages";
 import { useDispatch, useSelector } from "react-redux";
+
 
 
 const Servers = ({ sessionUser }) => {
     const dispatch = useDispatch();
     const servers = Object.values(useSelector((state) => state.servers));
+    const messages = Object.values(useSelector(state => state.messages));
     const [isLoaded, setIsLoaded] = useState(false);
     const [channelsLoaded, setChannelsLoaded] = useState(servers?.[0]?.Channels);
     const [messagesLoaded, setMessagesLoaded] = useState([]);
@@ -47,13 +49,7 @@ const Servers = ({ sessionUser }) => {
                     </button>
                 )
             })}
-            {messagesLoaded?.length > 0 && messagesLoaded.map(message => {
-                return (
-                    <div key={message.id}>
-                        {message.message}
-                    </div>
-                )
-            })}
+            {messages.length > 0 && <Messages messages={messages} />}
         </div>
     )
 }
