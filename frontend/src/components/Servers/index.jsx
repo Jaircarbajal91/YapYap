@@ -11,7 +11,7 @@ const Servers = ({ sessionUser }) => {
     const servers = Object.values(useSelector((state) => state.servers));
     const messages = Object.values(useSelector(state => state.messages));
     const [isLoaded, setIsLoaded] = useState(false);
-    const [channelsLoaded, setChannelsLoaded] = useState(servers?.[0]?.Channels);
+    const [channels, setChannels] = useState(servers?.[0]?.Channels);
     const [messagesLoaded, setMessagesLoaded] = useState([]);
 
 
@@ -23,7 +23,7 @@ const Servers = ({ sessionUser }) => {
         e.preventDefault();
         // display the channels of the server that was clicked
         const targetServer = servers.find(server => server.id === parseInt(e.target.id))
-        setChannelsLoaded(targetServer.Channels)
+        setChannels(targetServer.Channels)
     }
 
     const selectChannel = async e => {
@@ -42,13 +42,12 @@ const Servers = ({ sessionUser }) => {
                     {server.server_name}
                 </button>
             )})}
-            {channelsLoaded && channelsLoaded.map(channel => {
+            {channels && channels.map(channel => {
                 return (
-                    <button onClick={selectChannel} key={channel.id} id={channel.id} className="text-lg">
-                        {channel.channel_name}
-                    </button>
-                )
-            })}
+                <button key={channel.id} id={channel.id} className="text-lg" onClick={selectChannel}>
+                    {channel.channel_name}
+                </button>
+            )})}
             {messages.length > 0 && <Messages messages={messages} />}
         </div>
     )
