@@ -8,6 +8,7 @@ import Splash from './components/splash';
 import Servers from './components/Servers';
 import { getServers } from './store/servers';
 import ProtectedRoute from './components/ProtectedRoute';
+import SignupForm from './auth/SignupForm';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
@@ -22,6 +23,9 @@ function App() {
         <Switch>
           <Route path='/login' exact={true}>
             <LoginForm sessionUser={sessionUser} />
+          </Route>
+          <Route path='/register' exact={true}>
+            <SignupForm sessionUser={sessionUser} />
           </Route>
           <ProtectedRoute path="/app">
             <Servers sessionUser={sessionUser} />
