@@ -16,13 +16,13 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      channel_id: {
+      channelId: {
         type: Sequelize.INTEGER,
       },
-      image_id: {
+      imageId: {
         type: Sequelize.INTEGER,
       },
-      dm_id: {
+      dmId: {
         type: Sequelize.INTEGER,
       },
       createdAt: {

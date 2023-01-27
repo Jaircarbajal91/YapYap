@@ -8,11 +8,11 @@ const checkAuth = (req, res, next) =>
 		: next();
 
 // Get all messages for a channel with user info attached
-router.get("/:channel_id", async (req, res) => {
-	const { channel_id } = req.params;
+router.get("/:channelId", async (req, res) => {
+	const { channelId } = req.params;
 	const messages = await Message.findAll({
 		include: [{ model: User }],
-		where: { channel_id },
+		where: { channelId },
 	});
 	return res.json(messages);
 });
@@ -25,9 +25,9 @@ router.post("/create", checkAuth, async (req, res) => {
 });
 
 // Delete a channel
-router.delete("/delete/:channel_id", checkAuth, async (req, res) => {
-	const { channel_id } = req.params;
-	const channel = await Channel.findByPk(channel_id);
+router.delete("/delete/:channelId", checkAuth, async (req, res) => {
+	const { channelId } = req.params;
+	const channel = await Channel.findByPk(channelId);
 	await channel.destroy();
 	return res.json({
 		message: `successfully deleted ${channel.dataValues.channel_name}`,
@@ -35,10 +35,10 @@ router.delete("/delete/:channel_id", checkAuth, async (req, res) => {
 });
 
 // Update a channel
-router.put("/update/:channel_id", checkAuth, async (req, res) => {
-	const { channel_id } = req.params;
+router.put("/update/:channelId", checkAuth, async (req, res) => {
+	const { channelId } = req.params;
 	const { channel_name } = req.body;
-	const channel = await Channel.findByPk(channel_id);
+	const channel = await Channel.findByPk(channelId);
 	try {
 		channel_name && (channel.channel_name = channel_name);
 		await channel.save();
