@@ -30,6 +30,7 @@ export const addSingleImage = (image) => async dispatch => {
     body: formData,
 	});
 	const data = await response.json();
+  console.log(data)
 	if (response.ok) {
     dispatch(addImage(data.image));
   }
