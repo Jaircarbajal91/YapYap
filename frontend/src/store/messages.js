@@ -29,14 +29,14 @@ export const getMessages = channelId => async dispatch => {
 };
 
 export const sendMessage =
-	(message, senderId, { channel_id, dm_id, image_id }) =>
+	(message, senderId, { channelId, dm_id, image_id }) =>
 	async dispatch => {
 		const response = await csrfFetch(`/api/messages`, {
 			method: "POST",
 			body: JSON.stringify({
 				message,
 				senderId,
-				channel_id,
+				channelId,
 				dm_id,
 				image_id,
 			}),
