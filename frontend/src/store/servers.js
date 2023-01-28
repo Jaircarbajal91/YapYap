@@ -43,12 +43,12 @@ export const getServers = () => async dispatch => {
 };
 
 export const createServer = server => async dispatch => {
-	const { server_name, image_id } = server;
+	const { server_name, imageId } = server;
 	const response = await csrfFetch("/api/servers/create", {
 		method: "POST",
 		body: JSON.stringify({
 			server_name,
-			image_id,
+			imageId,
 		}),
 	});
 	if (response.ok) {
@@ -69,12 +69,12 @@ export const deleteServer = serverId => async dispatch => {
 };
 
 export const editServer = server => async dispatch => {
-	const { server_name, image_id, server_id } = server;
+	const { server_name, imageId, server_id } = server;
 	const response = await csrfFetch(`/api/servers/edit/${server_id}`, {
 		method: "PUT",
 		body: JSON.stringify({
 			server_name,
-			image_id,
+			imageId,
 		}),
 	});
 	if (response.ok) {
