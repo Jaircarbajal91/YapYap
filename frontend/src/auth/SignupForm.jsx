@@ -30,9 +30,8 @@ const SignupForm = () => {
   const history = useHistory();
   const handleSignUp = async (e) => {
     e.preventDefault();
-    console.log(image)
-    const newImage = await dispatch(addSingleImage(image));
-    console.log(newImage)
+    const newImage = await dispatch(addSingleImage({image, type: 'user'}));
+
   }
 
   const updateFile = (e) => {

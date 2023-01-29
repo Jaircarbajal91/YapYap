@@ -9,12 +9,11 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			Message.belongsTo(models.User, { foreignKey: "sender_id" });
-			Message.belongsTo(models.DirectMessage, { foreignKey: "dm_id" });
-			Message.belongsTo(models.Channel, { foreignKey: "channelId" });
+			Message.hasOne(models.User, { foreignKey: "sender_id" });
+			Message.hasOne(models.Channel, { foreignKey: "channelId" });
 			Message.hasMany(models.Image, {
 				foreignKey: "id",
-				sourceKey: "image_id",
+				sourceKey: "imageId",
 				onDelete: "CASCADE",
 			});
 		}
@@ -37,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
 			imageId: {
 				type: DataTypes.INTEGER,
 			},
-			dm_id: {
+			dmId: {
 				type: DataTypes.INTEGER,
 			},
 		},

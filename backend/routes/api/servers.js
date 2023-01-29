@@ -26,8 +26,8 @@ router.get("/", checkAuth, async (req, res) => {
 // Create a server
 router.post("/create", checkAuth, async (req, res) => {
 	const owner_id = req.user.id;
-	const { server_name, image_id } = req.body;
-	const server = await Server.create({ server_name, image_id, owner_id });
+	const { server_name, imageId } = req.body;
+	const server = await Server.create({ server_name, imageId, owner_id });
 	await ChatMember.create({ user_id: owner_id, server_id: server.id });
 	return res.json(server);
 });
@@ -45,7 +45,7 @@ router.delete("/delete/:server_id", checkAuth, async (req, res) => {
 // Update a server
 router.put("/update/:server_id", checkAuth, async (req, res) => {
 	const { server_id } = req.params;
-	const { server_name, image_id } = req.body;
+	const { server_name, imageId } = req.body;
 	const server = await Server.findByPk(server_id);
 	try {
 		server_name && (server.server_name = server_name);
@@ -54,7 +54,7 @@ router.put("/update/:server_id", checkAuth, async (req, res) => {
 		return res.status(400).json({ message: "Invalid server name" });
 	}
 	try {
-		image_id && (server.image_id = image_id);
+		imageId && (server.imageId = imageId);
 		await server.save();
 	} catch (e) {
 		return res.status(400).json({ message: "Invalid image id" });

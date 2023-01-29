@@ -29,7 +29,11 @@ export const getMessages = channelId => async dispatch => {
 };
 
 export const sendMessage =
+<<<<<<< HEAD
 	(message, senderId, { channelId, dm_id, image_id }) =>
+=======
+	(message, senderId, { channelId, dmId, imageId }) =>
+>>>>>>> d4ca0e5f9dc5ef0b8435b229b32503a67c0f1832
 	async dispatch => {
 		const response = await csrfFetch(`/api/messages`, {
 			method: "POST",
@@ -37,8 +41,13 @@ export const sendMessage =
 				message,
 				senderId,
 				channelId,
+<<<<<<< HEAD
 				dm_id,
 				image_id,
+=======
+				dmId,
+				imageId,
+>>>>>>> d4ca0e5f9dc5ef0b8435b229b32503a67c0f1832
 			}),
 		});
 		const data = await response.json();
