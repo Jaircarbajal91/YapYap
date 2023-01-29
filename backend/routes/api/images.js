@@ -1,6 +1,9 @@
 const express = require("express");
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' })
 const { Image } = require("../../db/models");
-const { singlePublicFileUpload, singleMulterUpload } = require("../../awsS3")
+// const { singlePublicFileUpload, singleMulterUpload } = require("../../awsS3")
+const { uploadFile } = require("../../awsS3")
 const { requireAuth } = require("../../utils/auth");
 
 const router = express.Router();
@@ -12,11 +15,17 @@ router.get("/", async (req, res) => {
 })
 
 // Create an image
-router.post("/", singleMulterUpload, requireAuth, async (req, res) => {
-  console.log('hellloooooooooo')
-  const profileImageUrl = await singlePublicFileUpload(req.file);
-  const image = await Image.create({ url: profileImageUrl });
-  return res.json(image);
+router.post("/", upload.single('image'), async (req, res) => {
+  const { file } = req
+  const { type } = req.body
+  const result = await uploadFile(file)
+  const url = result.Location
+  const image = await Image.create({ url, type });
+  return res.json(image)
+  // res.send(file)
+  // const profileImageUrl = await singlePublicFileUpload(req.file);
+  // const image = await Image.create({ url: profileImageUrl });
+  // return res.json(image);
 })
 
 // // Delete an image
