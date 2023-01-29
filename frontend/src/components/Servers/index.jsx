@@ -12,6 +12,7 @@ const Servers = ({ sessionUser }) => {
     const messages = Object.values(useSelector(state => state.messages));
     const [isLoaded, setIsLoaded] = useState(false);
     const [channels, setChannels] = useState(servers?.[0]?.Channels);
+    const [channelId, setChannelId] = useState(channels?.[0]?.id);
     const [messagesLoaded, setMessagesLoaded] = useState([]);
 
 
@@ -29,6 +30,7 @@ const Servers = ({ sessionUser }) => {
     const selectChannel = async e => {
         e.preventDefault();
         // display the messages of the channel that was clicked
+        setChannelId(e.target.id);
         const messages = await dispatch(getMessages(e.target.id));
         setMessagesLoaded(messages);
     }
@@ -48,7 +50,7 @@ const Servers = ({ sessionUser }) => {
                     {channel.channel_name}
                 </button>
             )})}
-            {messages.length > 0 && <Messages messages={messages} />}
+            {messages.length > 0 && <Messages messages={messages} channelId={channelId}/>}
         </div>
     )
 }

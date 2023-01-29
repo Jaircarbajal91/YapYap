@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { sendMessage } from '../../store/messages';
 
-export default function Messages({ messages }) {
+export default function Messages({ messages, channelId }) {
+    const sessionUser = useSelector(state => state.session.user);
     const dispatch = useDispatch();
     const [message, setMessage] = useState('');
 
     const send = e => {
         e.preventDefault();
-        dispatch(sendMessage(message));
+        dispatch(sendMessage(message, sessionUser.id, { channelId }));
     };
 
     return (

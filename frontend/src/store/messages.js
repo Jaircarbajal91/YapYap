@@ -31,6 +31,7 @@ export const getMessages = channelId => async dispatch => {
 export const sendMessage =
 	(message, senderId, { channelId, dmId, imageId }) =>
 	async dispatch => {
+		console.log(channelId)
 		const response = await csrfFetch(`/api/messages`, {
 			method: "POST",
 			body: JSON.stringify({
