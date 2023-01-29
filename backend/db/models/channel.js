@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: "channelId",
 				onDelete: "CASCADE",
 			});
-			Channel.belongsTo(models.Server, { foreignKey: "server_id" });
+			Channel.belongsTo(models.Server, { foreignKey: "serverId" });
 		}
 	}
 	Channel.init(
@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
 					len: [3, 20],
 				},
 			},
-			server_id: {
+			serverId: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},

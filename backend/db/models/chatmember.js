@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			// define association here
 			ChatMember.belongsTo(models.User, {
-				foreignKey: "user_id",
+				foreignKey: "userId",
 				onDelete: "CASCADE",
 			});
 			ChatMember.belongsTo(models.Server, {
-				foreignKey: "server_id",
+				foreignKey: "serverId",
 				onDelete: "CASCADE",
 			});
 			ChatMember.belongsTo(models.DirectMessage, {
@@ -25,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
 	}
 	ChatMember.init(
 		{
-			user_id: {
+			userId: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
-			server_id: DataTypes.INTEGER,
+			serverId: DataTypes.INTEGER,
 			dmId: DataTypes.INTEGER,
 		},
 		{

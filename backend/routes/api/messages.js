@@ -11,12 +11,12 @@ const io = require("socket.io")(8001, {
 
 io.on("connection", socket => {
 	console.log("connected");
-	socket.on("send-message", (message, senderId, channel_id) => {
+	socket.on("send-message", (message, senderId, channelId) => {
 		console.log("message sent");
 		console.log(message);
 		console.log(senderId);
-		console.log(channel_id);
-		io.emit("messageReceived", message, senderId, channel_id);
+		console.log(channelId);
+		io.emit("messageReceived", message, senderId, channelId);
 	});
 });
 

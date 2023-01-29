@@ -18,12 +18,12 @@ const removeChannel = channelId => {
 	};
 };
 
-export const createChannel = (channel_name, server_id) => async dispatch => {
+export const createChannel = (channel_name, serverId) => async dispatch => {
 	const response = await csrfFetch("/api/channels", {
 		method: "POST",
 		body: JSON.stringify({
 			channel_name,
-			server_id,
+			serverId,
 		}),
 	});
 	const data = await response.json();

@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			// define association here
 			Server.hasMany(models.ChatMember, {
-				foreignKey: "server_id",
+				foreignKey: "serverId",
 				onDelete: "CASCADE",
 			});
 			Server.hasMany(models.Channel, {
-				foreignKey: "server_id",
+				foreignKey: "serverId",
 				onDelete: "CASCADE",
 			});
 			Server.hasOne(models.Image, {
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
 				},
 			},
 			imageId: DataTypes.INTEGER,
-			owner_id: {
+			ownerId: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},

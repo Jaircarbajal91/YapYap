@@ -19,12 +19,12 @@ router.get("/:dmId", async (req, res) => {
 
 // Create a DM
 router.post("/create", checkAuth, async (req, res) => {
-	const user_id = req.user.id;
-	const { recipient_ids } = req.body;
+	const userId = req.user.id;
+	const { recipientIds } = req.body;
 	const dm = await DirectMessage.create();
-	await ChatMember.create({ user_id, dmId: dm.id });
-	recipient_ids.forEach(async recipient_id => {
-		await ChatMember.create({ user_id: recipient_id, dmId: dm.id });
+	await ChatMember.create({ userId, dmId: dm.id });
+	recipientIds.forEach(async recipientId => {
+		await ChatMember.create({ userId: recipientId, dmId: dm.id });
 	});
 	return res.json(dm);
 });

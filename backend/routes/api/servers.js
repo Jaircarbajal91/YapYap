@@ -10,10 +10,10 @@ const checkAuth = (req, res, next) =>
 
 // Get all servers for current user with channels attached
 router.get("/", checkAuth, async (req, res) => {
-	const user_id = req.user.id;
+	const userId = req.user.id;
 	const chatMembers = await ChatMember.findAll({
 		include: [{ model: Server, include: [{ model: Channel }] }],
-		where: { user_id },
+		where: { userId },
 	});
 	const result = [];
 	chatMembers.forEach(chatMember => {
@@ -25,17 +25,17 @@ router.get("/", checkAuth, async (req, res) => {
 
 // Create a server
 router.post("/create", checkAuth, async (req, res) => {
-	const owner_id = req.user.id;
+	const ownerId = req.user.id;
 	const { server_name, imageId } = req.body;
-	const server = await Server.create({ server_name, imageId, owner_id });
-	await ChatMember.create({ user_id: owner_id, server_id: server.id });
+	const server = await Server.create({ server_name, imageId, ownerId });
+	await ChatMember.create({ userId: ownerId, serverId: server.id });
 	return res.json(server);
 });
 
 // Delete a server
-router.delete("/delete/:server_id", checkAuth, async (req, res) => {
-	const { server_id } = req.params;
-	const server = await Server.findByPk(server_id);
+router.delete("/delete/:serverId", checkAuth, async (req, res) => {
+	const { serverId } = req.params;
+	const server = await Server.findByPk(serverId);
 	await server.destroy();
 	return res.json({
 		message: `successfully deleted ${server.dataValues.server_name}`,
@@ -43,10 +43,10 @@ router.delete("/delete/:server_id", checkAuth, async (req, res) => {
 });
 
 // Update a server
-router.put("/update/:server_id", checkAuth, async (req, res) => {
-	const { server_id } = req.params;
+router.put("/update/:serverId", checkAuth, async (req, res) => {
+	const { serverId } = req.params;
 	const { server_name, imageId } = req.body;
-	const server = await Server.findByPk(server_id);
+	const server = await Server.findByPk(serverId);
 	try {
 		server_name && (server.server_name = server_name);
 		await server.save();

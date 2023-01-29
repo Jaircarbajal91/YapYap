@@ -50,16 +50,11 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			User.hasMany(models.ChatMember, {
-				foreignKey: "user_id",
-				onDelete: "CASCADE",
-			});
+			// User.hasMany(models.Message, { onDelete: "CASCADE" });
+			// User.hasOne(models.Image, {
+			// 	onDelete: "CASCADE",
+			// });
 			User.hasMany(models.Message, { foreignKey: "senderId" });
-			User.hasOne(models.Image, {
-				foreignKey: "id",
-				sourceKey: "imageId",
-				onDelete: "CASCADE",
-			});
 		}
 	}
 	User.init(

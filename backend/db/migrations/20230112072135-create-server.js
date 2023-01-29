@@ -16,7 +16,7 @@ module.exports = {
 			imageId: {
 				type: Sequelize.INTEGER,
 			},
-			owner_id: {
+			ownerId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
 			},

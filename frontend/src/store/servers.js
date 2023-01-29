@@ -69,8 +69,8 @@ export const deleteServer = serverId => async dispatch => {
 };
 
 export const editServer = server => async dispatch => {
-	const { server_name, imageId, server_id } = server;
-	const response = await csrfFetch(`/api/servers/edit/${server_id}`, {
+	const { server_name, imageId, serverId } = server;
+	const response = await csrfFetch(`/api/servers/edit/${serverId}`, {
 		method: "PUT",
 		body: JSON.stringify({
 			server_name,

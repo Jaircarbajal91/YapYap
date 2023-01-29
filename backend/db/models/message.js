@@ -9,13 +9,9 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			Message.hasOne(models.User, { foreignKey: "senderId" });
-			Message.hasOne(models.Channel, { foreignKey: "channelId" });
-			Message.hasMany(models.Image, {
-				foreignKey: "id",
-				sourceKey: "imageId",
-				onDelete: "CASCADE",
-			});
+			Message.belongsTo(models.User, { foreignKey: "senderId" });
+			Message.belongsTo(models.Channel);
+			Message.hasOne(models.Image);
 		}
 	}
 	Message.init(
