@@ -29,7 +29,16 @@ const checkAuth = (req, res, next) =>
 router.post("/", checkAuth, async (req, res) => {
 	console.log(req.body);
 	const { message, senderId, channelId, dmId, imageId } = req.body;
-	return res.json({ message, senderId, channelId, dmId, imageId });
+	// commit this message to the database
+	const newMessage = await Message.create({
+		message,
+		senderId,
+		channelId,
+		dmId,
+		imageId,
+	});
+	console.log(newMessage)
+	return res.json(newMessage);
 });
 
 module.exports = router;

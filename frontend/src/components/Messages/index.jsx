@@ -7,6 +7,8 @@ export default function Messages({ messages, channelId }) {
     const dispatch = useDispatch();
     const [message, setMessage] = useState('');
 
+    const isDisabled = message.length === 0;
+
     const send = e => {
         e.preventDefault();
         dispatch(sendMessage(message, sessionUser.id, { channelId }));
@@ -28,7 +30,7 @@ export default function Messages({ messages, channelId }) {
                     value={message}
                     onChange={e => setMessage(e.target.value)}
                 />
-                <button type="submit">Send</button>
+                <button disabled={isDisabled} type="submit">Send</button>
             </form>
         </div>
     )
