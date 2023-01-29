@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			Message.hasOne(models.User, { foreignKey: "sender_id" });
+			Message.hasOne(models.User, { foreignKey: "senderId" });
 			Message.hasOne(models.Channel, { foreignKey: "channelId" });
 			Message.hasMany(models.Image, {
 				foreignKey: "id",
@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
 					len: [0, 256],
 				},
 			},
-			sender_id: {
+			senderId: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},

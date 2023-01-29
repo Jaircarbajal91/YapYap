@@ -21,7 +21,6 @@ const Splash = ({ sessionUser }) => {
                 <img className="absolute max-w-2xl -right-8 z-10 w-2/5" src="../../assets/svg/splash3.svg" alt="" />
             </div>
             <div className="top_links">
-
             </div>
         </div>
     )

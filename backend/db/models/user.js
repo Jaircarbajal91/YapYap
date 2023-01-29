@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
 				foreignKey: "user_id",
 				onDelete: "CASCADE",
 			});
-			User.hasMany(models.Message, { foreignKey: "sender_id" });
+			User.hasMany(models.Message, { foreignKey: "senderId" });
 			User.hasOne(models.Image, {
 				foreignKey: "id",
 				sourceKey: "imageId",
