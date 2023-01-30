@@ -55,6 +55,7 @@ module.exports = (sequelize, DataTypes) => {
 			// 	onDelete: "CASCADE",
 			// });
 			User.hasMany(models.Message, { foreignKey: "senderId" });
+			User.hasOne(models.Image, { foreignKey: "id" });
 		}
 	}
 	User.init(

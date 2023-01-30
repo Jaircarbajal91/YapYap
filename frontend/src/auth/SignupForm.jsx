@@ -31,7 +31,6 @@ const SignupForm = () => {
   const handleSignUp = async (e) => {
     e.preventDefault();
     const newImage = await dispatch(addSingleImage({image, type: 'user'}));
-
   }
 
   const updateFile = (e) => {

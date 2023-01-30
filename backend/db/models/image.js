@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			Image.hasOne(models.User, { foreignKey: "imageId" });
-			Image.hasOne(models.Message, { foreignKey: "imageId" });
-			Image.hasOne(models.Server, { foreignKey: "imageId" });
+			Image.hasOne(models.User);
+			Image.hasOne(models.Message);
+			Image.hasOne(models.Server);
 		}
 	}
 	Image.init(

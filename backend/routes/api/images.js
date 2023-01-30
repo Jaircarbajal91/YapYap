@@ -2,7 +2,7 @@ const express = require("express");
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' })
 const { Image } = require("../../db/models");
-const { uploadFile } = require("../../awsS3")
+const { uploadFile, deleteFile } = require("../../awsS3")
 const { requireAuth } = require("../../utils/auth");
 
 const router = express.Router();
