@@ -2,7 +2,6 @@ const express = require("express");
 const multer = require('multer');
 const upload = multer({ dest: 'uploads/' })
 const { Image } = require("../../db/models");
-// const { singlePublicFileUpload, singleMulterUpload } = require("../../awsS3")
 const { uploadFile } = require("../../awsS3")
 const { requireAuth } = require("../../utils/auth");
 
@@ -16,26 +15,27 @@ router.get("/", async (req, res) => {
 
 // Create an image
 router.post("/", upload.single('image'), async (req, res) => {
+  // write some safety checks here
   const { file } = req
   const { type } = req.body
   const result = await uploadFile(file)
   const url = result.Location
   const image = await Image.create({ url, type });
   return res.json(image)
-  // res.send(file)
-  // const profileImageUrl = await singlePublicFileUpload(req.file);
-  // const image = await Image.create({ url: profileImageUrl });
-  // return res.json(image);
 })
 
-// // Delete an image
-// router.delete("/:imageId", requireAuth, async (req, res) => {
-//   const { imageId } = req.params;
-//   const image = await Image.findByPk(imageId);
-//   await image.destroy();
-//   return res.json({
-//     message: `successfully deleted ${image.dataValues.image_url}`,
-//   });
-// })
+// Delete an image
+router.delete("/:id", requireAuth, async (req, res) => {
+  const image = await Image.findByPk(req.params.id);
+  if (image) {
+    // Delete image from AWS S3
+    await deleteFile(image.url);
+    await image.destroy();
+    return res.json({ message: "Image deleted" });
+  } else {
+    return res.json({ message: "Image not found" });
+  }
+});
+
 
 module.exports = router;
