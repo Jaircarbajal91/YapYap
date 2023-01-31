@@ -1,18 +1,14 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-    return queryInterface.bulkInsert("Images", [
+    options.tableName = "Images";
+    return queryInterface.bulkInsert(options, [
       { type: "message", url: "https://sampleURL.com/image1.jpg" },
       { type: "user", url: "https://sampleURL.com/image2.jpg" },
       { type: "server", url: "https://sampleURL.com/image3.jpg" },
@@ -23,12 +19,7 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    return queryInterface.bulkDelete("Images", null, {});
+    options.tableName = "Images";
+    return queryInterface.bulkDelete(options, null, {});
   }
 };

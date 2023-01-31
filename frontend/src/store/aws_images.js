@@ -24,7 +24,6 @@ export const addSingleImage = (user) => async dispatch => {
   const formData = new FormData();
   formData.append("type", type);
   if (image) formData.append("image", image);
-  console.log(formData)
 	const response = await csrfFetch("/api/images", {
 		method: "POST",
     headers: {
