@@ -1,5 +1,4 @@
 import { csrfFetch } from "./csrf";
-// const Heap = require("mnemonist/heap")
 
 const SET_MESSAGES = "messages/setMessages";
 const ADD_MESSAGE = "messages/addMessage";

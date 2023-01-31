@@ -7,19 +7,32 @@ export default function Messages({ messages, channelId, dmId, imageId }) {
     const sessionUser = useSelector(state => state.session.user);
     const dispatch = useDispatch();
     const [message, setMessage] = useState('');
-
+    const [socket, setSocket] = useState(null);
+    const [socketConnected, setSocketConnected] = useState(false);
     const isDisabled = message.length === 0;
 
-    const socket = io("http://localhost:8000");
+    useEffect(() => {
+        setSocket(io("http://localhost:8000"));
+    }, []);
 
-    socket.on("connection", () => {
-        console.log("Connected to server");
+    useEffect(() => {
+        if (!socket) return;
+        socket.on("connect", () => {
+            setSocketConnected(socket.connected);
+            console.log("connected")
+        });
+
+    }, [socket, socketConnected]);
+
+    socket?.once("newMessage", message => {
+        console.log(message);
+        document.querySelector("ul").innerHTML += `<li>${message}</li>`;
     });
 
     const send = e => {
         e.preventDefault();
+        socket.emit("chatMessage", message)
         dispatch(sendMessage(message, sessionUser.id, { channelId, dmId, imageId }));
-        socket.emit('newMessage', message);
     };
 
 

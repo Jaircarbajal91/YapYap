@@ -37,7 +37,7 @@ const Servers = ({ sessionUser }) => {
 
 
     return isLoaded && (
-        <div className="flex">
+        <div className="flex bg-black text-gray">
             {servers.map(server => {
                 return (
                 <button key={server.id} id={server.id} className="text-lg" onClick={selectServer}>

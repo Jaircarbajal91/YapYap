@@ -4,27 +4,32 @@
 // Import environment variables
 require("dotenv").config();
 const { createServer } = require("http");
-const { Server } = require("socket.io");
+const socketio = require("socket.io");
 const { port } = require("../config");
 
 const app = require("../app");
 
 const server = createServer(app);
-const io = new Server(server, {
+const io = socketio(server, {
 	cors: {
 		origin: "http://localhost:3000",
 	},
 });
-
 // run this when a client connects
-io.on("connection", socket => {
+io.on("connect", socket => {
+	console.log("New client connected");
+	socket.emit("message", "Welcome to the channel!");
+	socket.broadcast.emit("message", "A new user has joined the channel!");
+	socket.on("disconnect", () => {
+		console.log("Client disconnected");
+		io.emit("message", "A user has left the channel!");
+	});
   // Listen for a new message
-  socket.on("newMessage", message => {
-    // Send the new message to all connected clients
-    io.emit("message", message);
-    console.log(message)
-  });
-
+	socket.on("chatMessage", message => {
+		// Send the new message to all connected clients
+		console.log(message, "message from client");
+		io.emit("newMessage", message);
+	});
 });
 
 const db = require("../db/models");
