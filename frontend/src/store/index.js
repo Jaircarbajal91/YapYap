@@ -2,11 +2,18 @@ import { legacy_createStore as createStore, combineReducers, applyMiddleware, co
 import thunk from "redux-thunk";
 import logger from "redux-logger";
 import sessionReducer from "./session";
+import messagesReducer from "./messages";
 import serversReducer from "./servers";
+import channelsReducer from "./channels";
+import imagesReducer from "./aws_images";
+
 
 const rootReducer = combineReducers({
     session: sessionReducer,
     servers: serversReducer,
+    messages: messagesReducer,
+    channels: channelsReducer,
+    images: imagesReducer,
 });
 
 let enhancer;

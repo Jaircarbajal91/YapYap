@@ -1,6 +1,10 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
+let options = {tableName: "DirectMessages"};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 module.exports = {
   async up (queryInterface, Sequelize) {
     /**
@@ -12,7 +16,7 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    return queryInterface.bulkInsert("DirectMessages", [
+    return queryInterface.bulkInsert(options, [
       { serial_number: 1 },
       { serial_number: 2 },
       { serial_number: 3 },
@@ -33,6 +37,6 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete("DirectMessages", null, {});
+    return queryInterface.bulkDelete(options, null, {});
   }
 };

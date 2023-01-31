@@ -8,12 +8,14 @@
     "sequelize-cli": "sequelize-cli",
     "start": "per-env",
     "start:development": "nodemon ./bin/www",
-    "start:production": "node ./bin/www"
+    "start:production": "node ./bin/www",
+    "build": "node psql-setup-script.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.1303.0",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
@@ -25,6 +27,7 @@
     "helmet": "^6.0.1",
     "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "per-env": "^1.0.2",
     "sequelize": "^6.28.0",
     "sequelize-cli": "^6.5.2",

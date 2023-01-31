@@ -2,23 +2,54 @@
 // backend/bin/www
 
 // Import environment variables
-require('dotenv').config();
+require("dotenv").config();
+const { createServer } = require("http");
+const socketio = require("socket.io");
+const { port } = require("../config");
 
-const { port } = require('../config');
+const app = require("../app");
 
-const app = require('../app');
-const db = require('../db/models');
+const server = createServer(app);
+const io = socketio(server, {
+	cors: {
+		origin: "http://localhost:3000",
+	},
+});
+// run this when a client connects
+io.on("connect", socket => {
+  socket.on("join", room => {
+    socket.emit("message", `You have joined room ${room}`)
+  })
+	console.log("New client connected");
+	socket.emit("message", "Welcome to the channel!");
+	socket.broadcast.emit("message", "A new user has joined the channel!");
+	socket.on("disconnect", () => {
+		console.log("Client disconnected");
+		io.emit("message", "A user has left the channel!");
+	});
+  // Listen for a new message
+	socket.on("chatMessage", message => {
+		// Send the new message to all connected clients
+		console.log(message, "message from client");
+		io.emit("newMessage", message);
+	});
+});
+
+const db = require("../db/models");
 
 // Check the database connection before starting the app
 db.sequelize
-  .authenticate()
-  .then(() => {
-    console.log('Database connection success! Sequelize is ready to use...');
+	.authenticate()
+	.then(() => {
+		console.log("Database connection success! Sequelize is ready to use...");
 
-    // Start listening for connections
-    app.listen(port, () => console.log(`Listening on port ${port}...`));
-  })
-  .catch((err) => {
-    console.log('Database connection failure.');
-    console.error(err);
-  });
+		// Start listening for connections
+		server.listen(port, () =>
+			console.log(`Server listening on port ${port}...`)
+		);
+		// app.listen(port, () => console.log(`Listening on port ${port}...`));
+	})
+	.catch(err => {
+		console.log("Database connection failure.");
+		console.error(err);
+	});

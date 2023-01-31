@@ -1,19 +1,15 @@
 'use strict';
 const bcrypt = require("bcryptjs");
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-    return queryInterface.bulkInsert("Users", [
+    options.tableNmae = "Users";
+    return queryInterface.bulkInsert(options, [
       {
         username: "Demo_User",
         email: "demo@yapyap.io",
@@ -133,14 +129,9 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete("Users", {
+    options.tableName = "Users";
+    return queryInterface.bulkDelete(options, {
       username: { [Op.in]: ["Demo_User", "kevbot", "jairbot", "JohnSmith", "EmilyBrown", "MichaelJohnson", "JessicaWilliams", "MatthewJones", "AshleySmith", "DavidJohnson", "EmilyJones", "JacobSmith", "NicholasWilliams", "JoshuaBrown", "MadisonJohnson", "AlyssaJones", "MatthewSmith", "RachelWilliams"] }
   }, {});
   }

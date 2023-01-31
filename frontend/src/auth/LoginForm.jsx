@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { csrfFetch } from '../store/csrf';
 import { useHistory, Redirect } from 'react-router-dom';
 import { login } from '../store/session';
+import SignupForm from './SignupForm';
 
 
-const LoginForm = ({sessionUser}) => {
+const LoginForm = ({ sessionUser }) => {
   const history = useHistory();
   const dispatch = useDispatch();
   // const sessionUser = useSelector(state => state.session.user);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
+  const [showSignupForm, setShowSignupForm] = useState(false);
   const [errors, setErrors] = useState([]);
 
   const onLogin = async (e) => {
     e.preventDefault();
-    const data = await dispatch(login({credential, password}));
+    const data = await dispatch(login({ credential, password }));
     if (data) {
       setErrors(data);
     } else {
@@ -27,7 +28,7 @@ const LoginForm = ({sessionUser}) => {
 
   const demoLogin = async e => {
     e.preventDefault();
-    dispatch(login({credential: 'Demo_User', password: 'password'}));
+    dispatch(login({ credential: 'Demo_User', password: 'password' }));
     return <Redirect to="/app" />
   };
 
@@ -43,41 +44,47 @@ const LoginForm = ({sessionUser}) => {
     return <Redirect to="/app" />
   }
 
+  const triggerAnimation = () => {
+
+  }
+
   return !sessionUser && (
-    <div className="w-screen h-screen bg-[url('../../assets/svg/login.svg')] bg-center bg-no-repeat bg-cover">
-      <form  onSubmit={onLogin}>
-        <div >
-          <h1 >Log In</h1>
+    <div className="flex justify-center items-center w-screen h-screen bg-[url('../../assets/svg/login.svg')] bg-center bg-no-repeat bg-cover">
+      <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-gray md:h-2/5 rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:max-h-[40em] md:transition duration-150 ease-out' onSubmit={onLogin}>
+        <div className='flex flex-col text-white w-full items-center mb-4'>
+          <h1 className='text-2xl tracking-wide mb-2'>Welcome back!</h1>
+          <p className='text-lightGray tracking-wide text-sm'>We're so excited to see you again!</p>
         </div>
-        <div >
-          <div >
-            <label >Email/Username: </label>
-            <input
-              type="text"
-              name="email"
-              placeholder="Email/Username"
-              value={credential}
-              onChange={updateCredential}
-            />
-          </div>
-          <div >
-            <label >Password: </label>
-            <input
-              type="password"
-              name="password"
-              placeholder="Password"
-              value={password}
-              onChange={updatePassword}
-            />
-          </div>
+        <div className='text-lightGray mb-3'>
+          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="login-email">Email or username <span className='text-lightRed'>*</span></label>
+          <input
+            className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
+            type="text"
+            name="email"
+            id="login-email"
+            value={credential}
+            onChange={updateCredential}
+          />
+          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="login-password">Password <span className='text-lightRed'>*</span></label>
+          <input
+            className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none'
+            type="password"
+            name="password"
+            id="login-password"
+            value={password}
+            onChange={updatePassword}
+          />
         </div>
-        <div >
-          <button type="submit">Log In</button>
-          <button onClick={demoLogin}>Demo</button>
+        <div className='flex justify-between w-full gap-3'>
+          <button className='bg-navy text-white rounded-md p-2 w-1/2' type="submit">Log In</button>
+          <button className='bg-yellow text-black rounded-md p-2 w-1/2' onClick={demoLogin}>Demo</button>
         </div>
+        <p className='text-lightGray tracking-wide text-sm'>Need an account? <span onClick={() => {
+          history.push('/register')
+          }} className='text-torqoise cursor-pointer hover:underline'>Register</span></p>
       </form>
     </div>
-  )
+  );
 }
 
 export default LoginForm;

@@ -1,39 +1,30 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-   return queryInterface.bulkInsert("Servers", [
-      {server_name: "Gardening", owner_id: 1},
-      {server_name: "Fishing", owner_id: 2},
-      {server_name: "Cooking", owner_id: 3},
-      {server_name: "Soccer", owner_id: 4},
-      {server_name: "Basketball", owner_id: 5},
-      {server_name: "Hiking", owner_id: 6},
-      {server_name: "Gaming", owner_id: 7},
-      {server_name: "Puzzle", owner_id: 8},
-      {server_name: "Tennis", owner_id: 9},
-      {server_name: "Swimming", owner_id: 10},
-      {server_name: "Golf", owner_id: 11}
-    ]);
-  },
+	async up(queryInterface, Sequelize) {
+		options.tableName = "Servers";
+		return queryInterface.bulkInsert(options, [
+			{ server_name: "Gardening", ownerId: 1 },
+			{ server_name: "Fishing", ownerId: 2 },
+			{ server_name: "Cooking", ownerId: 3 },
+			{ server_name: "Soccer", ownerId: 4 },
+			{ server_name: "Basketball", ownerId: 5 },
+			{ server_name: "Hiking", ownerId: 6 },
+			{ server_name: "Gaming", ownerId: 7 },
+			{ server_name: "Puzzle", ownerId: 8 },
+			{ server_name: "Tennis", ownerId: 9 },
+			{ server_name: "Swimming", ownerId: 10 },
+			{ server_name: "Golf", ownerId: 11 },
+		]);
+	},
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    return queryInterface.bulkDelete("Servers", null, {});
-  }
+	async down(queryInterface, Sequelize) {
+		options.tableName = "Servers";
+		return queryInterface.bulkDelete(options, null, {});
+	},
 };

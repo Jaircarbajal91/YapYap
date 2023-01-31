@@ -1,45 +1,36 @@
-'use strict';
+"use strict";
 
 /** @type {import('sequelize-cli').Migration} */
+let options = {};
+if (process.env.NODE_ENV === 'production') {
+  options.schema = process.env.SCHEMA;  // define your schema in options object
+}
 module.exports = {
-  async up (queryInterface, Sequelize) {
-    /**
-     * Add seed commands here.
-     *
-     * Example:
-     * await queryInterface.bulkInsert('People', [{
-     *   name: 'John Doe',
-     *   isBetaMember: false
-     * }], {});
-    */
-    return queryInterface.bulkInsert("ChatMembers", [
-      { user_id: 1, server_id: 2 },
-      { user_id: 2, server_id: 5 },
-      { user_id: 3, server_id: 7 },
-      { user_id: 4, server_id: 8 },
-      { user_id: 5, server_id: 2 },
-      { user_id: 6, server_id: 1 },
-      { user_id: 7, server_id: 3 },
-      { user_id: 8, server_id: 6 },
-      { user_id: 9, server_id: 4 },
-      { user_id: 10, server_id: 8 },
-      { user_id: 1, dm_id: 2 },
-      { user_id: 2, dm_id: 5 },
-      { user_id: 3, dm_id: 7 },
-      { user_id: 4, dm_id: 8 },
-      { user_id: 5, dm_id: 2 },
-      { user_id: 6, dm_id: 1 },
-      { user_id: 7, dm_id: 3 }
-    ])
-  },
+	async up(queryInterface, Sequelize) {
+		options.tableName = "ChatMembers";
+		return queryInterface.bulkInsert(options, [
+			{ userId: 1, serverId: 2 },
+			{ userId: 2, serverId: 5 },
+			{ userId: 3, serverId: 7 },
+			{ userId: 4, serverId: 8 },
+			{ userId: 5, serverId: 2 },
+			{ userId: 6, serverId: 1 },
+			{ userId: 7, serverId: 3 },
+			{ userId: 8, serverId: 6 },
+			{ userId: 9, serverId: 4 },
+			{ userId: 10, serverId: 8 },
+			{ userId: 1, dmId: 2 },
+			{ userId: 2, dmId: 5 },
+			{ userId: 3, dmId: 7 },
+			{ userId: 4, dmId: 8 },
+			{ userId: 5, dmId: 2 },
+			{ userId: 6, dmId: 1 },
+			{ userId: 7, dmId: 3 },
+		]);
+	},
 
-  async down (queryInterface, Sequelize) {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
-    return queryInterface.bulkDelete("ChatMembers", null, {});
-  }
+	async down(queryInterface, Sequelize) {
+		options.tableName = "ChatMembers";
+		return queryInterface.bulkDelete(options, null, {});
+	},
 };

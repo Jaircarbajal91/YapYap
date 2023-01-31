@@ -12,7 +12,7 @@ const Splash = ({ sessionUser }) => {
         <div className="top_section h-screen">
             <div className="flex flex-row justify-evenly relative items-end w-full h-4/6 bg-hero gap-x-2 bg-[url('../../assets/svg/splash1.svg')] bg-bottom bg-no-repeat">
                 <Navbar />
-                <img className="absolute max-w-xxl -left-20 -ml-20 z-10 w-2/5" src="../../assets/svg/splash2.svg" alt="" />
+                <img className="absolute max-w-2xl -left-20 -ml-20 z-10 w-2/5" src="../../assets/svg/splash2.svg" alt="" />
                 <div className="flex flex-col items-center justify-center text-center h-full w-2/5">
                     <h1 className="text-white  text-5xl font-black font-header mb-10">IMAGINE A PLACE...</h1>
                     <p className="text-white text-center font-sans font-normal mb-10 text-lg tracking-wide leading-loose">...where you can belong to a school club, a gaming group, or a worldwide art community. Where just you and a handful of friends can spend time together. A place that makes it easy to talk every day and hang out more often.</p>
@@ -21,7 +21,6 @@ const Splash = ({ sessionUser }) => {
                 <img className="absolute max-w-2xl -right-8 z-10 w-2/5" src="../../assets/svg/splash3.svg" alt="" />
             </div>
             <div className="top_links">
-
             </div>
         </div>
     )
