@@ -60,7 +60,7 @@ const messagesReducer = (state = initialState, action) => {
 		case ADD_MESSAGE: {
 			const newState = { ...state };
 			newState[action.payload.id] = action.payload;
-			// return newState;
+			return newState;
 		}
 		default:
 			return state;
