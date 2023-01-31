@@ -14,7 +14,7 @@ module.exports = {
 				type: Sequelize.INTEGER,
 			},
 			channel_name: {
-				type: Sequelize.STRING(20),
+				type: Sequelize.STRING(100),
 				allowNull: false,
 			},
 			serverId: {

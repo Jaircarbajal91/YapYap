@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.STRING,
 				allowNull: false,
 				validate: {
-					len: [3, 20],
+					len: [3, 100],
 				},
 			},
 			serverId: {
