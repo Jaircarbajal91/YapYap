@@ -22,7 +22,11 @@
     "vite": "^4.0.0",
     "@vitejs/plugin-react": "^3.0.0",
     "tailwindcss": "^3.2.4",
-    "redux-logger": "^3.0.6"
+    "redux-logger": "^3.0.6",
+    "autoprefixer": "^10.4.13",
+    "postcss": "^8.4.21",
+    "@types/react": "^18.0.26",
+    "@types/react-dom": "^18.0.9"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
