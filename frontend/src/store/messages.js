@@ -31,7 +31,7 @@ export const getMessages = channelId => async dispatch => {
 export const sendMessage =
 	(message, senderId, { channelId, dmId, imageId }) =>
 	async dispatch => {
-		console.log(channelId)
+		// console.log(channelId)
 		const response = await csrfFetch(`/api/messages`, {
 			method: "POST",
 			body: JSON.stringify({
@@ -61,7 +61,7 @@ const messagesReducer = (state = initialState, action) => {
 		case ADD_MESSAGE: {
 			const newState = { ...state };
 			newState[action.payload.id] = action.payload;
-			return newState;
+			// return newState;
 		}
 		default:
 			return state;
