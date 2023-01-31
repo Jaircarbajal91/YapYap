@@ -40,7 +40,7 @@ const SignupForm = () => {
 
   return (
     <div className="flex justify-center items-center w-screen h-screen bg-[url('../../assets/svg/login.svg')] bg-center bg-no-repeat bg-cover ">
-      <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-gray md:h-3/5 rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:transition-opacity-70' onSubmit={handleSignUp}>
+      <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-gray md:h-3/5 rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:max-h-[60%]' onSubmit={handleSignUp}>
         <div className="flex flex-col text-white w-full items-center mb-4">
           <h1 className="text-2xl tracking-wide mb-2">Create an account</h1>
         </div>

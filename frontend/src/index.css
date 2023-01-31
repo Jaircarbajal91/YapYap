@@ -2,3 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+#root > div > div > form {
+  animation: .50s ease-out 0s 1 slideInFromTop;
+}
+
+@keyframes slideInFromTop {
+  0% {
+    transform: translateY(-10%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
