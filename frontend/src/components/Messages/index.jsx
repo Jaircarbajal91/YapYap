@@ -19,20 +19,23 @@ export default function Messages({ messages, channelId, dmId, imageId }) {
         if (!socket) return;
         socket.on("connect", () => {
             setSocketConnected(socket.connected);
-            console.log("connected")
+            // console.log("connected")
         });
 
-    }, [socket, socketConnected]);
+        socket?.on("newMessage", message => {
+            // console.log(message);
+            document.querySelector("ul").innerHTML += `<li>${message}</li>`;
+        });
 
-    socket?.once("newMessage", message => {
-        console.log(message);
-        document.querySelector("ul").innerHTML += `<li>${message}</li>`;
-    });
+    }, [socket]);
+
+
 
     const send = e => {
         e.preventDefault();
         socket.emit("chatMessage", message)
         dispatch(sendMessage(message, sessionUser.id, { channelId, dmId, imageId }));
+        setMessage('');
     };
 
 
