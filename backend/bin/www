@@ -17,6 +17,9 @@ const io = socketio(server, {
 });
 // run this when a client connects
 io.on("connect", socket => {
+  socket.on("join", room => {
+    socket.emit("message", `You have joined room ${room}`)
+  })
 	console.log("New client connected");
 	socket.emit("message", "Welcome to the channel!");
 	socket.broadcast.emit("message", "A new user has joined the channel!");

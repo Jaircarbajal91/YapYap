@@ -19,7 +19,6 @@ export default function Messages({ messages, channelId, dmId, imageId }) {
         if (!socket) return;
         socket.on("connect", () => {
             setSocketConnected(socket.connected);
-            // console.log("connected")
         });
 
         socket?.on("newMessage", message => {
