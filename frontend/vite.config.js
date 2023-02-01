@@ -4,9 +4,13 @@ import react from '@vitejs/plugin-react';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  root: 'frontend',
   build: {
-    outDir: '../backend/public',
+    rollupOptions: {
+      input: {
+        main: resolve(__dirname, 'index.html'),
+
+      },
+    },
   },
   plugins: [react()],
   server: {
