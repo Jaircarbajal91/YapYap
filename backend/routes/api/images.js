@@ -27,6 +27,7 @@ router.post("/", upload.single('image'), async (req, res) => {
 // Delete an image
 router.delete("/:id", requireAuth, async (req, res) => {
   const image = await Image.findByPk(req.params.id);
+  console.log(image)
   if (image) {
     // Delete image from AWS S3
     await deleteFile(image.url);
