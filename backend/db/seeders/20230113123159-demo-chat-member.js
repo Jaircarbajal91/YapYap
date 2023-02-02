@@ -1,14 +1,9 @@
 "use strict";
 
 /** @type {import('sequelize-cli').Migration} */
-let options = {};
-if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
-}
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		options.tableName = "ChatMembers";
-		return queryInterface.bulkInsert(options, [
+		return queryInterface.bulkInsert("ChatMembers", [
 			{ userId: 1, serverId: 2 },
 			{ userId: 2, serverId: 5 },
 			{ userId: 3, serverId: 7 },
@@ -30,7 +25,6 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
-		options.tableName = "ChatMembers";
-		return queryInterface.bulkDelete(options, null, {});
+		return queryInterface.bulkDelete("ChatMembers", null, {});
 	},
 };

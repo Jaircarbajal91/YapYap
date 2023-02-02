@@ -6,7 +6,7 @@ import LoginForm from './auth/LoginForm'
 import Logout from './auth/Logout';
 import Splash from './components/splash';
 import Servers from './components/Servers';
-import { getServers } from './store/servers';
+// import { getServers } from './store/servers';
 import ProtectedRoute from './components/ProtectedRoute';
 import SignupForm from './auth/SignupForm';
 
@@ -14,11 +14,11 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false);
 
   const sessionUser = useSelector(state => state.session.user);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   useEffect(() => {
     dispatch(restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
-  return (
+  return isLoaded && (
     <div className="App">
         <Switch>
           <Route path='/login' exact={true}>
@@ -42,4 +42,4 @@ function App() {
   )
 }
 
-export default App
+export default App;

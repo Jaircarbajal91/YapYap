@@ -1,9 +1,8 @@
-import { React, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Redirect, useHistory } from "react-router-dom";
+import { React } from "react";
+// import { useDispatch, useSelector } from "react-redux";
+import { Redirect } from "react-router-dom";
 import Navbar from "./Navbar";
 import DemoButton from "./demoButton";
-import { csrfFetch } from "../store/csrf";
 
 const Splash = ({ sessionUser }) => {
 

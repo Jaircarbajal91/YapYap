@@ -1,14 +1,9 @@
 "use strict";
 
 /** @type {import('sequelize-cli').Migration} */
-let options = {};
-options.tableName = "Messages";
-if (process.env.NODE_ENV === 'production') {
-  options.schema = process.env.SCHEMA;  // define your schema in options object
-}
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		return queryInterface.bulkInsert(options, [
+		return queryInterface.bulkInsert("Messages", [
 			{
 				message: "Hey Gardeners! Who's ready for spring planting season?",
 				senderId: 1,
@@ -180,6 +175,6 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
-		return queryInterface.bulkDelete(options, null, {});
+		return queryInterface.bulkDelete("Messages", null, {});
 	},
 };

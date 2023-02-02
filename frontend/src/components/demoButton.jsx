@@ -5,9 +5,9 @@ import { login } from "../store/session";
 
 const DemoButton = () => {
     const dispatch = useDispatch();
-    const handleDemo = async e => {
+    const handleDemo = e => {
         e.preventDefault();
-        await dispatch(login({credential: "Demo_User", password: "password"}));
+        dispatch(login({credential: "Demo_User", password: "password"}));
         return <Redirect to="/app" />;
     }
 

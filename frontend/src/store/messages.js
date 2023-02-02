@@ -2,8 +2,8 @@ import { csrfFetch } from "./csrf";
 
 const SET_MESSAGES = "messages/setMessages";
 const ADD_MESSAGE = "messages/addMessage";
-const REMOVE_MESSAGE = "messages/removeMessage";
-const UPDATE_MESSAGE = "messages/updateMessage";
+// const REMOVE_MESSAGE = "messages/removeMessage";
+// const UPDATE_MESSAGE = "messages/updateMessage";
 
 const setMessages = messages => {
 	return {

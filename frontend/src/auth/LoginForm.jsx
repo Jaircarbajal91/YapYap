@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useHistory, Redirect } from 'react-router-dom';
 import { login } from '../store/session';
-import SignupForm from './SignupForm';
+
 
 
 const LoginForm = ({ sessionUser }) => {
@@ -11,7 +11,6 @@ const LoginForm = ({ sessionUser }) => {
   // const sessionUser = useSelector(state => state.session.user);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
-  const [showSignupForm, setShowSignupForm] = useState(false);
   const [errors, setErrors] = useState([]);
 
   const onLogin = async (e) => {

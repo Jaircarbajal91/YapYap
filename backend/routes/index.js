@@ -38,7 +38,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 router.get('/', async(req, res) => {
-  return res.json("Meetup");
+  return res.json("YapYap");
 });
 
 module.exports = router;
