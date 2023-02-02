@@ -30,12 +30,6 @@ module.exports = {
       serif: ['Merriweather', 'serif'],
       header: ['Seymour One', 'sans-serif']
     },
-    extend: {
-      animation: {
-
-      }
-    },
-
   },
   plugins: [],
 }
