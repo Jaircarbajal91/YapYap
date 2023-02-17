@@ -3,7 +3,7 @@ module.exports = {
   content: [
     "./index.html",
     "./src/**/*.{html,js,jsx}",
-    "./assets/images/*.svg"
+    "./assets/**/*.svg"
   ],
   theme: {
     backgroundImage: {
