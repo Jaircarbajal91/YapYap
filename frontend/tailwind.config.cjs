@@ -2,9 +2,15 @@
 module.exports = {
   content: [
     "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
+    "./src/**/*.{html,js,jsx}",
   ],
   theme: {
+    backgroundImage: {
+      'login-bg': "url('../assets/images/login.svg')",
+      'splash-1': "url('../assets/images/splash1.svg')",
+      'splash-2': "url('../assets/images/splash2.svg')",
+      'splash-3': "url('../assets/images/splash3.svg')",
+    },
     screens: {
       sm: '480px',
       md: '768px',
