@@ -5,8 +5,7 @@ import react from '@vitejs/plugin-react';
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
-    tailwindcss: {},
-    autoprefixer: {},
+  mode: 'jit',
   build: {
     outDir: './build',
   },
