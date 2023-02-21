@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {restoreUser} from './store/session';
 import LoginForm from './auth/LoginForm'
 import Logout from './auth/Logout';
-import Splash from './components/splash';
+import Splash from '../src/components/Splash/splash';
 import Servers from './components/Servers';
 import { getServers } from './store/servers';
 import ProtectedRoute from './components/ProtectedRoute';
