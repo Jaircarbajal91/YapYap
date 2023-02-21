@@ -3,7 +3,7 @@
   display: flex;
   flex-direction: column;
   height: 62%;
-  background-image: url('../../../assets/images/splash1.svg');
+  background-image: url('../../assets/images/splash1.svg');
   background-position: center;
   background-color: #404EED;
   align-items: center;
