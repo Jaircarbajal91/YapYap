@@ -21,8 +21,6 @@ const Splash = ({ sessionUser }) => {
                 </div>
                 <img src="../../../assets/images/splash3.svg" alt="" />
             </div>
-            <div className="">
-            </div>
         </div>
     )
 }
