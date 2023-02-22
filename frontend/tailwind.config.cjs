@@ -2,13 +2,12 @@
 module.exports = {
   content: [
     "./index.html",
-    "./src/**/*.{html,js,jsx}",
-    "./assets/**/*.svg"
+    "./src/**/*.{html,js,jsx}"
   ],
   theme: {
     backgroundImage: {
-      'login-bg': "url('./assets/images/login.svg')",
-      'splash-1': "url('./assets/images/splash1.svg')",
+      'login-bg': "url('./src/assets/images/login.svg')",
+      'splash-1': "url('./src/assets/images/splash1.svg')",
     },
     screens: {
       sm: '480px',
