@@ -8,9 +8,13 @@ import splash2 from "../../assets/images/splash2.svg";
 import splash3 from "../../assets/images/splash3.svg";
 import studyGroup from "../../assets/images/study-group.svg";
 import chillin from "../../assets/images/chillin.svg";
+import fandom from "../../assets/images/fandom.svg";
+import reliable from "../../assets/images/reliable.svg";
+import stars from "../../assets/images/stars.svg";
 
 const Splash = ({ sessionUser }) => {
   if (sessionUser) return <Redirect to="/app" />;
+  const history = useHistory()
   return (
     <div className="top_section h-screen">
       <div className="flex flex-row justify-evenly relative items-end w-full h-4/6 bg-hero gap-x-2 bg-splash-1 bg-bottom bg-no-repeat">
@@ -66,6 +70,37 @@ const Splash = ({ sessionUser }) => {
             </p>
           </div>
           <img src={chillin} alt="" />
+        </div>
+      </section>
+      <section className="w-full flex justify-center py-20">
+        <div className="flex justify-center items-center w-2/3">
+          <img src={fandom} alt="" />
+          <div className="flex flex-col text-offBlack w-[30%] ml-20">
+            <h2 className="text-[2.4rem] font-black leading-normal tracking-wide mb-5">
+              From few to a fandom
+            </h2>
+            <p className="leading-8 text-[1.1rem]">
+              Get any community running with moderation tools and custom member
+              access. Give members special powers, set up private channels, and
+              more.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section className="flex justify-center w-full bg-offWhite py-20">
+        <div className="flex flex-col justify-center items-center w-2/3 text-offBlack">
+          <h2 className="text-[2.4rem] font-black leading-normal tracking-wide mb-5">
+            RELIABLE TECH FOR STAYING CLOSE
+          </h2>
+          <p className="max-w-[65%] leading-8 text-[1.1rem] text-center">
+            Low-latency voice and video feels like you’re in the same room. Wave
+            hello over video, watch friends stream their games, or gather up and
+            have a drawing session with screen share.
+          </p>
+          <img className="mb-20" src={reliable} alt="" />
+          <img className="-mb-4" src={stars} alt="" />
+          <p className="text-[2rem] font-black mb-6">Ready to start your journey?</p>
+          <button className="bg-navy text-white px-5 py-3 rounded-full" onClick={() => history.push('/register')}>Register Here</button>
         </div>
       </section>
     </div>
