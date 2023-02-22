@@ -1,6 +1,8 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+html, body, #root, .App {
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+}
 
 #root > div > div > form {
   animation: .50s ease-out 0s 1 slideInFromTop;
@@ -16,7 +18,3 @@
     opacity: 1;
   }
 }
-
-
-
-

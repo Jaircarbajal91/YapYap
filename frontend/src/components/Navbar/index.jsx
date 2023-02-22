@@ -1,9 +1,10 @@
 import { useHistory } from "react-router-dom";
+import './Navbar.css'
 
 const Navbar = () => {
   const history = useHistory();
   return (
-    <nav className="absolute flex flex-row justify-around top-0 w-full z-100 pt-4">
+    <nav className="nav-container">
       <div className="navbar-brand" to="/">
         <img src="" alt="" />
         logo
