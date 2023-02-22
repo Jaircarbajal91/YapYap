@@ -4,8 +4,8 @@ import { Redirect, useHistory } from "react-router-dom";
 import Navbar from "./Navbar";
 import DemoButton from "./demoButton";
 import { csrfFetch } from "../store/csrf";
-import splash2 from '../assets/images/splash2.svg'
-import splash3 from '../assets/images/splash3.svg'
+import splash2 from '../../assets/images/splash2.svg'
+import splash3 from '../../assets/images/splash3.svg'
 
 const Splash = ({ sessionUser }) => {
 
