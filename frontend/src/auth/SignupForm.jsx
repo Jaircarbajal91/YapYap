@@ -40,7 +40,7 @@ const SignupForm = () => {
 
   return (
     <div className="flex justify-center items-center w-screen h-screen bg-login-bg bg-center bg-no-repeat bg-cover ">
-      <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-gray md:h-3/5 rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:max-h-[40em]' onSubmit={handleSignUp}>
+      <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-gray md:h-3/5 md:rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:max-h-[40em]' onSubmit={handleSignUp}>
         <div className="flex flex-col text-white w-full items-center mb-4">
           <h1 className="text-2xl tracking-wide mb-2">Create an account</h1>
         </div>
@@ -74,9 +74,9 @@ const SignupForm = () => {
           />
         </div>
         <div>
-          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-image">Profile Image</label>
+          <label className='block uppercase text-xs mb-2 font-bold text-lightGray' htmlFor="signup-image">Profile Image</label>
           <input
-            className='mb-4'
+            className='mb-4 text-lightGray'
             type="file"
             name="image"
             accept='.png, .jpg, .jpeg'
