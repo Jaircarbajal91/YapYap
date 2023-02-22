@@ -29,6 +29,8 @@ module.exports = {
       torqoise: '#0AACEF',
       navy: '#4853C6',
       yellow: '#FFC61A',
+      offBlack: '#23272A',
+      offWhite: '#F6F6F6'
     },
     fontFamily: {
       sans: ['gg sans', 'Inter', 'sans-serif'],
