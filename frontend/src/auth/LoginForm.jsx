@@ -48,8 +48,6 @@ const LoginForm = ({ sessionUser }) => {
     return <Redirect to="/app" />
   }
 
-  console.log(errors)
-
   return !sessionUser && (
     <div className={`flex justify-center items-center w-screen h-screen bg-login-bg bg-center bg-no-repeat bg-cover`}>
       <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-gray md:h-2/5 md:rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:transition duration-150 ease-out' onSubmit={onLogin}>

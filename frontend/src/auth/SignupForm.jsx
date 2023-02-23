@@ -3,35 +3,58 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addSingleImage } from '../store/aws_images';
+import { signupUser } from '../store/session';
 
 const SignupForm = () => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState([]);
-  const [image, setImage] = useState(null);
-
-
   const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const [emailErrors, setEmailErrors] = useState([])
+  const [username, setUsername] = useState('');
+  const [usernameErrors, setUsernameErrors] = useState([])
+  const [password, setPassword] = useState('');
+  const [passwordErrors, setPasswordErrors] = useState([])
+  const [image, setImage] = useState(null);
+  const [errors, setErrors] = useState([]);
+
   // useEffect(() => {
-  //   const errors = [];
-  //   if (email.length === 0) {
-  //     errors.push('Email cannot be empty');
-  //   }
-  //   if (username.length === 0) {
-  //     errors.push('Username cannot be empty');
-  //   }
-  //   if (password.length === 0) {
-  //     errors.push('Password cannot be empty');
-  //   }
-  //   setErrors(errors);
-  // }, [errors, email, username, password]);
+
+  // }, [emailErrors.length, usernameErrors.length, passwordErrors.length])
+
+  useEffect(() => {
+    setEmailErrors([])
+  }, [email]);
+
+  useEffect(() => {
+    setUsernameErrors([])
+  }, [username]);
+
+  useEffect(() => {
+    setPasswordErrors([])
+  }, [password]);
+
+  useEffect(() => {
+    setErrors([])
+  }, [email, username, password]);
+
 
   const history = useHistory();
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const newImage = await dispatch(addSingleImage({image, type: 'user'}));
+    // const newImage = await dispatch(addSingleImage({image, type: 'user'}));
+    try {
+      const data = await dispatch(signupUser({ email, username, password, imageId: null }));
+    } catch(err) {
+      const errors = await err.json()
+      errors.errors.forEach((error) => {
+        error = error.toLowerCase()
+        if (error.includes('email')) setEmailErrors([...emailErrors, error])
+        if (error.includes('username')) setUsernameErrors([...usernameErrors, error])
+        if (error.includes('password')) setPasswordErrors([...passwordErrors, error])
+        else setErrors([...errors, error])
+      })
+    }
   }
+
 
   const updateFile = (e) => {
     const file = e.target.files[0];
@@ -44,8 +67,11 @@ const SignupForm = () => {
         <div className="flex flex-col text-white w-full items-center mb-4">
           <h1 className="text-2xl tracking-wide mb-2">Create an account</h1>
         </div>
+        {errors.length > 0 && <div>
+          {errors.map((error, idx) => <div className='text-lightRed' key={idx}>{error}</div>)}
+          </div>}
         <div className='text-lightGray mb-3'>
-          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-email">Email</label>
+          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-email">{}</label>
           <input
             className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
             type="text"

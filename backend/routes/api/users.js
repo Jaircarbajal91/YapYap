@@ -30,8 +30,9 @@ const checkAuth = (req, res, next) =>
 		: next();
 
 // Sign up
-router.post("/join", validateSignup, async (req, res) => {
+router.post("/signup", validateSignup, async (req, res) => {
 	const { email, password, username, imageId, alias } = req.body;
+	console.log(password)
 	const user = await User.signup({
 		email,
 		username,
