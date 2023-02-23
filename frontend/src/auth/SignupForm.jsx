@@ -16,10 +16,6 @@ const SignupForm = () => {
   const [image, setImage] = useState(null);
   const [errors, setErrors] = useState([]);
 
-  // useEffect(() => {
-
-  // }, [emailErrors.length, usernameErrors.length, passwordErrors.length])
-
   useEffect(() => {
     setEmailErrors([])
   }, [email]);
@@ -40,12 +36,14 @@ const SignupForm = () => {
   const history = useHistory();
   const handleSignUp = async (e) => {
     e.preventDefault();
-    // const newImage = await dispatch(addSingleImage({image, type: 'user'}));
+    const newImage = await dispatch(addSingleImage({image, type: 'user'}));
     try {
-      const data = await dispatch(signupUser({ email, username, password, imageId: null }));
+      const data = await dispatch(signupUser({ email, username, password, imageId: newImage !== undefined ? newImage.id : null }));
+      history.push('/app');
     } catch(err) {
-      const errors = await err.json()
-      errors.errors.forEach((error) => {
+      const newErrors = await err.json()
+      console.log(newErrors)
+      newErrors.errors.forEach((error) => {
         error = error.toLowerCase()
         if (error.includes('email')) setEmailErrors([...emailErrors, error])
         if (error.includes('username')) setUsernameErrors([...usernameErrors, error])
@@ -68,10 +66,10 @@ const SignupForm = () => {
           <h1 className="text-2xl tracking-wide mb-2">Create an account</h1>
         </div>
         {errors.length > 0 && <div>
-          {errors.map((error, idx) => <div className='text-lightRed' key={idx}>{error}</div>)}
+          {errors.map((error, idx) => <div className='uppercase text-lightRed -mt-6 w-full text-center' key={idx}>{error}</div>)}
           </div>}
         <div className='text-lightGray mb-3'>
-          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-email">{}</label>
+          <label className={`block uppercase text-xs mb-2 font-bold ${emailErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-email">{emailErrors.length > 0 ? `Email - ${emailErrors[0]}` : "Email"}</label>
           <input
             className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
             type="text"
@@ -80,7 +78,7 @@ const SignupForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-username">Username</label>
+          <label className={`block uppercase text-xs mb-2 font-bold ${usernameErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-username">{usernameErrors.length > 0 ? `Username - ${usernameErrors[0]}` : "Username"}</label>
           <input
             className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
             type="text"
@@ -89,7 +87,7 @@ const SignupForm = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-password">Password</label>
+          <label className={`block uppercase text-xs mb-2 font-bold ${passwordErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-password">{passwordErrors.length > 0 ? `Password - ${passwordErrors[0]}` : "Password"}</label>
           <input
             className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
             type="password"

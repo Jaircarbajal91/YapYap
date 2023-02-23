@@ -4,6 +4,7 @@ const { setTokenCookie, requireAuth } = require("../../utils/auth");
 const { User } = require("../../db/models");
 const { check } = require("express-validator");
 const { handleValidationErrors } = require("../../utils/validation");
+const { Op } = require("sequelize");
 
 const router = express.Router();
 
@@ -32,7 +33,10 @@ const checkAuth = (req, res, next) =>
 // Sign up
 router.post("/signup", validateSignup, async (req, res) => {
 	const { email, password, username, imageId, alias } = req.body;
-	console.log(password)
+	const foundUser = await User.findOne({ where: { [Op.or]: [{ email }, { username }] } });
+	if (foundUser) {
+		return res.status(401).json({ errors: ["User already exists"] });
+	}
 	const user = await User.signup({
 		email,
 		username,
