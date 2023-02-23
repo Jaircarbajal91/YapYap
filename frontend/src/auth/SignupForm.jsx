@@ -3,35 +3,56 @@ import { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addSingleImage } from '../store/aws_images';
+import { signupUser } from '../store/session';
 
 const SignupForm = () => {
-  const [email, setEmail] = useState('');
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [errors, setErrors] = useState([]);
-  const [image, setImage] = useState(null);
-
-
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const errors = [];
-  //   if (email.length === 0) {
-  //     errors.push('Email cannot be empty');
-  //   }
-  //   if (username.length === 0) {
-  //     errors.push('Username cannot be empty');
-  //   }
-  //   if (password.length === 0) {
-  //     errors.push('Password cannot be empty');
-  //   }
-  //   setErrors(errors);
-  // }, [errors, email, username, password]);
+  const [email, setEmail] = useState('');
+  const [emailErrors, setEmailErrors] = useState([])
+  const [username, setUsername] = useState('');
+  const [usernameErrors, setUsernameErrors] = useState([])
+  const [password, setPassword] = useState('');
+  const [passwordErrors, setPasswordErrors] = useState([])
+  const [image, setImage] = useState(null);
+  const [errors, setErrors] = useState([]);
+
+  useEffect(() => {
+    setEmailErrors([])
+  }, [email]);
+
+  useEffect(() => {
+    setUsernameErrors([])
+  }, [username]);
+
+  useEffect(() => {
+    setPasswordErrors([])
+  }, [password]);
+
+  useEffect(() => {
+    setErrors([])
+  }, [email, username, password]);
+
 
   const history = useHistory();
   const handleSignUp = async (e) => {
     e.preventDefault();
     const newImage = await dispatch(addSingleImage({image, type: 'user'}));
+    try {
+      const data = await dispatch(signupUser({ email, username, password, imageId: newImage !== undefined ? newImage.id : null }));
+      history.push('/app');
+    } catch(err) {
+      const newErrors = await err.json()
+      console.log(newErrors)
+      newErrors.errors.forEach((error) => {
+        error = error.toLowerCase()
+        if (error.includes('email')) setEmailErrors([...emailErrors, error])
+        if (error.includes('username')) setUsernameErrors([...usernameErrors, error])
+        if (error.includes('password')) setPasswordErrors([...passwordErrors, error])
+        else setErrors([...errors, error])
+      })
+    }
   }
+
 
   const updateFile = (e) => {
     const file = e.target.files[0];
@@ -44,8 +65,11 @@ const SignupForm = () => {
         <div className="flex flex-col text-white w-full items-center mb-4">
           <h1 className="text-2xl tracking-wide mb-2">Create an account</h1>
         </div>
+        {errors.length > 0 && <div>
+          {errors.map((error, idx) => <div className='uppercase text-lightRed -mt-6 w-full text-center' key={idx}>{error}</div>)}
+          </div>}
         <div className='text-lightGray mb-3'>
-          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-email">Email</label>
+          <label className={`block uppercase text-xs mb-2 font-bold ${emailErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-email">{emailErrors.length > 0 ? `Email - ${emailErrors[0]}` : "Email"}</label>
           <input
             className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
             type="text"
@@ -54,7 +78,7 @@ const SignupForm = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-username">Username</label>
+          <label className={`block uppercase text-xs mb-2 font-bold ${usernameErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-username">{usernameErrors.length > 0 ? `Username - ${usernameErrors[0]}` : "Username"}</label>
           <input
             className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
             type="text"
@@ -63,7 +87,7 @@ const SignupForm = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
           />
-          <label className='block uppercase text-xs mb-2 font-bold' htmlFor="signup-password">Password</label>
+          <label className={`block uppercase text-xs mb-2 font-bold ${passwordErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-password">{passwordErrors.length > 0 ? `Password - ${passwordErrors[0]}` : "Password"}</label>
           <input
             className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
             type="password"

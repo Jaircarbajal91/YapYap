@@ -41,12 +41,12 @@ export const restoreUser = () => async dispatch => {
 };
 
 export const signupUser = user => async dispatch => {
-	const { alias, email, hashedPassword, username, imageId } = user;
+	const { alias, email, password, username, imageId } = user;
 	const response = await csrfFetch("api/users/signup", {
 		method: "POST",
 		body: JSON.stringify({
 			username,
-			hashedPassword,
+			password,
 			email,
 			alias,
 			imageId,
@@ -57,7 +57,7 @@ export const signupUser = user => async dispatch => {
 		dispatch(setUser(data));
 		return response;
 	}
-	return response;
+	return response
 };
 
 export const logout = () => async dispatch => {

@@ -17,6 +17,7 @@ export const getImages = () => async dispatch => {
   if (response.ok) {
     dispatch(setImages(data.images));
   }
+  return data;
 };
 
 export const addSingleImage = (user) => async dispatch => {
@@ -35,7 +36,7 @@ export const addSingleImage = (user) => async dispatch => {
 	if (response.ok) {
     dispatch(addImage(data));
   }
-  return response;
+  return data;
 };
 
 const initialState = {};
