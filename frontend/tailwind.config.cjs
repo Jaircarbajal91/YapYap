@@ -28,6 +28,7 @@ module.exports = {
       serverBg: '#1E1E22',
       channelBg: '#2A2D31',
       chatBg: '#303338',
+      serverGreen: '#23A55A',
       lightRed: '#ED4346',
       torqoise: '#0AACEF',
       navy: '#4853C6',
