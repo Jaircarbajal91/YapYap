@@ -36,13 +36,15 @@ const SignupForm = () => {
   const history = useHistory();
   const handleSignUp = async (e) => {
     e.preventDefault();
-    const newImage = await dispatch(addSingleImage({image, type: 'user'}));
+    let newImage;
+    if (image) {
+      newImage = await dispatch(addSingleImage(image));
+    }
     try {
-      const data = await dispatch(signupUser({ email, username, password, imageId: newImage !== undefined ? newImage.id : null }));
+      const data = await dispatch(signupUser({ email, username, password, imageId: newImage ? newImage.id : null }));
       history.push('/app');
     } catch(err) {
       const newErrors = await err.json()
-      console.log(newErrors)
       newErrors.errors.forEach((error) => {
         error = error.toLowerCase()
         if (error.includes('email')) setEmailErrors([...emailErrors, error])
