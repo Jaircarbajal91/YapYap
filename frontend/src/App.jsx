@@ -29,7 +29,7 @@ function App() {
           </Route>
           <ProtectedRoute path="/app">
             <Servers sessionUser={sessionUser} />
-            <Logout />
+            {/* <Logout /> */}
           </ProtectedRoute>
           <Route path="/" exact={true}>
             <Splash sessionUser={sessionUser} />
