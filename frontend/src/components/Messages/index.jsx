@@ -24,7 +24,6 @@ export default function Messages({ messages, channelId, dmId, imageId }) {
         });
 
         socket?.on("newMessage", message => {
-            // console.log(message);
             setMessagesDisplayed(messagesDisplayed => [...messagesDisplayed, message]);
         });
 

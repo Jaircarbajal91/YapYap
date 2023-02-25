@@ -10,7 +10,6 @@ const checkAuth = (req, res, next) =>
 
 // Add a message to the database
 router.post("/", checkAuth, async (req, res) => {
-	// console.log(req.body);
 	const { message, senderId, channelId, dmId, imageId } = req.body;
 	// commit this message to the database
 	const newMessage = await Message.create({
@@ -20,7 +19,6 @@ router.post("/", checkAuth, async (req, res) => {
 		dmId,
 		imageId,
 	});
-	// console.log(newMessage)
 	return res.json(newMessage);
 });
 

@@ -25,10 +25,8 @@ const LoginForm = ({ sessionUser }) => {
       const data = await dispatch(login({ credential, password }));
       return (<Redirect to="/app" />)
     } catch(err) {
-      console.log(err)
       err = await err.json()
-      console.log(err)
-      // setErrors([err.errors[0]])
+      setErrors([err.errors[0]])
     }
   };
 

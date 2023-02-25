@@ -14,7 +14,6 @@ const Servers = ({ sessionUser }) => {
   const servers = Object.values(useSelector((state) => state.servers));
   const messages = Object.values(useSelector((state) => state.messages));
   const images = useSelector((state) => state.images);
-  console.log(images)
   const [isHovered, setIsHovered] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [channels, setChannels] = useState(servers?.[0]?.Channels);

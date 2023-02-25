@@ -28,7 +28,6 @@ const AddServerForm = ({setShowNewServerModal}) => {
     if (serverImage) {
       newImage = await dispatch(addSingleImage({image: serverImage, type: 'server'}));
     }
-    console.log(newImage)
     try {
       const data = await dispatch(
         createServer({ serverName, imageId: newImage ? newImage.id : null })
@@ -36,10 +35,8 @@ const AddServerForm = ({setShowNewServerModal}) => {
       history.push("/app");
       setShowNewServerModal(false);
     } catch (err) {
-      console.log(err)
       const newErrors = await err.json();
       newErrors.errors.forEach((error) => {
-        console.log(error);
       });
     }
   };

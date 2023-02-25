@@ -57,6 +57,7 @@ router.get(
   restoreUser,
   (req, res) => {
     const { user } = req;
+    res.cookie('XSRF-TOKEN', req.csrfToken());
     if (user) {
       return res.json({
         user: user.toSafeObject()
