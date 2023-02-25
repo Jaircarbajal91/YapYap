@@ -4,7 +4,7 @@ import Messages from "../Messages";
 import { getMessages } from "../../store/messages";
 import { useDispatch, useSelector } from "react-redux";
 import AddServerForm from "./AddServerForm";
-import greenPlusIcon from "../../../assets/images/greenPlusCcon.svg";
+import greenPlusIcon from "../../../assets/images/greenPlusIcon.svg";
 import whitePlusIcon from "../../../assets/images/whitePlusIcon.svg";
 import discordIcon from "../../../assets/images/discordIcon.svg";
 import { Modal } from "../../context/Modal";
