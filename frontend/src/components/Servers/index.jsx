@@ -6,12 +6,15 @@ import { useDispatch, useSelector } from "react-redux";
 import AddServerForm from "./AddServerForm";
 import greenPlusIcon from "../../../assets/images/greenPlusCcon.svg";
 import whitePlusIcon from "../../../assets/images/whitePlusIcon.svg";
+import discordIcon from "../../../assets/images/discordIcon.svg";
 import { Modal } from "../../context/Modal";
 
 const Servers = ({ sessionUser }) => {
   const dispatch = useDispatch();
   const servers = Object.values(useSelector((state) => state.servers));
   const messages = Object.values(useSelector((state) => state.messages));
+  const images = useSelector((state) => state.images);
+  console.log(images)
   const [isHovered, setIsHovered] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [channels, setChannels] = useState(servers?.[0]?.Channels);
@@ -48,17 +51,17 @@ const Servers = ({ sessionUser }) => {
             <AddServerForm setShowNewServerModal={setShowNewServerModal}/>
         </Modal>
       )}
-        <div className="flex flex-col gap-3 items-center justify-start bg-serverBg text-lightGray max-w-[4%] min-w-[4%] h-screen max-h-screen">
+        <div className="relative flex flex-col gap-2 items-center justify-start bg-serverBg text-lightGray max-w-[4%] min-w-fit py-2 px-1 min-h-screen max-h-screen overflow-auto">
           {servers.map((server) => {
             return (
-              <button
+              <div
                 key={server.id}
                 id={server.id}
-                className="text-lg"
+                className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:rounded-[30%]"
                 onClick={selectServer}
               >
-                {server.server_name}
-              </button>
+                <img className="w-[2em] h-[2em]" src={server?.imagedId ? images[server.imageId] : discordIcon} alt="" />
+              </div>
             );
           })}
           {/* {channels && channels.map(channel => {
@@ -72,7 +75,7 @@ const Servers = ({ sessionUser }) => {
             onClick={() => setShowNewServerModal(true)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="flex justify-center items-center cursor-pointer w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:bg-serverGreen hover:rounded-[30%]"
+            className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:bg-serverGreen hover:rounded-[30%] sticky bottom-5"
           >
             <img
               className="w-[2em] h-[2em] plus-icon"

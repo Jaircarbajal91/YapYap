@@ -50,7 +50,7 @@ const LoginForm = ({ sessionUser }) => {
 
   return !sessionUser && (
     <div className={`flex justify-center items-center w-screen h-screen bg-login-bg bg-center bg-no-repeat bg-cover`}>
-      <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-gray md:h-2/5 md:rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:transition duration-150 ease-out' onSubmit={onLogin}>
+      <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-chatBg md:h-2/5 md:rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:transition duration-150 ease-out' onSubmit={onLogin}>
         <div className='flex flex-col text-white w-full items-center mb-4'>
           <h1 className='text-2xl tracking-wide mb-2'>Welcome back!</h1>
           <p className='text-lightGray tracking-wide text-sm'>We're so excited to see you again!</p>

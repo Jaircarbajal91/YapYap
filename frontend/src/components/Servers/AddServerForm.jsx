@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { createServer } from "../../store/servers";
 import { addSingleImage } from "../../store/aws_images";
 import { useHistory } from "react-router-dom";
@@ -16,18 +16,19 @@ const AddServerForm = ({setShowNewServerModal}) => {
   const [page, setPage] = useState(0);
   const [errors, setErrors] = useState([]);
 
+  const image = useSelector((state) => state.images?.[serverImage?.imageId]);
 
   useEffect(() => {
     setServerNameErrors([]);
   }, [serverName]);
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     let newImage;
     if (serverImage) {
-      newImage = await dispatch(addSingleImage(serverImage));
+      newImage = await dispatch(addSingleImage({image: serverImage, type: 'server'}));
     }
+    console.log(newImage)
     try {
       const data = await dispatch(
         createServer({ serverName, imageId: newImage ? newImage.id : null })
@@ -114,7 +115,7 @@ const AddServerForm = ({setShowNewServerModal}) => {
         {page === 1 && (
           <div>
             <label htmlFor="serverImage">Server Icon Image</label>
-            <input type="file" name="serverImage" id="serverImage" />
+            <input type="file" name="serverImage" id="serverImage" onChange={updateFile}/>
           </div>
         )}
         {page === 2 && (
