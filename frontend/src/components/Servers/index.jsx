@@ -45,7 +45,7 @@ const Servers = ({ sessionUser }) => {
       <>
       {showNewServerModal && (
         <Modal onClose={() => setShowNewServerModal(false)}>
-            <AddServerForm />
+            <AddServerForm setShowNewServerModal={setShowNewServerModal}/>
         </Modal>
       )}
         <div className="flex flex-col gap-3 items-center justify-start bg-serverBg text-lightGray max-w-[4%] min-w-[4%] h-screen max-h-screen">
