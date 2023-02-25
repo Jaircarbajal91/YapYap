@@ -43,11 +43,11 @@ export const getServers = () => async dispatch => {
 };
 
 export const createServer = server => async dispatch => {
-	const { server_name, imageId } = server;
+	const { serverName, imageId } = server;
 	const response = await csrfFetch("/api/servers/create", {
 		method: "POST",
 		body: JSON.stringify({
-			server_name,
+			server_name: serverName,
 			imageId,
 		}),
 	});
