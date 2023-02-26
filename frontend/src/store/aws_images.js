@@ -10,6 +10,12 @@ const addImage = image => {
   };
 };
 
+const setImages = images => {
+  return {
+    type: SET_IMAGES,
+    payload: images,
+  };
+};
 
 export const getImages = () => async dispatch => {
   const response = await csrfFetch("/api/images");

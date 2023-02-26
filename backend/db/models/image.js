@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			Image.belongsTo(models.User);
+			Image.belongsTo(models.User, { foreignKey: "id" });
 			// Image.hasOne(models.Message);
 			// Image.hasOne(models.Server);
 		}

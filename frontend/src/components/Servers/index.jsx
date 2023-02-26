@@ -8,6 +8,7 @@ import greenPlusIcon from "../../../assets/images/greenPlusIcon.svg";
 import whitePlusIcon from "../../../assets/images/whitePlusIcon.svg";
 import discordIcon from "../../../assets/images/discordIcon.svg";
 import { Modal } from "../../context/Modal";
+import { getImages } from "../../store/aws_images";
 
 const Servers = ({ sessionUser }) => {
   const dispatch = useDispatch();
@@ -22,8 +23,14 @@ const Servers = ({ sessionUser }) => {
   const [showNewServerModal, setShowNewServerModal] = useState(false);
 
   useEffect(() => {
+    setIsLoaded(false)
+    dispatch(getImages()).then(() => setIsLoaded(true))
+  }, [dispatch, showNewServerModal]);
+
+  useEffect(() => {
     dispatch(getServers()).then(() => setIsLoaded(true));
   }, [dispatch]);
+
 
   const selectServer = (e) => {
     e.preventDefault();
@@ -42,6 +49,7 @@ const Servers = ({ sessionUser }) => {
     setMessagesLoaded(messages);
   };
 
+
   return (
     isLoaded && (
       <>
@@ -52,6 +60,12 @@ const Servers = ({ sessionUser }) => {
       )}
         <div className="relative flex flex-col gap-2 items-center justify-start bg-serverBg text-lightGray max-w-[4%] min-w-fit py-2 px-1 min-h-screen max-h-screen overflow-auto">
           {servers.map((server) => {
+            let image;
+            if (server.imageId) {
+              image = images[server.imageId].url;
+            } else {
+              image = discordIcon;
+            }
             return (
               <div
                 key={server.id}
@@ -59,7 +73,7 @@ const Servers = ({ sessionUser }) => {
                 className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:rounded-[30%]"
                 onClick={selectServer}
               >
-                <img className="w-[2em] h-[2em]" src={server?.imagedId ? images[server.imageId] : discordIcon} alt="" />
+                <img className="w-[2em] h-[2em]" src={image} alt="" />
               </div>
             );
           })}
