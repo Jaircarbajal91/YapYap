@@ -13,6 +13,7 @@ const AddServerForm = ({setShowNewServerModal}) => {
   const [serverName, setServerName] = useState("");
   const [serverNameErrors, setServerNameErrors] = useState([]);
   const [serverImage, setServerImage] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
   const [page, setPage] = useState(0);
   const [errors, setErrors] = useState([]);
 
@@ -44,6 +45,11 @@ const AddServerForm = ({setShowNewServerModal}) => {
   const updateFile = (e) => {
     const file = e.target.files[0];
     if (file) setServerImage(file);
+    const reader = new FileReader(file)
+    reader.readAsDataURL(file);
+    reader.onloadend = function () {
+      setPreviewImage(reader.result)
+    }
   };
 
   const handleNextButton = () => {
@@ -117,8 +123,8 @@ const AddServerForm = ({setShowNewServerModal}) => {
         )}
         {page === 2 && (
           <div className="flex flex-col w-full h-full justify-center items-center -mt-2">
-            <div className="flex w-full justify-around items-center">
-              <img className="max-w-[20%]" src={serverImage ? serverImage : discordIcon} alt="" />
+            <div className="flex w-full justify-around items-center mb-2">
+              <img className="min-w-[30%] max-w-[30%] rounded-md" src={previewImage ? previewImage : discordIcon} alt="" />
               <span className="text-[2.3rem] -ml-5 text-lightGray">-</span>
               <div>
                 <h3 className="uppercase mr-5 font-bold tracking-wide">{serverName}</h3>
