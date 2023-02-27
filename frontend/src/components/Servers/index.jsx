@@ -64,10 +64,10 @@ const Servers = ({ sessionUser }) => {
               <div
                 key={server.id}
                 id={server.id}
-                className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:rounded-[30%]"
+                className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:rounded-[30%] "
                 onClick={selectServer}
               >
-                <img className="w-[2.5em] min-w-[2.5em] min-h-[2.5em] object-cover h-[2.5em] rounded-full" src={server.imageId ? images[server.imageId].url : discordIcon} alt="" />
+                <img className={`${!server.imageId ? 'w-[2.5em] h-[2.5em]' : 'min-w-[100%] min-h-[100%] w-[100%] h-[100%]'} max-w-[100%] max-h-[100%] object-cover rounded-full hover:rounded-[30%] ease-in-out`} src={server.imageId ? images[server.imageId].url : discordIcon} alt="" />
               </div>
             );
           })}
