@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();;
 const apiRouter = require('./api');
 
+
 router.use('/api', apiRouter);
 
 // Static routes
@@ -37,8 +38,8 @@ if (process.env.NODE_ENV !== 'production') {
   });
 }
 
-router.get('/', async(req, res) => {
-  return res.json("Meetup");
-});
+// router.get('/', async(req, res) => {
+//   return res.json("Meetup");
+// });
 
 module.exports = router;

@@ -5,7 +5,9 @@ import {restoreUser} from './store/session';
 import LoginForm from './auth/LoginForm'
 import Logout from './auth/Logout';
 import Splash from './components/splash';
+import Server from './components/Server';
 import Servers from './components/Servers';
+import Channels from './components/Channels';
 import { getServers } from './store/servers';
 import ProtectedRoute from './components/ProtectedRoute';
 import SignupForm from './auth/SignupForm';
@@ -27,9 +29,13 @@ function App() {
           <Route path='/register' exact={true}>
             <SignupForm sessionUser={sessionUser} />
           </Route>
+          <ProtectedRoute path="/app/:serverId/" exact={true}>
+            {/* <Servers sessionUser={sessionUser} /> */}
+            <Server sessionUser={sessionUser} />
+          </ProtectedRoute>
           <ProtectedRoute path="/app">
             <Servers sessionUser={sessionUser} />
-            {/* <Logout /> */}
+            <Logout />
           </ProtectedRoute>
           <Route path="/" exact={true}>
             <Splash sessionUser={sessionUser} />

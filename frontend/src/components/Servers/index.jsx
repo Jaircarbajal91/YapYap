@@ -9,9 +9,11 @@ import whitePlusIcon from "../../../assets/images/whitePlusIcon.svg";
 import discordIcon from "../../../assets/images/discordIcon.svg";
 import { Modal } from "../../context/Modal";
 import { getImages } from "../../store/aws_images";
+import { useHistory } from "react-router-dom";
 
 const Servers = ({ sessionUser }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
   const servers = Object.values(useSelector((state) => state.servers));
   const messages = Object.values(useSelector((state) => state.messages));
   const images = useSelector((state) => state.images);
@@ -19,7 +21,7 @@ const Servers = ({ sessionUser }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [channels, setChannels] = useState(servers?.[0]?.Channels);
   const [channelId, setChannelId] = useState(channels?.[0]?.id);
-  const [messagesLoaded, setMessagesLoaded] = useState([]);
+  const [messagesLoaded, setMessagesLoaded] = useState(messages);
   const [showNewServerModal, setShowNewServerModal] = useState(false);
 
   useEffect(() => {
@@ -36,9 +38,10 @@ const Servers = ({ sessionUser }) => {
     e.preventDefault();
     // display the channels of the server that was clicked
     const targetServer = servers.find(
-      (server) => server.id === parseInt(e.target.id)
+      server => server.id === parseInt(e.target.id)
     );
     setChannels(targetServer.Channels);
+    history.push(`/app/${targetServer.id}`);
   };
 
   const selectChannel = async (e) => {
@@ -71,18 +74,17 @@ const Servers = ({ sessionUser }) => {
               </div>
             );
           })}
-          {/* {channels && channels.map(channel => {
-                return (
-                <button key={channel.id} id={channel.id} className="text-lg" onClick={selectChannel}>
-                    {channel.channel_name}
-                </button>
-            )})}
-            {messages.length > 0 && <Messages messages={messages} channelId={channelId}/>} */}
           <div
             onClick={() => setShowNewServerModal(true)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:bg-serverGreen hover:rounded-[30%] sticky bottom-5"
+            className="flex
+                      justify-center
+                      items-center
+                      cursor-pointer
+                      w-[3.6em]
+                      h-[3.6em]
+                      rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:bg-serverGreen hover:rounded-[30%]"
           >
             <img
               className="w-[2em] h-[2em] plus-icon"
@@ -91,6 +93,13 @@ const Servers = ({ sessionUser }) => {
             />
           </div>
         </div>
+        {/* {channels && channels.map(channel => {
+                return (
+                <button key={channel.id} id={channel.id} className="text-lg" onClick={selectChannel}>
+                    {channel.channel_name}
+                </button>
+            )})}
+            {messages.length > 0 && <Messages messages={messages} channelId={channelId}/>} */}
       </>
     )
   );
