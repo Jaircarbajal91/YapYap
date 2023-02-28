@@ -1,4 +1,4 @@
-import DirectMessagesList from "../DMSection"
+import DirectMessagesList from "../DirectMessages"
 import Channels from "../Channels"
 import { useSelector, useDispatch } from "react-redux"
 import { getDirectMessages } from "../../store/DirectMessages"
