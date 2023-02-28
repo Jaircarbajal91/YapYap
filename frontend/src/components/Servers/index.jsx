@@ -23,6 +23,8 @@ const Servers = ({ sessionUser }) => {
   const [channelId, setChannelId] = useState(channels?.[0]?.id);
   const [messagesLoaded, setMessagesLoaded] = useState(messages);
   const [showNewServerModal, setShowNewServerModal] = useState(false);
+  const [channelIdx, setChannelIdx] = useState(-1);
+  const [showChannelName, setShowChannelName] = useState(false);
 
   useEffect(() => {
     setIsLoaded(false)
@@ -61,16 +63,29 @@ const Servers = ({ sessionUser }) => {
             <AddServerForm setShowNewServerModal={setShowNewServerModal}/>
         </Modal>
       )}
-        <div className="relative flex flex-col gap-2 items-center justify-start bg-serverBg text-lightGray max-w-[4%] min-w-fit py-2 px-1 min-h-screen max-h-screen overflow-auto">
-          {servers.map((server) => {
+        <div className="flex flex-col gap-2 items-center justify-start bg-serverBg text-lightGray max-w-[4%] min-w-fit py-2 px-1 min-h-screen max-h-screen overflow-auto">
+          {servers.map((server, i) => {
             return (
               <div
                 key={server.id}
                 id={server.id}
+                onMouseEnter={() => {
+                  setChannelIdx(i)
+                  setShowChannelName(true)
+                }}
+                onMouseLeave={() => {
+                  setShowChannelName(false)
+                  setChannelIdx(-1)
+                }}
                 className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:rounded-[30%] "
                 onClick={selectServer}
               >
+                <div className={`${showChannelName && channelIdx === i ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md left-[5%] z-50 flex items-center`}>
+                  <div className="relative w-2 h-2 bg-black rotate-45 -left-1"></div>
+                  <span className="p-2 -ml-1 text-center capitalize">{server.server_name}</span>
+                </div>
                 <img className={`${!server.imageId ? 'w-[2.5em] h-[2.5em]' : 'min-w-[100%] min-h-[100%] w-[100%] h-[100%]'} max-w-[100%] max-h-[100%] object-cover rounded-full hover:rounded-[30%] ease-in-out`} src={server.imageId ? images[server.imageId].url : discordIcon} alt="" />
+
               </div>
             );
           })}

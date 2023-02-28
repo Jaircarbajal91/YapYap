@@ -11,9 +11,13 @@ import Channels from './components/Channels';
 import { getServers } from './store/servers';
 import ProtectedRoute from './components/ProtectedRoute';
 import SignupForm from './auth/SignupForm';
+import MidSection from './components/MidSection';
+
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [serverClicked, setServerClicked] = useState(false);
+
 
   const sessionUser = useSelector(state => state.session.user);
   const dispatch = useDispatch()
@@ -21,7 +25,7 @@ function App() {
     dispatch(restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
   return (
-    <div className="App">
+    <div className="App flex relative">
         <Switch>
           <Route path='/login' exact={true}>
             <LoginForm sessionUser={sessionUser} />
@@ -30,11 +34,11 @@ function App() {
             <SignupForm sessionUser={sessionUser} />
           </Route>
           <ProtectedRoute path="/app/:serverId/" exact={true}>
-            {/* <Servers sessionUser={sessionUser} /> */}
             <Server sessionUser={sessionUser} />
           </ProtectedRoute>
           <ProtectedRoute path="/app">
             <Servers sessionUser={sessionUser} />
+            <MidSection serverClicked={serverClicked}/>
             <Logout />
           </ProtectedRoute>
           <Route path="/" exact={true}>

@@ -24,6 +24,7 @@ module.exports = {
       black: '#000000',
       gray: '#575A61',
       lightGray: '#ABACB0',
+      midGray: '#2A2D30',
       darkGray: '#212225',
       serverBg: '#1E1E22',
       channelBg: '#2A2D31',
