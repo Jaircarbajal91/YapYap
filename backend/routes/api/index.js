@@ -15,7 +15,7 @@ router.use("/servers", serversRouter);
 router.use("/channels", channelsRouter);
 router.use("/images", imagesRouter);
 router.use("/messages", messagesRouter);
-router.use("/directMessages", directMessage);
+router.use("/directmessages", directMessage);
 
 router.post('/test', function(req, res) {
     res.json({ requestBody: req.body });

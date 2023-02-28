@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
 		 */
 		static associate(models) {
 			// define association here
-			// DirectMessage.hasMany(models.Message, { foreignKey: "dmId", onDelete: "CASCADE" });
-			// DirectMessage.hasMany(models.ChatMember, { foreignKey: "dmId", onDelete: "CASCADE" });
+			DirectMessage.hasMany(models.Message, { foreignKey: "dmId", onDelete: "CASCADE" });
+			DirectMessage.hasMany(models.ChatMember, { foreignKey: "dmId", onDelete: "CASCADE" });
 		}
 	}
 	DirectMessage.init(

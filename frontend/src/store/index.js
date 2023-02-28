@@ -6,6 +6,7 @@ import messagesReducer from "./messages";
 import serversReducer from "./servers";
 import channelsReducer from "./channels";
 import imagesReducer from "./aws_images";
+import directMessagesReducer from "./DirectMessages";
 
 
 const rootReducer = combineReducers({
@@ -14,6 +15,7 @@ const rootReducer = combineReducers({
     messages: messagesReducer,
     channels: channelsReducer,
     images: imagesReducer,
+    dms: directMessagesReducer,
 });
 
 let enhancer;

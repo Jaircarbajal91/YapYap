@@ -8,19 +8,13 @@ const checkAuth = (req, res, next) =>
 		: next();
 
 
-// Get all DMs for current user
+// Get all DMs for current user with user info attached
 router.get("/", checkAuth, async (req, res) => {
 	const userId = req.user.id;
-	const chatMembers = await ChatMember.findAll({
-		include: [{ model: DirectMessage }],
-		where: { userId },
+	const messages = await DirectMessage.findAll({
+		include: [{ model: ChatMember, include: [{ model: User }] }]
 	});
-	const result = [];
-	chatMembers.forEach(chatMember => {
-		const dm = chatMember.DirectMessage;
-		if (dm) result.push(dm);
-	});
-	return res.json({ Messages: result });
+	return res.json({ messages });
 });
 
 
@@ -28,8 +22,8 @@ router.get("/", checkAuth, async (req, res) => {
 router.get("/:dmId", async (req, res) => {
 	const { dmId } = req.params;
 	const messages = await DirectMessage.findAll({
-		include: [{ model: User }],
-		where: { dmId },
+		include: [{ model: ChatMember, include: [{ model: User }] }],
+		where: { id: dmId },
 	});
 	return res.json({ Messages: messages });
 });
