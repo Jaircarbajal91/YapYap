@@ -2,6 +2,9 @@
   "name": "yapyap",
   "version": "1.0.0",
   "description": "YapYap aims to mimic the look and functionality of Discord.",
+  "engines": {
+    "node": "16.x"
+  },
   "main": "index.js",
    "scripts": {
     "heroku-postbuild": "npm run build --prefix frontend",
