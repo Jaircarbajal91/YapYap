@@ -80,7 +80,7 @@ const Servers = ({ sessionUser }) => {
                 className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:rounded-[30%] "
                 onClick={selectServer}
               >
-                <div className={`${showChannelName && channelIdx === i ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md left-[5%] z-50 flex items-center`}>
+                <div className={`${showChannelName && channelIdx === i ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md left-[4.5em] z-50 flex items-center`}>
                   <div className="relative w-2 h-2 bg-black rotate-45 -left-1"></div>
                   <span className="p-2 -ml-1 text-center capitalize">{server.server_name}</span>
                 </div>
