@@ -78,7 +78,7 @@ const Servers = ({ sessionUser }) => {
             </div>
             <img className={`w-[2.5em] h-[2.5em] max-w-[100%] max-h-[100%] object-cover rounded-full hover:rounded-[30%] ease-in-out cursor-pointer`} src={discordIcon} alt="direct messages" />
           </div>
-          <hr className="bg-white"/>
+          <hr className="border border-solid border-darkGrey w-[50%]" />
           {servers.map((server, i) => {
             return (
               <div
