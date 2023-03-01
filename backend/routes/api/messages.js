@@ -22,4 +22,14 @@ router.post("/", checkAuth, async (req, res) => {
 	return res.json(newMessage);
 });
 
+
+// get all messages for a dm
+router.get("/dm/:dmId", async (req, res) => {
+	const { dmId } = req.params;
+	const messages = await Message.findAll({
+		where: { dmId },
+	});
+	return res.json({ messages });
+});
+
 module.exports = router;
