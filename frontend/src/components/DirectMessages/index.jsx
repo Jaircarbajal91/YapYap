@@ -24,7 +24,7 @@ const DirectMessagesList = ({ directMessages }) => {
               src={
                 dm.ChatMembers.length > 1
                   ? `https://api.dicebear.com/5.x/identicon/svg?seed=Aneka&backgroundType=gradientLinear`
-                  : images[11].url
+                  : images[11]?.url
               }
               alt="avatar"
             />
