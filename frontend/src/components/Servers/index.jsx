@@ -64,6 +64,9 @@ const Servers = ({ sessionUser }) => {
         </Modal>
       )}
         <div className="flex flex-col gap-2 items-center justify-start bg-serverBg text-lightGray max-w-[4%] min-w-fit py-2 px-1 min-h-screen max-h-screen overflow-auto">
+          <div>
+            Direct Messages
+          </div>
           {servers.map((server, i) => {
             return (
               <div
