@@ -1,8 +1,8 @@
-import DirectMessagesList from "../DirectMessages";
-import Channels from "../Channels";
-import { useSelector, useDispatch } from "react-redux";
-import { getDirectMessages } from "../../store/directMessages";
-import { useEffect, useState } from "react";
+import DirectMessagesList from "../DirectMessages"
+import Channels from "../Channels"
+import { useSelector, useDispatch } from "react-redux"
+import { getDirectMessages } from "../../store/directMessages"
+import { useEffect, useState } from "react"
 
 const MidSection = ({ serverClicked }) => {
   const dispatch = useDispatch();
