@@ -74,7 +74,7 @@ const Servers = ({ sessionUser }) => {
           >
             <div className={`${showDMSpan ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md left-[4.5em] z-50 flex items-center`}>
               <div className="relative w-2 h-2 bg-black rotate-45 -left-1"></div>
-              <span className="p-2 -ml-1 text-center capitalize">{`Direct Messages`}</span>
+              <span className="p-2 -ml-1 text-center capitalize font-bold">Direct Messages</span>
             </div>
             <img className={`w-[2.5em] h-[2.5em] max-w-[100%] max-h-[100%] object-cover rounded-full hover:rounded-[30%] ease-in-out cursor-pointer`} src={discordIcon} alt="direct messages" />
           </div>
@@ -97,7 +97,7 @@ const Servers = ({ sessionUser }) => {
               >
                 <div className={`${showChannelName && channelIdx === i ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md left-[4.5em] z-50 flex items-center`}>
                   <div className="relative w-2 h-2 bg-black rotate-45 -left-1"></div>
-                  <span className="p-2 -ml-1 text-center capitalize">{server.server_name}</span>
+                  <span className="p-2 -ml-1 text-center capitalize font-bold">{server.server_name}</span>
                 </div>
                 <img className={`${!server.imageId ? 'w-[2.5em] h-[2.5em]' : 'min-w-[100%] min-h-[100%] w-[100%] h-[100%]'} max-w-[100%] max-h-[100%] object-cover rounded-full hover:rounded-[30%] ease-in-out`} src={server.imageId ? images[server.imageId].url : discordIcon} alt={`${server.server_name}`} />
 
@@ -116,6 +116,10 @@ const Servers = ({ sessionUser }) => {
                       h-[3.6em]
                       rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:bg-serverGreen hover:rounded-[30%]"
           >
+             <div className={`${isHovered ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md left-[4.5em] z-50 flex items-center`}>
+              <div className="relative w-2 h-2 bg-black rotate-45 -left-1"></div>
+              <span className="p-2 -ml-1 text-center capitalize font-bold">Add a Server</span>
+            </div>
             <img
               className="w-[2em] h-[2em] plus-icon"
               src={isHovered ? whitePlusIcon : greenPlusIcon}
