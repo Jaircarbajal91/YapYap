@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../../store/messages";
 import { getDmMessages } from "../../store/messages";
 import { io } from "socket.io-client";
-import { use } from "chai";
 
 export default function Messages({ messages, room }) {
   // const messages = Object.values(useSelector(state => state.messages));
