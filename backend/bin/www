@@ -4,6 +4,8 @@
 // Import environment variables
 require("dotenv").config();
 const { createServer } = require("http");
+const { environment } = require('../config');
+const isProduction = environment === 'production';
 const db = require("../db/models");
 const {User, Message, DirectMessage} = require("../db/models");
 const { Server } = require("socket.io");
@@ -14,12 +16,11 @@ const app = require("../app");
 const server = createServer(app);
 
 // const io = require('socket.io')(server);
-const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    // methods: ["GET", "POST"],
-  },
-});
+const options = !isProduction ? { cors: {
+	origin: "http://localhost:3000",
+	// methods: ["GET", "POST"],
+}} : {};
+const io = new Server(server, options);
 
 io.on("connection", (socket) => {
   console.log(`New client connected ${socket.id}`);
