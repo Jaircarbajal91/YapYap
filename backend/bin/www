@@ -25,6 +25,7 @@ const options = !isProduction
       credentials: true,
     }
   : {};
+  
 const io = new Server(server, options);
 
 io.on("connection", (socket) => {
