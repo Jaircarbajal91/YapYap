@@ -21,11 +21,11 @@ const options = !isProduction
       cors: {
         origin: "http://localhost:3000",
       },
-      allowedHeaders: ["yapayp.herokuapp.com"],
+      allowedHeaders: ["yapyap.herokuapp.com"],
       credentials: true,
     }
   : {};
-  
+
 const io = new Server(server, options);
 
 io.on("connection", (socket) => {
