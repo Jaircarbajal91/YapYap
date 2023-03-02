@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 		static associate(models) {
 			// define association here
 			Message.belongsTo(models.User, { foreignKey: "senderId" });
-			Message.belongsTo(models.Channel);
+			Message.belongsTo(models.Channel, { foreignKey: "id" });
 			Message.hasMany(models.Image, { foreignKey: "id", sourceKey: "imageId" });
 		}
 	}
