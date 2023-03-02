@@ -19,10 +19,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
-if (!isProduction) {
-  // enable cors only in development
-  app.use(cors());
-}
+
 
 // helmet helps set a variety of headers to better secure your app
 app.use(

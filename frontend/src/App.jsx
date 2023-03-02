@@ -17,14 +17,17 @@ import Messages from './components/Messages';
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [serverClicked, setServerClicked] = useState(false);
-  const [messages, setMessages] = useState([]);
+  const [room, setRoom] = useState(null);
 
+  const messages = Object.values(useSelector(state => state.messages))
 
   const sessionUser = useSelector(state => state.session.user);
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
+
+
   return (
     <div className="App flex relative w-full">
         <Switch>
@@ -39,8 +42,8 @@ function App() {
           </ProtectedRoute>
           <ProtectedRoute path="/app">
             <Servers sessionUser={sessionUser} />
-            <MidSection setMessages={setMessages} serverClicked={serverClicked}/>
-            <Messages messages={messages}/>
+            <MidSection setRoom={setRoom} serverClicked={serverClicked}/>
+            <Messages room={room} messages={messages}/>
           </ProtectedRoute>
           <Route path="/" exact={true}>
             <Splash sessionUser={sessionUser} />

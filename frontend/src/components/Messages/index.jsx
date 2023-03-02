@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../../store/messages";
+import { getDmMessages } from "../../store/messages";
 import { io } from "socket.io-client";
+import { use } from "chai";
 
-export default function Messages({ messages, channelId, dmId, imageId }) {
+export default function Messages({ messages, room }) {
   // const messages = Object.values(useSelector(state => state.messages));
   const sessionUser = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
-  const socket = io();
+  const socket = io.connect("http://localhost:8000");
   const [socketConnected, setSocketConnected] = useState(false);
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
+  const [messageReceived, setMessageReceived] = useState("");
 
-  // create socket connection
   useEffect(() => {
-    socket.on("connection", () => {
+    if (room !== null) {
+      socket.emit("joinRoom", { room });
+      console.log('room', room)
       setSocketConnected(true);
-      console.log("socket connected");
+    }
+  }, [room]);
+
+  useEffect(() => {
+    socket.on("receivedMessage", (data) => {
+      console.log(data);
+      dispatch(getDmMessages(data.dmId));
     });
-    return () => {
-      socket.off("connection");
-      setSocketConnected(false);
-    };
-  }, [socket, send]);
+  }, [socket]);
+
+
 
   function send(e) {
     e.preventDefault();
-    socket.emit("chatMessage", newMessage);
-    // console.log(message)
-    dispatch(
-      sendMessage(newMessage, sessionUser.id, { channelId, dmId, imageId })
-    );
+    socket.emit("chatMessage", { newMessage, room, userId: sessionUser.id, dmId: room });
     setNewMessage("");
   }
 
@@ -38,11 +42,12 @@ export default function Messages({ messages, channelId, dmId, imageId }) {
       <div className="p-3 flex flex-col">
         {messages.map((message) => {
           return (
-            <p className="text-offWhite" key={message.id}>
+            <p key={message.id} className="text-offWhite">
               {message.message}
             </p>
           );
         })}
+        {/* <p className="text-offWhite">{messageReceived}</p> */}
       </div>
       <form className="absolute bottom-6 w-[97%]" onSubmit={send}>
         <input

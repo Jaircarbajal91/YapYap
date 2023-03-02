@@ -5,7 +5,7 @@ import { getDirectMessages } from "../../store/directMessages";
 import { useEffect, useState } from "react";
 import Logout from "../../auth/Logout";
 
-const MidSection = ({ serverClicked, setMessages }) => {
+const MidSection = ({ serverClicked, setMessages, setRoom }) => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -22,7 +22,7 @@ const MidSection = ({ serverClicked, setMessages }) => {
           <Channels />
         ) : (
           <DirectMessagesList
-            setMessages={setMessages}
+            setRoom={setRoom}
             directMessages={directMessages}
           />
         )}

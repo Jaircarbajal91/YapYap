@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { csrfFetch } from "../../store/csrf";
 import { getDmMessages } from "../../store/messages";
 
-const DirectMessagesList = ({ directMessages, setMessages }) => {
+const DirectMessagesList = ({ directMessages, setMessages, setRoom }) => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
   const images = useSelector((state) => state.images);
@@ -14,7 +14,6 @@ const DirectMessagesList = ({ directMessages, setMessages }) => {
 
   const showMessages = async (id) => {
     const res = await dispatch(getDmMessages(id));
-    setMessages(res.messages)
   };
 
 
@@ -26,7 +25,10 @@ const DirectMessagesList = ({ directMessages, setMessages }) => {
           <div
             key={dm.id}
             className="w-full flex items-center gap-4 hover:bg-demoButtonHover px-2 py-1 rounded-md cursor-pointer"
-            onClick={() => showMessages(dm.id)}
+            onClick={() => {
+              setRoom(dm.id);
+              showMessages(dm.id)
+            }}
           >
             <img
               className="w-10 h-10 rounded-full"
