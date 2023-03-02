@@ -11,7 +11,7 @@ const DirectMessagesList = ({ directMessages }) => {
     (dm) => dm.ChatMembers.length > 0
   );
   return (
-    <div className="flex flex-col gap-6 items-center justify-start">
+    <div className="flex flex-col items-center justify-start">
       <p className="w-full text-lightGray uppercase">Direct Messages</p>
       {directMessagesList.map((dm) => {
         return (

@@ -69,7 +69,6 @@ const Servers = ({ sessionUser }) => {
             id="DMs"
             onMouseEnter={() => setShowDMSpan(true)}
             onMouseLeave={() => setShowDMSpan(false)}
-            onClick=''
             className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:rounded-[30%] "
           >
             <div className={`${showDMSpan ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md left-[4.5em] z-50 flex items-center`}>
@@ -127,13 +126,6 @@ const Servers = ({ sessionUser }) => {
             />
           </div>
         </div>
-        {/* {channels && channels.map(channel => {
-                return (
-                <button key={channel.id} id={channel.id} className="text-lg" onClick={selectChannel}>
-                    {channel.channel_name}
-                </button>
-            )})}
-            {messages.length > 0 && <Messages messages={messages} channelId={channelId}/>} */}
       </>
     )
   );
