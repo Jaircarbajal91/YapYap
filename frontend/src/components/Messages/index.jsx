@@ -7,9 +7,9 @@ import { io } from "socket.io-client";
 export default function Messages({ messages, room }) {
   // const messages = Object.values(useSelector(state => state.messages));
   const sessionUser = useSelector((state) => state.session.user);
-  const dispatch = useDispatch();
   const REACT_APP_SOCKET_IO_URL = process.env.REACT_APP_SOCKET_IO_URL || "ws://localhost:3000";
   const socket = io.connect(REACT_APP_SOCKET_IO_URL, {secure: true});
+  const dispatch = useDispatch();
   const [socketConnected, setSocketConnected] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState("");

@@ -17,5 +17,8 @@ export default defineConfig({
         changeOrigin: true,
       }
     },
+  },
+  define: {
+    'process.env': {}
   }
 });
