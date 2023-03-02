@@ -12,20 +12,24 @@ import { getServers } from './store/servers';
 import ProtectedRoute from './components/ProtectedRoute';
 import SignupForm from './auth/SignupForm';
 import MidSection from './components/MidSection';
-
+import Messages from './components/Messages';
 
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [serverClicked, setServerClicked] = useState(false);
+  const [room, setRoom] = useState(null);
 
+  const messages = Object.values(useSelector(state => state.messages))
 
   const sessionUser = useSelector(state => state.session.user);
   const dispatch = useDispatch()
   useEffect(() => {
     dispatch(restoreUser()).then(() => setIsLoaded(true));
   }, [dispatch]);
+
+
   return (
-    <div className="App flex relative">
+    <div className="App flex relative w-full">
         <Switch>
           <Route path='/login' exact={true}>
             <LoginForm sessionUser={sessionUser} />
@@ -38,8 +42,8 @@ function App() {
           </ProtectedRoute>
           <ProtectedRoute path="/app">
             <Servers sessionUser={sessionUser} />
-            <MidSection serverClicked={serverClicked}/>
-            <Logout />
+            <MidSection setRoom={setRoom} serverClicked={serverClicked}/>
+            <Messages room={room} messages={messages}/>
           </ProtectedRoute>
           <Route path="/" exact={true}>
             <Splash sessionUser={sessionUser} />

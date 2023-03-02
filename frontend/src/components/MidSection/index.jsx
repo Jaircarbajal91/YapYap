@@ -1,10 +1,11 @@
-import DirectMessagesList from "../DirectMessages"
-import Channels from "../Channels"
-import { useSelector, useDispatch } from "react-redux"
-import { getDirectMessages } from "../../store/directMessages"
-import { useEffect, useState } from "react"
+import DirectMessagesList from "../DirectMessages";
+import Channels from "../Channels";
+import { useSelector, useDispatch } from "react-redux";
+import { getDirectMessages } from "../../store/directMessages";
+import { useEffect, useState } from "react";
+import Logout from "../../auth/Logout";
 
-const MidSection = ({ serverClicked }) => {
+const MidSection = ({ serverClicked, setMessages, setRoom }) => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -16,12 +17,16 @@ const MidSection = ({ serverClicked }) => {
 
   return (
     isLoaded && (
-      <div className="relative z-0 min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray">
+      <div className="relative z-0 min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex flex-col items-start justify-between">
         {serverClicked ? (
           <Channels />
         ) : (
-          <DirectMessagesList directMessages={directMessages} />
+          <DirectMessagesList
+            setRoom={setRoom}
+            directMessages={directMessages}
+          />
         )}
+        <Logout />
       </div>
     )
   );

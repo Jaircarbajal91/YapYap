@@ -27,6 +27,17 @@ export const getMessages = channelId => async dispatch => {
 	}
 };
 
+
+export const getDmMessages = dmId => async dispatch => {
+	const response = await csrfFetch(`/api/messages/dm/${dmId}`);
+	const data = await response.json();
+	if (response.ok) {
+		dispatch(setMessages(data.messages));
+	}
+	return data
+};
+
+
 export const sendMessage =
 	(message, senderId, { channelId, dmId, imageId }) =>
 	async dispatch => {
