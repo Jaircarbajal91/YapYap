@@ -1,12 +1,12 @@
 import { useHistory } from "react-router-dom";
 import yapyap from "../../../assets/images/yapyap.svg";
 import yapyapLogo from '../../../assets/images/yapyapLogo.svg'
-import './Navbar.css'
+
 
 const Navbar = () => {
   const history = useHistory();
   return (
-    <nav className="nav-container">
+    <nav className="absolute flex top-0 justify-around w-full py-3">
       <div className="flex gap-1 cursor-pointer items-center navbar-brand" onClick={() => history.push('/')}>
         <img className="w-[4em]" src={yapyap} alt="" />
         <img className="w-[4em]" src={yapyapLogo} alt="" />
