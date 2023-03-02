@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 const Logout = () => {
   const dispatch = useDispatch();
   return (
-    <button onClick={() => dispatch(logout())}>
+    <button className="cursor-pointer w-[50%] border-2 p-2 text-lightGray text-start " onClick={() => dispatch(logout())}>
       Log Out
     </button>
   );
