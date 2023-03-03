@@ -4,10 +4,14 @@ import { sendMessage } from "../../store/messages";
 import { getDmMessages } from "../../store/messages";
 import { io } from "socket.io-client";
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default function Messages({ messages, room }) {
   // const messages = Object.values(useSelector(state => state.messages));
   const sessionUser = useSelector((state) => state.session.user);
-  const REACT_APP_SOCKET_IO_URL = import.meta.env.REACT_APP_SOCKET_IO_URL || "http://localhost:8000";
+  console.log(isProduction)
+  const REACT_APP_SOCKET_IO_URL = isProduction ? "https://yapyap.herokuapp.com" : "http://localhost:8000";
+  console.log(REACT_APP_SOCKET_IO_URL)
   const socket = io.connect(REACT_APP_SOCKET_IO_URL, {secure: true});
   const dispatch = useDispatch();
   const [socketConnected, setSocketConnected] = useState(false);
