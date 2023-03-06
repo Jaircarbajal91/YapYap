@@ -14,7 +14,6 @@ export default function Channels() {
 
     useEffect(() => {
         dispatch(getChannels(serverId));
-        // console.log(channels)
     }, [dispatch, serverId]);
 
     useEffect(() => {

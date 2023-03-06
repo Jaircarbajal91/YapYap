@@ -29,13 +29,10 @@ const options = !isProduction
 const io = new Server(server, options);
 
 io.on("connection", (socket) => {
-  console.log(`New client connected ${socket.id}`);
   socket.on("joinRoom", (data) => {
     socket.join(data.room);
-    console.log(data);
   });
   socket.on("chatMessage", async (data) => {
-    console.log(data);
     socket.to(data.room).emit("receivedMessage", data);
     const message = await Message.create({
       senderId: data.userId,

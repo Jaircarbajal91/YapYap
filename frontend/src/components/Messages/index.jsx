@@ -9,9 +9,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 export default function Messages({ messages, room }) {
   // const messages = Object.values(useSelector(state => state.messages));
   const sessionUser = useSelector((state) => state.session.user);
-  console.log(isProduction)
   const REACT_APP_SOCKET_IO_URL = isProduction ? "https://yapyap.herokuapp.com" : "http://localhost:8000";
-  console.log(REACT_APP_SOCKET_IO_URL)
   const socket = io.connect(REACT_APP_SOCKET_IO_URL, {secure: true});
   const dispatch = useDispatch();
   const [socketConnected, setSocketConnected] = useState(false);
@@ -21,14 +19,12 @@ export default function Messages({ messages, room }) {
   useEffect(() => {
     if (room !== null) {
       socket.emit("joinRoom", { room });
-      console.log('room', room)
       setSocketConnected(true);
     }
   }, [room]);
 
   useEffect(() => {
     socket.on("receivedMessage", (data) => {
-      console.log(data);
       dispatch(getDmMessages(data.dmId));
     });
   }, [socket]);
