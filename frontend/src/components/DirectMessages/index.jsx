@@ -6,6 +6,7 @@ import { getDmMessages } from "../../store/messages";
 const DirectMessagesList = ({ directMessages, setMessages, setRoom }) => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
+  const [ showCreateDM, setShowCreateDM ] = useState(false);
   const images = useSelector((state) => state.images);
 
   const directMessagesList = directMessages.filter(
@@ -19,7 +20,22 @@ const DirectMessagesList = ({ directMessages, setMessages, setRoom }) => {
 
   return (
     <div className="flex w-full flex-col items-center justify-start">
-      <p className="w-full text-lightGray uppercase">Direct Messages</p>
+      <div className="flex w-full justify-between">
+        <p className="w-full text-lightGray uppercase">Direct Messages</p>
+        <div
+          className="text-lightGray cursor-pointer text-lg"
+          onMouseEnter={() => setShowCreateDM(true)}
+          onMouseLeave={() => setShowCreateDM(false)}
+        >
+          +
+          <div
+            className={`${showCreateDM ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md right-1 z-50 flex items-center`}
+          >
+            <div className="relative w-2 h-2 bg-black rotate-45 -top-4 left-14"></div>
+            <span className="p-2 -ml-1 text-center capitalize font-bold text-xs">Create DM</span>
+          </div>
+        </div>
+      </div>
       {directMessagesList.map((dm) => {
         return (
           <div
