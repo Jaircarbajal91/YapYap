@@ -38,6 +38,7 @@ function App() {
             <SignupForm sessionUser={sessionUser} />
           </Route>
           <ProtectedRoute path="/app/:serverId/" exact={true}>
+            <Servers sessionUser={sessionUser} />
             <Server sessionUser={sessionUser} />
           </ProtectedRoute>
           <ProtectedRoute path="/app">
