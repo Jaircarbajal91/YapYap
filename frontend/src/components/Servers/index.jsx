@@ -56,6 +56,10 @@ const Servers = ({ sessionUser }) => {
     setMessagesLoaded(messages);
   };
 
+  const goBackToDMs = () => {
+    history.push('/app')
+  }
+
 
   return (
     isLoaded && (
@@ -67,6 +71,7 @@ const Servers = ({ sessionUser }) => {
       )}
         <div className="flex flex-col gap-2 items-center justify-start bg-serverBg text-lightGray max-w-[4%] w-[3%] min-w-fit py-2 px-1 min-h-screen max-h-screen overflow-auto">
           <div
+            onClick={goBackToDMs}
             id="DMs"
             onMouseEnter={() => setShowDMSpan(true)}
             onMouseLeave={() => setShowDMSpan(false)}
