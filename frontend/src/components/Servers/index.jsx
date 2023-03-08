@@ -9,7 +9,7 @@ import whitePlusIcon from "../../../assets/images/whitePlusIcon.svg";
 import discordIcon from "../../../assets/images/discordIcon.svg";
 import { Modal } from "../../context/Modal";
 import { getImages } from "../../store/aws_images";
-import { useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const Servers = ({ sessionUser }) => {
   const dispatch = useDispatch();
@@ -37,15 +37,16 @@ const Servers = ({ sessionUser }) => {
   }, [dispatch]);
 
 
-  const selectServer = (e) => {
-    e.preventDefault();
-    // display the channels of the server that was clicked
-    const targetServer = servers.find(
-      server => server.id === parseInt(e.target.id)
-    );
-    setChannels(targetServer.Channels);
-    history.push(`/app/${targetServer.id}`);
-  };
+  // const selectServer = (e) => {
+  //   e.preventDefault();
+  //   // display the channels of the server that was clicked
+  //   const targetServer = servers.find(
+  //     server => server.id === parseInt(e.target?.id)
+  //   );
+
+  //   setChannels(targetServer.Channels);
+  //   history.push(`/app/${targetServer.id}`);
+  // };
 
   const selectChannel = async (e) => {
     e.preventDefault();
@@ -80,9 +81,8 @@ const Servers = ({ sessionUser }) => {
           <hr className="border border-solid border-darkGrey w-[50%]" />
           {servers.map((server, i) => {
             return (
-              <div
+              <Link
                 key={server.id}
-                id={server.id}
                 onMouseEnter={() => {
                   setChannelIdx(i)
                   setShowChannelName(true)
@@ -92,7 +92,7 @@ const Servers = ({ sessionUser }) => {
                   setChannelIdx(-1)
                 }}
                 className="flex justify-center items-center cursor-pointer min-w-[3.6em] min-h-[3.6em] w-[3.6em] h-[3.6em] rounded-[50%] bg-chatBg transform-all ease-in-out duration-300 hover:transition-all hover:rounded-[30%] "
-                onClick={selectServer}
+                to={`/app/${server.id}`}
               >
                 <div className={`${showChannelName && channelIdx === i ? 'inline' : 'hidden'} absolute w-fit h-fit bg-black text-white rounded-md left-[4.5em] z-50 flex items-center`}>
                   <div className="relative w-2 h-2 bg-black rotate-45 -left-1"></div>
@@ -100,7 +100,7 @@ const Servers = ({ sessionUser }) => {
                 </div>
                 <img className={`${!server.imageId ? 'w-[2.5em] h-[2.5em]' : 'min-w-[100%] min-h-[100%] w-[100%] h-[100%]'} max-w-[100%] max-h-[100%] object-cover rounded-full hover:rounded-[30%] ease-in-out`} src={server.imageId ? images[server.imageId].url : discordIcon} alt={`${server.server_name}`} />
 
-              </div>
+              </Link>
             );
           })}
           <div
