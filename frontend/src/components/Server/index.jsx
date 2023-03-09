@@ -14,7 +14,7 @@ export default function ServerDetails({ sessionUser }) {
     const messages = Object.values(useSelector(state => state.messages));
     const [channelId, setChannelId] = useState(null);
     const [messagesLoaded, setMessagesLoaded] = useState([]);
-    const [ showCreateChannel, setShowCreateChannel ] = useState(false);
+    const [showCreateChannel, setShowCreateChannel] = useState(false);
 
     async function selectChannel(e) {
         e.preventDefault();
