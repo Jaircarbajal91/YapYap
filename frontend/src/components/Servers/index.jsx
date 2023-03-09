@@ -103,7 +103,7 @@ const Servers = ({ sessionUser }) => {
                   <div className="relative w-2 h-2 bg-black rotate-45 -left-1"></div>
                   <span className="p-2 -ml-1 text-center capitalize font-bold">{server.server_name}</span>
                 </div>
-                <img className={`${!server.imageId ? 'w-[2.5em] h-[2.5em]' : 'min-w-[100%] min-h-[100%] w-[100%] h-[100%]'} max-w-[100%] max-h-[100%] object-cover rounded-full hover:rounded-[30%] ease-in-out`} src={server.imageId ? images[server.imageId].url : discordIcon} alt={`${server.server_name}`} />
+                <img className={`${!server.imageId ? 'w-[2.5em] h-[2.5em]' : 'min-w-[100%] min-h-[100%] w-[100%] h-[100%]'} max-w-[100%] max-h-[100%] object-cover rounded-full hover:rounded-[30%] ease-in-out`} src={server.imageId ? images[server.imageId]?.url : discordIcon} alt={`${server.server_name}`} />
 
               </Link>
             );
