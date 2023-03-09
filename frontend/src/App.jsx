@@ -33,7 +33,7 @@ function App() {
   }, [dispatch]);
 
   return isLoaded ? (
-    <div className="App flex relative w-full">
+    <div className="App flex relative w-screen">
       <Switch>
         <Route path="/login" exact={true}>
           <LoginForm sessionUser={sessionUser} />
