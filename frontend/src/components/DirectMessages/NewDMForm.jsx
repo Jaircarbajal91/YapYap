@@ -13,7 +13,7 @@ const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
     <div
       ref={wrapperRef}
       id="new-dm-form"
-      className="absolute flex flex-col items-center justify-between py-2 px-3 left-[21%] top-[3.5%] w-[18em] h-[17em] bg-demoButton z-50 rounded-md overflow-auto shadow-md border-[1px] border-darkGray"
+      className="absolute flex flex-col items-center justify-between py-2 px-3 left-[16%] top-[3.5%] w-[18em] h-[17em] bg-demoButton z-50 rounded-md overflow-auto shadow-md border-[1px] border-darkGray"
     >
       <div className="flex flex-col w-full max-h-[82%]">
         <h3 className="text-offWhite font-medium tracking-wide mb-4">
