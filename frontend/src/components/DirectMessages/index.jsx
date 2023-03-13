@@ -16,6 +16,8 @@ const DirectMessagesList = ({ directMessages, setMessages, setRoom }) => {
     (dm) => dm.ChatMembers.length > 0
   );
 
+  
+
   const showMessages = async (id) => {
     const res = await dispatch(getDmMessages(id));
   };
