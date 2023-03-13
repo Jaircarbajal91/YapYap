@@ -11,8 +11,13 @@ const checkAuth = (req, res, next) =>
 // Get all DMs for current user with user info attached
 router.get("/", checkAuth, async (req, res) => {
 	const userId = req.user.id;
-	const messages = await DirectMessage.findAll({
+	const allMessages = await DirectMessage.findAll({
 		include: [{ model: ChatMember, include: [{ model: User }] }]
+	});
+	const messages = allMessages.filter(message => {
+		const members = message.dataValues.ChatMembers;
+		const memberIds = members.map(member => member.dataValues.userId);
+		return memberIds.includes(userId);
 	});
 	return res.json({ messages });
 });

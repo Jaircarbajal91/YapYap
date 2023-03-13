@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { restoreUser } from "./store/session";
+import { restoreUser, fetchAllUsers } from "./store/session";
 import LoginForm from "./auth/LoginForm";
 import Logout from "./auth/Logout";
 import Splash from "./components/splash";
@@ -28,6 +28,7 @@ function App() {
     if (!isLoaded) {
       setTimeout(() => {
         dispatch(restoreUser()).then(() => setIsLoaded(true));
+        dispatch(fetchAllUsers());
       }, 2000);
     }
   }, [dispatch]);

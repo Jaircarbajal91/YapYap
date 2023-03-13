@@ -51,6 +51,22 @@ router.delete(
   }
 );
 
+// get all users except current user and inlcuding their images
+router.get(
+  '/users',
+  async (req, res) => {
+    const users = await User.findAll({
+      attributes: ['id', 'username', 'alias', 'email', 'imageId'],
+      include: { all: true, nested: true }
+    });
+
+    
+
+    return res.json(users);
+  }
+);
+
+
 // Restore session user
 router.get(
   '/restore',
