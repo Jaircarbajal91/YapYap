@@ -49,7 +49,6 @@ export default function Messages({ messages, room }) {
       <div className="p-3 flex flex-col w-full max-w-full max-h-[92%] overflow-auto">
         {messages.map((message) => {
           const { sender } = message;
-          console.log(message.image);
           const newDate = Date.parse(message.updatedAt);
           const formattedDate = format(
             new Date(newDate),

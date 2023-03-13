@@ -28,13 +28,11 @@ export const getDirectMessages = dmId => async dispatch => {
   return data;
 }
 
-export const sendDirectMessage = (message, senderId, dmId) => async dispatch => {
-  const response = await csrfFetch(`/api/directmessages`, {
+export const sendDirectMessage = (recipientIds) => async dispatch => {
+  const response = await csrfFetch(`/api/create`, {
     method: "POST",
     body: JSON.stringify({
-      message,
-      senderId,
-      dmId,
+      recipientIds,
     }),
   });
   const data = await response.json();

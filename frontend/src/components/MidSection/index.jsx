@@ -17,7 +17,7 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
 
   return (
     isLoaded && (
-      <div className="relative z-0 min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex flex-col items-start justify-between">
+      <div className="min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex flex-col items-start justify-between">
         {serverClicked ? (
           <Channels />
         ) : (
