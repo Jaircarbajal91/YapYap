@@ -46,10 +46,14 @@ export default function Messages({ messages, room }) {
     <div className="relative px-5 bg-chatBg max-w-full w-full min-h-screen max-h-screen overflow-auto">
       <div className="p-3 flex flex-col w-full max-w-full">
         {messages.map((message) => {
+          const { sender } = message;
+          console.log(sender);
           return (
-            <p key={message.id} className="text-offWhite">
-              {message.message}
-            </p>
+            <div>
+              <p key={message.id} className="text-offWhite">
+                {message.message}
+              </p>
+            </div>
           );
         })}
         {/* <p className="text-offWhite">{messageReceived}</p> */}
