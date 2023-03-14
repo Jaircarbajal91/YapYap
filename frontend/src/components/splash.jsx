@@ -16,7 +16,7 @@ const Splash = ({ sessionUser }) => {
   if (sessionUser) return <Redirect to="/app" />;
   const history = useHistory()
   return (
-    <div className="top_section h-screen">
+    <div className="top_section h-screen w-full">
       <div className="flex flex-row justify-evenly relative items-end w-full h-4/6 bg-hero gap-x-2 bg-splash-1 bg-bottom bg-no-repeat">
         <Navbar />
         <img
