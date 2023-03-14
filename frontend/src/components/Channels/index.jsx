@@ -29,33 +29,30 @@ export default function Channels() {
         setErrors(errors);
     }, [channel]);
 
-    function createChannel(e) {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        dispatch(createChannel(channel, serverId));
+        // TODO getting a 404 when submitting form to create channel,
+            // channel string and serverId are present, so probably issue in backend
+        await dispatch(createChannel(channel, serverId));
         setChannel('');
     };
 
     return (
-        <>
-
-
-        </>
-
-        // <div>
-        //     <h1>Channels</h1>
-        //     <ul>
-        //         {channels.map(channel => (
-        //             <li key={channel.id}>{channel.name}</li>
-        //         ))}
-        //     </ul>
-        //     <form onSubmit={createChannel}>
-        //         <input
-        //             type="text"
-        //             value={channel}
-        //             onChange={e => setChannel(e.target.value)}
-        //         />
-        //         <button disabled={isDisabled} type="submit">Create Channel</button>
-        //     </form>
-        // </div>
+        <div>
+            {/* <h1>Channels</h1>
+            <ul>
+                {channels.map(channel => (
+                    <li key={channel.id}>{channel.name}</li>
+                ))}
+            </ul> */}
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    value={channel}
+                    onChange={e => setChannel(e.target.value)}
+                />
+                <button disabled={isDisabled} type="submit">Create Channel</button>
+            </form>
+        </div>
     )
 }
