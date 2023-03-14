@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import {createDMRoom } from "../../store/directMessages";
 import check from "../../../assets/images/check.svg";
 
 const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
@@ -8,8 +9,36 @@ const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
   const users = useSelector((state) => state.session.users);
   const sessionUser = useSelector((state) => state.session.user);
   const friends = users.filter((user) => user.id !== sessionUser.id);
+  const [filteredFriends, setFilteredFriends] = useState(friends);
+  const dispatch = useDispatch();
+
+  const filterFriends = (e) => {
+    const filteredFriends = friends.filter((friend) => {
+      if (friend.alias) {
+        return friend.alias.toLowerCase().includes(e.target.value.toLowerCase());
+      } else {
+        return friend.username
+          .toLowerCase()
+          .includes(e.target.value.toLowerCase());
+      }
+    });
+    setFilteredFriends(filteredFriends);
+    return filteredFriends;
+  };
 
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (selectedFriends.length === 0) return;
+    try {
+      const room = await dispatch(createDMRoom(selectedFriends));
+      if (room) {
+        setShowNewDMForm(false);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return (
     <div
@@ -21,8 +50,11 @@ const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
         <h3 className="text-offWhite font-medium tracking-wide mb-4">
           Select Friends
         </h3>
+        <input
+          className="w-full min-h-[2em] focus:outline-none bg-demoButtonHover text-sm px-2 mb-1 text-lightGray rounded-md"
+          placeholder="Type the username of a friend" onChange={filterFriends} type="text" />
         <div className="scrollbar flex flex-col w-full overflow-auto">
-          {friends.map((friend) => {
+          {filteredFriends.map((friend) => {
             return (
               <div
                 onClick={() => {
@@ -62,7 +94,7 @@ const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
         </div>
       </div>
       <div className="absolute flex justify-center bottom-1 min-w-full p-2 border-t-[1px] border-gray">
-        <button className="w-full p-1 bg-[#5865F2] text-offWhite rounded-md">
+        <button onClick={handleSubmit} className="w-full p-1 bg-[#5865F2] text-offWhite rounded-md">
           Create DM
         </button>
       </div>

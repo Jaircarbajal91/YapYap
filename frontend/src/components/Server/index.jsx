@@ -26,7 +26,7 @@ export default function ServerDetails({ sessionUser }) {
 
     return (
         <div className='App flex relative w-full'>
-            <div className="relative z-0 min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex flex-col items-start">
+            <div className="relative scrollbar z-0 min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex flex-col items-start">
                 <h1 className='w-full text-offWhite text-lg ml-1 mb-5'>{server_name}</h1>
                 <div className='flex w-full justify-between'>
                     <h1 className='text-offWhite text-lg ml-1'>Text Channels</h1>
@@ -39,7 +39,7 @@ export default function ServerDetails({ sessionUser }) {
                     </button>
                 )})}
             </div>
-            <div className="relative p-5 bg-chatBg w-full min-h-screen max-h-screen overflow-auto">
+            <div className="relative scrollbar p-5 bg-chatBg w-full min-h-screen max-h-screen overflow-auto">
                 {messages.length > 0 && <Messages messages={messages} channelId={channelId}/>}
             </div>
         </div>

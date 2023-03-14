@@ -37,12 +37,17 @@ router.get("/:dmId", async (req, res) => {
 router.post("/create", checkAuth, async (req, res) => {
 	const userId = req.user.id;
 	const { recipientIds } = req.body;
+	console.log("recipientIds", recipientIds);
 	const dm = await DirectMessage.create();
 	await ChatMember.create({ userId, dmId: dm.id });
 	recipientIds.forEach(async recipientId => {
 		await ChatMember.create({ userId: recipientId, dmId: dm.id });
 	});
-	return res.json(dm);
+	const message = await DirectMessage.findByPk(dm.id, {
+		include: [{ model: ChatMember, include: [{ model: User }] }]
+	});
+
+	return res.json(message);
 });
 
 // Delete a DM

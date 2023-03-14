@@ -28,8 +28,9 @@ export const getDirectMessages = dmId => async dispatch => {
   return data;
 }
 
-export const sendDirectMessage = (recipientIds) => async dispatch => {
-  const response = await csrfFetch(`/api/create`, {
+export const createDMRoom = (recipientIds) => async dispatch => {
+  console.log("recipientIds", recipientIds)
+  const response = await csrfFetch(`/api/directmessages/create`, {
     method: "POST",
     body: JSON.stringify({
       recipientIds,
@@ -39,6 +40,7 @@ export const sendDirectMessage = (recipientIds) => async dispatch => {
   if (response.ok) {
     dispatch(addDirectMessage(data));
   }
+  return data;
 }
 
 const initialState = {};
@@ -54,6 +56,7 @@ const directMessagesReducer = (state = initialState, action) => {
     }
     case ADD_DIRECT_MESSAGE: {
       const newState = { ...state };
+      console.log(action.payload)
       newState[action.payload.id] = action.payload;
       return newState;
     }
