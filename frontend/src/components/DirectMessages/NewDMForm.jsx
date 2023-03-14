@@ -9,6 +9,8 @@ const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
   const sessionUser = useSelector((state) => state.session.user);
   const friends = users.filter((user) => user.id !== sessionUser.id);
 
+
+
   return (
     <div
       ref={wrapperRef}
@@ -19,7 +21,7 @@ const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
         <h3 className="text-offWhite font-medium tracking-wide mb-4">
           Select Friends
         </h3>
-        <div className="flex flex-col w-full overflow-auto">
+        <div className="scrollbar flex flex-col w-full overflow-auto">
           {friends.map((friend) => {
             return (
               <div
