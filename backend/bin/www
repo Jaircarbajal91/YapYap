@@ -19,8 +19,9 @@ const server = createServer(app);
 const options = !isProduction
   ? {
       cors: {
-        origin: ["http://localhost:3000", "https://yapyap.herokuapp.com"]
+        origin: ["http://localhost:3000", "http://localhost:3001"]
       },
+      methods: ["GET", "POST"],
       // allowedHeaders: ["yapyap.herokuapp.com"],
       credentials: true,
     }
