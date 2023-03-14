@@ -2,7 +2,7 @@
 const express = require('express');
 
 const { setTokenCookie, restoreUser } = require('../../utils/auth.js');
-const { User } = require('../../db/models');
+const { User, Image } = require('../../db/models');
 const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation');
 
@@ -60,7 +60,7 @@ router.get(
       include: { all: true, nested: true }
     });
 
-    
+
 
     return res.json(users);
   }
@@ -71,10 +71,11 @@ router.get(
 router.get(
   '/restore',
   restoreUser,
-  (req, res) => {
+  async (req, res) => {
     const { user } = req;
     res.cookie('XSRF-TOKEN', req.csrfToken());
     if (user) {
+
       return res.json({
         user: user.toSafeObject()
       });

@@ -45,8 +45,8 @@ export default function Messages({ messages, room }) {
   }
 
   return (
-    <div className="relative px-5 bg-chatBg max-w-full w-full min-h-screen max-h-screen overflow-auto">
-      <div className="p-3 flex flex-col w-full max-w-full max-h-[92%] overflow-auto">
+    <div className="relative scrollbar px-5 bg-chatBg max-w-full w-full min-h-screen max-h-screen overflow-auto">
+      <div className="p-3 scrollbar flex flex-col w-full max-w-full max-h-[92%] overflow-auto">
         {messages.map((message) => {
           const { sender: { username, alias } } = message;
           const newDate = Date.parse(message.updatedAt);

@@ -69,7 +69,7 @@ const Servers = ({ sessionUser }) => {
             <AddServerForm setShowNewServerModal={setShowNewServerModal}/>
         </Modal>
       )}
-        <div className="flex flex-col gap-2 items-center justify-start bg-serverBg text-lightGray max-w-[4%] w-[3%] min-w-fit py-2 px-1 min-h-screen max-h-screen overflow-auto">
+        <div className="flex scrollbar flex-col gap-2 items-center justify-start bg-serverBg text-lightGray max-w-[4%] w-[3%] min-w-fit py-2 px-1 min-h-screen max-h-screen overflow-auto">
           <div
             onClick={goBackToDMs}
             id="DMs"
