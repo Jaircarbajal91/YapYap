@@ -70,7 +70,7 @@ const DirectMessagesList = ({ directMessages, setMessages, setRoom }) => {
           </div>
         </div>
       </div>
-      {directMessagesList.map((dm) => {
+      {directMessagesList.length > 0 && directMessagesList.map((dm) => {
         const chatMembers = dm.ChatMembers.filter((member) => {
           return member.userId !== sessionUser.id;
         });

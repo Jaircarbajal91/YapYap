@@ -20,8 +20,7 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
   }, [dispatch]);
 
   return (
-    isLoaded &&
-    directMessages.length > 0 && (
+    isLoaded && (
       <div className="min-w-[18em] w-[18em] max-w-[18em] min-h-screen max-h-screen flex flex-col bg-midGray">
         <div className="min-w-full scrollbar max-w-full py-2 px-3 min-h-[92%] max-h-[92%] overflow-auto flex flex-col items-start justify-between">
           {serverClicked ? (
