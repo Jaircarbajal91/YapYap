@@ -28,7 +28,7 @@ export const createChannel = (channel_name, serverId) => async dispatch => {
 	});
 	const data = await response.json();
 	if (response.ok) {
-		dispatch(addChannel(data.channel));
+		dispatch(addChannel(data));
 	}
 };
 

@@ -49,7 +49,7 @@ export default function Messages({ messages, room }) {
       <div className="p-3 scrollbar flex flex-col w-full max-w-full max-h-[92%] overflow-auto">
         {messages.map((message) => {
           const {
-            sender: { username, alias },
+            User: { username, alias },
           } = message;
           const newDate = Date.parse(message.updatedAt);
           const formattedDate = format(

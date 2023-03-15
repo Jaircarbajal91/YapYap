@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { createChannel } from '../../store/channels';
 
-export default function Channels() {
+export default function Channels({ setShowChannelModal }) {
     const { serverId } = useParams();
     const channels = useSelector(state => state.servers?.[serverId]?.Channels);
     const sessionUser = useSelector(state => state.session.user);
@@ -31,10 +31,8 @@ export default function Channels() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        // TODO getting a 404 when submitting form to create channel,
-            // channel string and serverId are present, so probably issue in backend
         await dispatch(createChannel(channel, serverId));
-        setChannel('');
+        setShowChannelModal(false)
     };
 
     return (

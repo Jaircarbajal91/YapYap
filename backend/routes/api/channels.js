@@ -18,7 +18,7 @@ router.get("/:channelId", async (req, res) => {
 });
 
 // Create a channel
-router.post("/create", checkAuth, async (req, res) => {
+router.post("/", checkAuth, async (req, res) => {
 	const { serverId, channel_name } = req.body;
 	const channel = await Channel.create({ serverId, channel_name });
 	return res.json(channel);

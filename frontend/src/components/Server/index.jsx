@@ -12,6 +12,8 @@ export default function ServerDetails({ sessionUser }) {
     const server = useSelector(state => state.servers[serverId]);
     const server_name = server?.server_name;
     const channels = useSelector(state => state.servers?.[serverId]?.Channels);
+    const test = useSelector(state => state.channels)
+    console.log('use selector', test)
     const messages = Object.values(useSelector(state => state.messages));
     const [channelId, setChannelId] = useState(null);
     const [messagesLoaded, setMessagesLoaded] = useState([]);
