@@ -13,7 +13,6 @@ export default function ChannelModal() {
         setShowChannelModal(true)
     }
 
-
     return (
         <>
             <div
@@ -32,7 +31,7 @@ export default function ChannelModal() {
             </div>
             {showChannelModal &&
                 <Modal onClose={closeChannelModal}>
-                    <Channels />
+                    <Channels setShowChannelModal={setShowChannelModal}/>
                 </Modal>
             }
         </>

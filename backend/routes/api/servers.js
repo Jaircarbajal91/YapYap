@@ -62,4 +62,15 @@ router.put("/update/:serverId", checkAuth, async (req, res) => {
 	return res.json(server);
 });
 
+// Get all channels for a server
+router.get('/:serverId/channels', checkAuth, async (req, res) => {
+	const { serverId } = req.params;
+	const channels = await Channel.findAll({
+		where: {
+			serverId: serverId
+		}
+	})
+	return res.json(channels)
+})
+
 module.exports = router;
