@@ -30,7 +30,7 @@ const Servers = ({ sessionUser }) => {
   useEffect(() => {
     setIsLoaded(false)
     dispatch(getImages()).then(() => setIsLoaded(true))
-  }, [dispatch, showNewServerModal]);
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getServers()).then(() => setIsLoaded(true));

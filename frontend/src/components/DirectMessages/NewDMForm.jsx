@@ -26,7 +26,6 @@ const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
     return filteredFriends;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (selectedFriends.length === 0) return;
