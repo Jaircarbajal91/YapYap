@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {createDMRoom } from "../../store/directMessages";
+import { createDMRoom, getDirectMessages } from "../../store/directMessages";
 import check from "../../../assets/images/check.svg";
 
 const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
@@ -33,6 +33,7 @@ const NewDMForm = ({ setShowNewDMForm, wrapperRef }) => {
     try {
       const room = await dispatch(createDMRoom(selectedFriends));
       if (room) {
+        dispatch(getDirectMessages());
         setShowNewDMForm(false);
       }
     } catch (e) {

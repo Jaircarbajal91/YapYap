@@ -56,7 +56,6 @@ const directMessagesReducer = (state = initialState, action) => {
     }
     case ADD_DIRECT_MESSAGE: {
       const newState = { ...state };
-      console.log(action.payload)
       newState[action.payload.id] = action.payload;
       return newState;
     }
