@@ -50,9 +50,11 @@ export default function ServerDetails({ sessionUser }) {
             );
           })}
       </div>
-      {messages.length > 0 && (
-        <Messages messages={messages} channelId={channelId} />
-      )}
+      <div className="bg-chatBg w-full">
+        {messages.length > 0 && (
+          <Messages messages={messages} channelId={channelId} />
+        )}
+      </div>
     </div>
   );
 }

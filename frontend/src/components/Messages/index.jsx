@@ -87,8 +87,8 @@ export default function Messages({ messages, room }) {
         })}
       </div>
       <form className="flex items-center w-full max-w-full mb-5" onSubmit={send}>
-        <div className="flex box-border justify-center items-center w-[2%] h-full bg-demoButton rounded-tl-lg rounded-bl-lg cursor-pointer">
-          <img className="w-full pl-2" src={plus} alt="" />
+        <div className="flex box-border justify-center items-center min-w-[2%] min-h-full bg-demoButton rounded-tl-lg rounded-bl-lg cursor-pointer">
+          <img className="min-w-full pl-2" src={plus} alt="" />
         </div>
         <input
           type="text"

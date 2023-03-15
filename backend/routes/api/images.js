@@ -17,6 +17,7 @@ router.get("/", async (req, res) => {
 router.post("/", upload.single('image'), async (req, res) => {
   // write some safety checks here
   const { file } = req
+  console.log(file)
   const { type } = req.body
   const result = await uploadFile(file)
   const url = result.Location

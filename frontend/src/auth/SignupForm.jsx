@@ -38,7 +38,7 @@ const SignupForm = () => {
     e.preventDefault();
     let newImage;
     if (image) {
-      newImage = await dispatch(addSingleImage(image));
+      newImage = await dispatch(addSingleImage({image, type: 'user'}));
     }
     try {
       const data = await dispatch(signupUser({ email, username, password, imageId: newImage ? newImage.id : null }));
