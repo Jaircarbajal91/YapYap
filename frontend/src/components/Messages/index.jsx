@@ -9,7 +9,6 @@ const isProduction = process.env.NODE_ENV === "production";
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
 export default function Messages({ messages, room }) {
-  // const messages = Object.values(useSelector(state => state.messages));
   const sessionUser = useSelector((state) => state.session.user);
   const REACT_APP_SOCKET_IO_URL = isProduction
     ? "https://yapyap.herokuapp.com"
@@ -45,7 +44,7 @@ export default function Messages({ messages, room }) {
   }
 
   return (
-    <div className="relative scrollbar px-5 bg-chatBg max-w-full w-full min-h-screen max-h-screen overflow-auto">
+    <div className="relative scrollbar px-5 bg-chatBg max-w-full w-full min-h-screen max-h-screen overflow-auto flex flex-col justify-between">
       <div className="p-3 scrollbar flex flex-col w-full max-w-full max-h-[92%] overflow-auto">
         {messages.map((message) => {
           const { sender: { username, alias } } = message;
@@ -84,7 +83,10 @@ export default function Messages({ messages, room }) {
         })}
         {/* <p className="text-offWhite">{messageReceived}</p> */}
       </div>
-      <form className="fixed bottom-6 w-[95%] max-w-full" onSubmit={send}>
+      <div>
+
+      </div>
+      <form className=" w-full max-w-full mb-5" onSubmit={send}>
         <input
           type="text"
           value={newMessage}
