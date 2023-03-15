@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../../store/messages";
 import { getDmMessages } from "../../store/messages";
@@ -19,6 +19,7 @@ export default function Messages({ messages, room }) {
   const [socketConnected, setSocketConnected] = useState(false);
   const [newMessage, setNewMessage] = useState("");
   const [messageReceived, setMessageReceived] = useState("");
+  const wrapperRef = useRef(null);
 
   useEffect(() => {
     if (room !== null) {
@@ -31,6 +32,7 @@ export default function Messages({ messages, room }) {
     socket.on("receivedMessage", (data) => {
       dispatch(getDmMessages(data.dmId));
     });
+    wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
   }, [socket]);
 
   function send(e) {
@@ -43,10 +45,9 @@ export default function Messages({ messages, room }) {
     });
     setNewMessage("");
   }
-
   return (
     <div className="relative scrollbar px-5 bg-chatBg max-w-full w-full min-h-screen max-h-screen overflow-auto flex flex-col justify-between">
-      <div className="p-3 scrollbar flex flex-col w-full max-w-full max-h-[92%] overflow-auto">
+      <div ref={wrapperRef} className="p-3 scrollbar flex flex-col w-full max-w-full max-h-[92%] overflow-auto">
         {messages.map((message) => {
           const {
             User: { username, alias },
