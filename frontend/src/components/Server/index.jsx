@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -25,6 +26,38 @@ export default function ServerDetails({ sessionUser }) {
     const messages = dispatch(getMessages(e.target.id));
     setMessagesLoaded(messages);
   }
+=======
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { getAllChannelsForServer } from '../../store/channels';
+import { getMessages } from '../../store/messages';
+import Channels from '../Channels';
+import ChannelModal from '../Channels/ChannelModal';
+import Messages from '../Messages';
+
+export default function ServerDetails({ sessionUser }) {
+    const { serverId } = useParams();
+    const dispatch = useDispatch();
+    const server = useSelector(state => state.servers[serverId]);
+    const server_name = server?.server_name;
+    const channels = Object.values(useSelector(state => state.channels));
+    const messages = Object.values(useSelector(state => state.messages));
+    const [channelId, setChannelId] = useState(null);
+    const [messagesLoaded, setMessagesLoaded] = useState([]);
+
+    useEffect(() => {
+        dispatch(getAllChannelsForServer(serverId))
+    },[serverId])
+
+    async function selectChannel(e) {
+        e.preventDefault();
+        // display the messages of the channel that was clicked
+        setChannelId(e.target.id);
+        const messages = dispatch(getMessages(e.target.id));
+        setMessagesLoaded(messages);
+    }
+>>>>>>> Stashed changes
 
   return (
     <div className="App flex relative w-full">

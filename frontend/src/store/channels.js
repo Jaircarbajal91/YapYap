@@ -4,6 +4,13 @@ const SET_CHANNELS = "channels/setChannels";
 const ADD_CHANNEL = "channels/addChannel";
 const REMOVE_CHANNEL = "channels/removeChannel";
 
+export const setChannelsForServer = channels => {
+	return {
+		type: SET_CHANNELS,
+		payload: channels
+	}
+}
+
 const addChannel = channel => {
 	return {
 		type: ADD_CHANNEL,
@@ -17,6 +24,16 @@ const removeChannel = channelId => {
 		payload: channelId,
 	};
 };
+
+export const getAllChannelsForServer = (serverId) => async (dispatch) => {
+	const response = await csrfFetch(`/api/servers/${serverId}/channels`)
+
+	const data = await response.json()
+	if (response.ok) {
+		dispatch(setChannelsForServer(data))
+	}
+
+}
 
 export const createChannel = (channel_name, serverId) => async dispatch => {
 	const response = await csrfFetch("/api/channels", {

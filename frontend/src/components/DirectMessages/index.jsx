@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { setChannelsForServer } from "../../store/channels";
 import { csrfFetch } from "../../store/csrf";
 import { getDmMessages } from "../../store/messages";
 import NewDMForm from "./NewDMForm";
@@ -11,6 +12,10 @@ const DirectMessagesList = ({ directMessages, setMessages, setRoom }) => {
   const sessionUser = useSelector((state) => state.session.user);
   const images = useSelector((state) => state.images);
   const wrapperRef = useRef(null);
+
+  useEffect(() => {
+    dispatch(setChannelsForServer([]))
+  },[])
 
   const directMessagesList = directMessages.filter((dm) => {
     return dm.ChatMembers.length > 0;
