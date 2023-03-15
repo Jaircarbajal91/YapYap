@@ -4,6 +4,7 @@ import { sendMessage } from "../../store/messages";
 import { getDmMessages } from "../../store/messages";
 import { io } from "socket.io-client";
 import { zonedTimeToUtc, utcToZonedTime, format } from "date-fns-tz";
+import plus from '../../../assets/images/plus.svg'
 
 const isProduction = process.env.NODE_ENV === "production";
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -47,7 +48,9 @@ export default function Messages({ messages, room }) {
     <div className="relative scrollbar px-5 bg-chatBg max-w-full w-full min-h-screen max-h-screen overflow-auto flex flex-col justify-between">
       <div className="p-3 scrollbar flex flex-col w-full max-w-full max-h-[92%] overflow-auto">
         {messages.map((message) => {
-          const { sender: { username, alias } } = message;
+          const {
+            sender: { username, alias },
+          } = message;
           const newDate = Date.parse(message.updatedAt);
           const formattedDate = format(
             new Date(newDate),
@@ -81,16 +84,15 @@ export default function Messages({ messages, room }) {
             </div>
           );
         })}
-        {/* <p className="text-offWhite">{messageReceived}</p> */}
       </div>
-      <div>
-
-      </div>
-      <form className=" w-full max-w-full mb-5" onSubmit={send}>
+      <form className="flex items-center w-full max-w-full mb-5" onSubmit={send}>
+        <div className="flex box-border justify-center items-center w-[2%] h-full bg-demoButton rounded-tl-lg rounded-bl-lg cursor-pointer">
+          <img className="w-full pl-2" src={plus} alt="" />
+        </div>
         <input
           type="text"
           value={newMessage}
-          className=" p-2 rounded-lg max-w-full w-full bg-demoButton outline-none caret-lightGray px-4 text-lightGray"
+          className=" p-2 rounded-tr-lg rounded-br-lg max-w-full w-full bg-demoButton outline-none caret-lightGray px-4 text-lightGray"
           onChange={(e) => setNewMessage(e.target.value)}
         />
       </form>

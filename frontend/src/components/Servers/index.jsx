@@ -36,18 +36,6 @@ const Servers = ({ sessionUser }) => {
     dispatch(getServers()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
-
-  // const selectServer = (e) => {
-  //   e.preventDefault();
-  //   // display the channels of the server that was clicked
-  //   const targetServer = servers.find(
-  //     server => server.id === parseInt(e.target?.id)
-  //   );
-
-  //   setChannels(targetServer.Channels);
-  //   history.push(`/app/${targetServer.id}`);
-  // };
-
   const selectChannel = async (e) => {
     e.preventDefault();
     // display the messages of the channel that was clicked
