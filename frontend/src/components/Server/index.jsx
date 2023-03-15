@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { getAllChannelsForServer } from '../../store/channels';
 import { getMessages } from '../../store/messages';
-import Channels from '../Channels';
+import Channels from '../Channels/ChannelForm';
 import ChannelModal from '../Channels/ChannelModal';
 import Messages from '../Messages';
 

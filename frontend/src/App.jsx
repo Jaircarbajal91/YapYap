@@ -7,7 +7,7 @@ import Logout from "./auth/Logout";
 import Splash from "./components/splash";
 import Server from "./components/Server";
 import Servers from "./components/Servers";
-import Channels from "./components/Channels";
+import Channels from "./components/Channels/ChannelForm";
 import { getServers } from "./store/servers";
 import ProtectedRoute from "./components/ProtectedRoute";
 import SignupForm from "./auth/SignupForm";

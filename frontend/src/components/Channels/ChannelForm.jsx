@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 
 import { createChannel } from '../../store/channels';
 
-export default function Channels({ setShowChannelModal }) {
+export default function ChannelForm({ setShowChannelModal }) {
     const { serverId } = useParams();
     const channels = useSelector(state => state.servers?.[serverId]?.Channels);
     const sessionUser = useSelector(state => state.session.user);
@@ -36,20 +36,34 @@ export default function Channels({ setShowChannelModal }) {
     };
 
     return (
-        <div>
-            {/* <h1>Channels</h1>
-            <ul>
-                {channels.map(channel => (
-                    <li key={channel.id}>{channel.name}</li>
-                ))}
-            </ul> */}
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="text"
-                    value={channel}
-                    onChange={e => setChannel(e.target.value)}
-                />
-                <button disabled={isDisabled} type="submit">Create Channel</button>
+        <div className='flex flex-col items-center min-w-[25em] w-[25em] h-[15em] p-5'>
+            <div
+                className='font-bold text-2xl h-[30%] flex items-center'
+            >
+                Create Channel
+            </div>
+            <form
+                className='w-full h-[70%] flex flex-col justify-evenly'
+                onSubmit={handleSubmit}
+            >
+                <div
+                    className='w-full border-2 border-[#cfcece] rounded-md h-10'
+                >
+                    <input
+                        placeholder='Channel Name'
+                        className='px-2 w-full focus:outline-none rounded-md h-full'
+                        type="text"
+                        value={channel}
+                        onChange={e => setChannel(e.target.value)}
+                    />
+                </div>
+                <button
+                    className={`border-2 border-[#5865F2] bg-[#5865F2] text-offWhite p-2 rounded-md disabled: ${isDisabled ? 'opacity-70' : 'opacity-100'}`}
+                    disabled={isDisabled}
+                    type="submit"
+                >
+                    Create Channel
+                </button>
             </form>
         </div>
     )

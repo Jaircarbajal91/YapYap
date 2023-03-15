@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Channels from "./index";
+import ChannelForm from "./ChannelForm";
 import { Modal } from "../../context/Modal";
 
 export default function ChannelModal() {
@@ -31,7 +31,7 @@ export default function ChannelModal() {
             </div>
             {showChannelModal &&
                 <Modal onClose={closeChannelModal}>
-                    <Channels setShowChannelModal={setShowChannelModal}/>
+                    <ChannelForm setShowChannelModal={setShowChannelModal}/>
                 </Modal>
             }
         </>
