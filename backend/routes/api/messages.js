@@ -39,7 +39,7 @@ router.get("/dm/:dmId", async (req, res) => {
 		messages.map(async (message) => {
 			const sender = await User.findByPk(message.senderId);
 			const image = await Image.findByPk(message.imageId);
-			return { ...message.dataValues, sender, image };
+			return { ...message.dataValues, User: sender, image };
 		})
 	);
   return res.json({ messages });
