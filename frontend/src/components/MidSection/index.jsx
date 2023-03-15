@@ -1,5 +1,5 @@
 import DirectMessagesList from "../DirectMessages";
-import Channels from "../Channels";
+import Channels from "../Channels/ChannelForm";
 import { useSelector, useDispatch } from "react-redux";
 import { getDirectMessages } from "../../store/directMessages";
 import { useEffect, useState } from "react";
