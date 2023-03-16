@@ -17,6 +17,7 @@ export default function ServerDetails({ sessionUser }) {
     const [channelId, setChannelId] = useState(null);
     const [messagesLoaded, setMessagesLoaded] = useState([]);
 
+    // fetches channels for selected server
     useEffect(() => {
         dispatch(getAllChannelsForServer(serverId))
     },[serverId])

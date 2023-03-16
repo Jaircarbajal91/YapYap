@@ -11,6 +11,7 @@ export default function ChannelForm({ setShowChannelModal }) {
     const [isDisabled, setIsDisabled] = useState(false);
     const [errors, setErrors] = useState([]);
 
+    // toggles button access depending on length of input
     useEffect(() => {
         setIsDisabled(channel.length < 3);
     }, [channel]);
