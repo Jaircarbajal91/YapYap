@@ -32,7 +32,6 @@ export const getAllChannelsForServer = (serverId) => async (dispatch) => {
 	if (response.ok) {
 		dispatch(setChannelsForServer(data))
 	}
-
 }
 
 export const createChannel = (channel_name, serverId) => async dispatch => {

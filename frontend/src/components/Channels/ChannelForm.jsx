@@ -1,38 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import { createChannel } from '../../store/channels';
 
 export default function ChannelForm({ setShowChannelModal }) {
     const { serverId } = useParams();
-    const channels = useSelector(state => state.servers?.[serverId]?.Channels);
-    const sessionUser = useSelector(state => state.session.user);
     const dispatch = useDispatch();
     const [channel, setChannel] = useState('');
-    const [channelsDisplayed, setChannelsDisplayed] = useState(channels);
-    const [isDisabled, setIsDisabled] = useState(true);
+    const [isDisabled, setIsDisabled] = useState(false);
     const [errors, setErrors] = useState([]);
 
-    // useEffect(() => {
-    //     dispatch(getChannels(serverId));
-    // }, [dispatch, serverId]);
-
     useEffect(() => {
-        setChannelsDisplayed(channels);
-    }, [channels]);
-
-    useEffect(() => {
-        const errors = [];
-        if (channel.length === 0) errors.push('Channel name cannot be empty');
-        setIsDisabled(errors.length > 0);
-        setErrors(errors);
+        setIsDisabled(channel.length < 3);
     }, [channel]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        await dispatch(createChannel(channel, serverId));
-        setShowChannelModal(false)
+        try {
+            await dispatch(createChannel(channel, serverId));
+            setShowChannelModal(false)
+        } catch(err) {
+            const errorsObj = await err.json()
+            setErrors(errorsObj.errors)
+        }
     };
 
     return (
@@ -42,6 +33,11 @@ export default function ChannelForm({ setShowChannelModal }) {
             >
                 Create Channel
             </div>
+            {errors && errors.map((error) => (
+                <div className='text-lightRed capitalize'>
+                    {error}
+                </div>
+            ))}
             <form
                 className='w-full h-[70%] flex flex-col justify-evenly'
                 onSubmit={handleSubmit}

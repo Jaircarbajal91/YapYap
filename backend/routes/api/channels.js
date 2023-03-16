@@ -1,5 +1,6 @@
 const express = require("express");
 const { Channel, Message, User } = require("../../db/models");
+const { body, validationResult } = require('express-validator')
 const router = express.Router();
 
 const checkAuth = (req, res, next) =>
@@ -18,10 +19,17 @@ router.get("/:channelId", async (req, res) => {
 });
 
 // Create a channel
-router.post("/", checkAuth, async (req, res) => {
-	const { serverId, channel_name } = req.body;
-	const channel = await Channel.create({ serverId, channel_name });
-	return res.json(channel);
+router.post("/",
+	checkAuth,
+	body('channel_name').isLength({min: 3, max: 100}),
+	async (req, res) => {
+		const errors = validationResult(req);
+		if (!errors.isEmpty()) {
+			return res.status(400).json({ errors: ['Channel name must be between 3 and 100 characters'] })
+		}
+		const { serverId, channel_name } = req.body;
+		const channel = await Channel.create({ serverId, channel_name });
+		return res.json(channel);
 });
 
 // Delete a channel
