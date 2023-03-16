@@ -45,7 +45,10 @@ export default function ServerDetails({ sessionUser }) {
               <button
                 key={channel.id}
                 id={channel.id}
-                className="text-lg"
+                // make the button active if it is the selected channel
+                className={`w-full text-offWhite text-left text-sm mb-1 pl-4 hover:bg-darkGray rounded min-h-fit h-8 ${
+                  channelId === channel.id ? 'bg-darkGray text-bold' : ''
+                }`}
                 onClick={selectChannel}
               >
                 # {channel.channel_name}
