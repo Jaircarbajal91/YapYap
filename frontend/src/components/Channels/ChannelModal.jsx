@@ -1,21 +1,24 @@
 import { useState } from "react";
 import ChannelForm from "./ChannelForm";
 import { Modal } from "../../context/Modal";
+import optionsIcon from '../../../assets/images/options.svg'
 
-export default function ChannelModal() {
+export default function ChannelModal({ channel, formType }) {
     const [ showChannelModal, setShowChannelModal ] = useState(false);
     const [ showCreateChannel, setShowCreateChannel ] = useState(false);
 
-    const closeChannelModal = () => {
+    const closeChannelModal = (e) => {
         setShowChannelModal(false)
+        e.stopPropagation()
     }
-    const openChannelModal = () => {
+    const openChannelModal = (e) => {
+        e.stopPropagation()
         setShowChannelModal(true)
     }
 
     return (
         <>
-            <div
+            {formType === 'Create' ? <div
                 className="text-lightGray cursor-pointer text-2xl relative mr-1"
                 onMouseEnter={() => setShowCreateChannel(true)}
                 onMouseLeave={() => setShowCreateChannel(false)}
@@ -29,9 +32,17 @@ export default function ChannelModal() {
                     <span className="p-2 -ml-1 text-center capitalize font-bold text-xs">Create Channel</span>
                 </div>
             </div>
+            :
+                <img
+                  className='mr-1'
+                  onClick={openChannelModal}
+                  src={optionsIcon}
+                  alt='options'
+                />
+            }
             {showChannelModal &&
                 <Modal onClose={closeChannelModal}>
-                    <ChannelForm setShowChannelModal={setShowChannelModal}/>
+                    <ChannelForm setShowChannelModal={setShowChannelModal} formType={formType} channel={channel} />
                 </Modal>
             }
         </>

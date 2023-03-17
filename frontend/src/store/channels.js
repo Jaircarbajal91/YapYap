@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 const SET_CHANNELS = "channels/setChannels";
 const ADD_CHANNEL = "channels/addChannel";
+const UPDATE_CHANNEL = "channels/updateChannel"
 const REMOVE_CHANNEL = "channels/removeChannel";
 
 export const setChannelsForServer = channels => {
@@ -17,6 +18,13 @@ const addChannel = channel => {
 		payload: channel,
 	};
 };
+
+const updateChannelAction = channel => {
+	return {
+		type: UPDATE_CHANNEL,
+		payload: channel
+	}
+}
 
 const removeChannel = channelId => {
 	return {
@@ -48,6 +56,19 @@ export const createChannel = (channel_name, serverId) => async dispatch => {
 	}
 };
 
+export const updateChannel = (channelId, channelName) => async (dispatch) => {
+	const response = await csrfFetch(`/api/${channelId}`, {
+		method: 'PUT',
+		body: JSON.stringify({
+			channelName
+		})
+	})
+	const data = await response.json()
+	if (response.ok) {
+		dispatch(updateChannelAction(data))
+	}
+}
+
 export const deleteChannel = channelId => async dispatch => {
 	const response = await csrfFetch(`/api/channels/${channelId}`, {
 		method: "DELETE",
@@ -71,6 +92,11 @@ const channelsReducer = (state = initialState, action) => {
 			const newState = { ...state };
 			newState[action.payload.id] = action.payload;
 			return newState;
+		}
+		case UPDATE_CHANNEL: {
+			const newState = { ...state };
+			newState[action.payload.id] = action.payload
+			return newState
 		}
 		case REMOVE_CHANNEL: {
 			const newState = { ...state };
