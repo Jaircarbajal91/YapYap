@@ -12,21 +12,22 @@ export default function ServerDetails({ sessionUser }) {
     const dispatch = useDispatch();
     const server = useSelector(state => state.servers[serverId]);
     const server_name = server?.server_name;
-    const channels = Object.values(useSelector(state => state.channels));
+    const channelsObj = useSelector(state => state.channels);
+    const channels = Object.values(channelsObj);
     const messages = Object.values(useSelector(state => state.messages));
     const [channelId, setChannelId] = useState(null);
     const [messagesLoaded, setMessagesLoaded] = useState([]);
 
     // fetches channels for selected server
     useEffect(() => {
-        dispatch(getAllChannelsForServer(serverId))
+        dispatch(getAllChannelsForServer(serverId));
     },[serverId])
 
     async function selectChannel(e) {
         e.preventDefault();
         // display the messages of the channel that was clicked
-        setChannelId(e.target.id);
-        const messages = dispatch(getMessages(e.target.id));
+        setChannelId(e.currentTarget.id);
+        const messages = await dispatch(getMessages(e.currentTarget.id));
         setMessagesLoaded(messages);
     }
 
@@ -38,22 +39,27 @@ export default function ServerDetails({ sessionUser }) {
         </h1>
         <div className="flex w-full justify-between">
           <h1 className="text-offWhite text-lg ml-1">Text Channels</h1>
-          <ChannelModal />
+          <ChannelModal formType='Create'/>
         </div>
         {channels &&
           channels.map((channel) => {
             return (
-              <button
+              <div
                 key={channel.id}
                 id={channel.id}
                 // make the button active if it is the selected channel
-                className={`w-full text-offWhite text-left text-sm mb-1 pl-4 hover:bg-darkGray rounded min-h-fit h-8 ${
+                className={`w-full flex justify-between text-offWhite text-left text-sm mb-1 pl-4 hover:bg-darkGray cursor-pointer rounded min-h-fit h-8 ${
                   channelId === channel.id ? 'bg-darkGray text-bold' : ''
                 }`}
                 onClick={selectChannel}
               >
-                # {channel.channel_name}
-              </button>
+                <div
+                  className='mt-1'
+                >
+                  # {channel.channel_name}
+                </div>
+                <ChannelModal channel={channel} formType='Update' />
+              </div>
             );
           })}
       </div>

@@ -33,7 +33,7 @@ router.post("/",
 });
 
 // Delete a channel
-router.delete("/delete/:channelId", checkAuth, async (req, res) => {
+router.delete("/:channelId", checkAuth, async (req, res) => {
 	const { channelId } = req.params;
 	const channel = await Channel.findByPk(channelId);
 	await channel.destroy();
@@ -43,7 +43,7 @@ router.delete("/delete/:channelId", checkAuth, async (req, res) => {
 });
 
 // Update a channel
-router.put("/update/:channelId", checkAuth, async (req, res) => {
+router.put("/:channelId", checkAuth, async (req, res) => {
 	const { channelId } = req.params;
 	const { channel_name } = req.body;
 	const channel = await Channel.findByPk(channelId);
