@@ -57,15 +57,17 @@ export const createChannel = (channel_name, serverId) => async dispatch => {
 };
 
 export const updateChannel = (channelId, channelName) => async (dispatch) => {
-	const response = await csrfFetch(`/api/${channelId}`, {
+	const response = await csrfFetch(`/api/channels/${channelId}`, {
 		method: 'PUT',
 		body: JSON.stringify({
-			channelName
+			channel_name: channelName
 		})
 	})
 	const data = await response.json()
 	if (response.ok) {
 		dispatch(updateChannelAction(data))
+	} else {
+		throw new Error(data.message || 'Failed to update channel')
 	}
 }
 
@@ -75,6 +77,9 @@ export const deleteChannel = channelId => async dispatch => {
 	});
 	if (response.ok) {
 		dispatch(removeChannel(channelId));
+	} else {
+		const data = await response.json();
+		throw new Error(data.message || 'Failed to delete channel');
 	}
 };
 

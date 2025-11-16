@@ -2,3 +2,7 @@ PORT=8000
 DB_FILE=db/dev.db
 JWT_SECRET=your_jwt_secret
 JWT_EXPIRES_IN=604800
+S3_BUCKET=your_bucket_name
+S3_REGION=us-east-1
+S3_KEY=your_aws_access_key_id
+S3_SECRET=your_aws_secret_access_key

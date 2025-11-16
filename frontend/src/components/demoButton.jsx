@@ -12,7 +12,12 @@ const DemoButton = () => {
     }
 
     return (
-        <button className="bg-demoButton tracking-wider text-white w-fit p-3 px-4 rounded-full hover:bg-demoButtonHover transition delay-75" onClick={handleDemo}>Demo Login</button>
+        <button
+            className="w-full rounded-full border border-white/20 bg-white/10 px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20 sm:w-auto"
+            onClick={handleDemo}
+        >
+            Demo login
+        </button>
     )
 }
 

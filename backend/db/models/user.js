@@ -56,6 +56,8 @@ module.exports = (sequelize, DataTypes) => {
 			// });
 			User.hasMany(models.Message, { foreignKey: "senderId" });
 			User.hasOne(models.Image, { foreignKey: "id" });
+			User.hasMany(models.Friend, { foreignKey: "userId", as: "friends" });
+			User.hasMany(models.Friend, { foreignKey: "friendId", as: "friendOf" });
 		}
 	}
 	User.init(

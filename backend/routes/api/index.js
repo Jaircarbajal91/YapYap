@@ -6,6 +6,7 @@ const channelsRouter = require('./channels');
 const imagesRouter = require('./images');
 const messagesRouter = require('./messages');
 const directMessage = require('./directMessages');
+const friendsRouter = require('./friends');
 const { restoreUser } = require("../../utils/auth");
 
 router.use(restoreUser);
@@ -16,6 +17,7 @@ router.use("/channels", channelsRouter);
 router.use("/images", imagesRouter);
 router.use("/messages", messagesRouter);
 router.use("/directmessages", directMessage);
+router.use("/friends", friendsRouter);
 
 router.post('/test', function(req, res) {
     res.json({ requestBody: req.body });

@@ -7,8 +7,9 @@ const { createServer } = require("http");
 const { environment } = require("../config");
 const isProduction = environment === "production";
 const db = require("../db/models");
-const { User, Message, DirectMessage } = require("../db/models");
-const { Server } = require("socket.io");
+const { User, Message, Image, Server } = require("../db/models");
+const { Server: SocketIOServer } = require("socket.io");
+const { deleteFile } = require("../awsS3");
 // const socketio = require("socket.io");
 const { port } = require("../config");
 
@@ -27,23 +28,328 @@ const options = !isProduction
     }
   : {};
 
-const io = new Server(server, options);
+const io = new SocketIOServer(server, options);
+
+// Attach io to app so routes can access it
+app.set('io', io);
+
+// Store typing state: { roomId: { userId: { username, alias, socketId } } }
+const typingUsers = {};
+
+// Helper function to safely delete a message image from S3
+const deleteMessageImage = async (imageId) => {
+  if (!imageId) return;
+
+  try {
+    const image = await Image.findByPk(imageId);
+    if (!image) return;
+
+    // Only delete images that are specifically for messages
+    if (image.type !== "message") return;
+
+    // Check if image is used by any other message
+    const otherMessages = await Message.findOne({
+      where: { imageId: imageId },
+    });
+
+    // Check if image is used by any user or server
+    const usedByUser = await User.findOne({ where: { imageId: imageId } });
+    const usedByServer = await Server.findOne({ where: { imageId: imageId } });
+
+    // Only delete if not used elsewhere
+    if (!otherMessages && !usedByUser && !usedByServer) {
+      // Delete from S3
+      await deleteFile(image.url);
+      // Delete from database
+      await image.destroy();
+    }
+  } catch (error) {
+    console.error("Error deleting message image:", error);
+    // Don't throw - we don't want to fail the message operation if image deletion fails
+  }
+};
 
 io.on("connection", (socket) => {
+  console.log("Socket connected:", socket.id);
+  
   socket.on("joinRoom", (data) => {
-    socket.join(data.room);
+    if (data?.room) {
+      console.log("Socket", socket.id, "joining room:", data.room);
+      socket.join(data.room);
+      // Log how many sockets are in the room
+      io.in(data.room).fetchSockets().then(sockets => {
+        console.log(`Room ${data.room} now has ${sockets.length} socket(s)`);
+      });
+    }
   });
+
+  socket.on("leaveRoom", (data) => {
+    if (data?.room) {
+      socket.leave(data.room);
+    }
+  });
+
+  socket.on("joinUserRoom", (data) => {
+    const { userId } = data || {};
+    if (userId) {
+      socket.join(`user-${userId}`);
+    }
+  });
+
+  socket.on("leaveUserRoom", (data) => {
+    const { userId } = data || {};
+    if (userId) {
+      socket.leave(`user-${userId}`);
+    }
+  });
+
   socket.on("chatMessage", async (data) => {
-    socket.to(data.room).emit("receivedMessage", data);
-    const message = await Message.create({
-      senderId: data.userId,
-      message: data.newMessage,
-      channelId: data?.channelId || null,
-      imageId: data?.imageId || null,
-      dmId: data?.dmId || null,
+    const { room, newMessage, userId, channelId, dmId, imageId } = data || {};
+
+    if (!room || !newMessage || !userId) return;
+
+    try {
+      const messageRecord = await Message.create({
+        senderId: userId,
+        message: newMessage,
+        channelId: channelId || null,
+        imageId: imageId || null,
+        dmId: dmId || null,
+      });
+
+      const messageWithUser = await Message.findByPk(messageRecord.id, {
+        include: [{ model: User }],
+      });
+
+      const messageJson = messageWithUser?.toJSON();
+
+      if (!messageJson) return;
+
+      let image = null;
+      if (messageJson.imageId) {
+        const imageRecord = await Image.findByPk(messageJson.imageId);
+        image = imageRecord ? imageRecord.url : null;
+      }
+
+      io.to(room).emit("receivedMessage", {
+        message: {
+          ...messageJson,
+          image,
+        },
+      });
+    } catch (error) {
+      console.error("Error processing chatMessage event:", error);
+    }
+  });
+
+  socket.on("updateMessage", async (data) => {
+    const { room, messageId, message, userId, imageId, removeImage } = data || {};
+
+    if (!room || !messageId || !userId) return;
+
+    try {
+      const messageRecord = await Message.findByPk(messageId);
+      
+      if (!messageRecord || messageRecord.senderId !== userId) return;
+
+      const oldImageId = messageRecord.imageId;
+
+      // Update message text if provided
+      if (message !== undefined) {
+        messageRecord.message = message;
+      }
+
+      // Handle image changes
+      if (removeImage === true) {
+        // Remove image from message
+        messageRecord.imageId = null;
+        // Delete the old image if it exists
+        if (oldImageId) {
+          await deleteMessageImage(oldImageId);
+        }
+      } else if (imageId !== undefined) {
+        // Set new image (or null to remove)
+        if (imageId !== messageRecord.imageId && oldImageId) {
+          // Delete old image if it's being replaced
+          await deleteMessageImage(oldImageId);
+        }
+        messageRecord.imageId = imageId;
+      }
+
+      await messageRecord.save();
+
+      const messageWithUser = await Message.findByPk(messageRecord.id, {
+        include: [{ model: User }],
+      });
+
+      const messageJson = messageWithUser?.toJSON();
+
+      if (!messageJson) return;
+
+      let image = null;
+      if (messageJson.imageId) {
+        const imageRecord = await Image.findByPk(messageJson.imageId);
+        image = imageRecord ? imageRecord.url : null;
+      }
+
+      io.to(room).emit("messageUpdated", {
+        message: {
+          ...messageJson,
+          image,
+        },
+      });
+    } catch (error) {
+      console.error("Error processing updateMessage event:", error);
+    }
+  });
+
+  socket.on("deleteMessage", async (data) => {
+    const { room, messageId, userId } = data || {};
+
+    if (!room || !messageId || !userId) return;
+
+    try {
+      const messageRecord = await Message.findByPk(messageId);
+      
+      if (!messageRecord || messageRecord.senderId !== userId) return;
+
+      const imageId = messageRecord.imageId;
+
+      // Delete the message
+      await messageRecord.destroy();
+
+      // Delete associated image from S3 if it exists
+      if (imageId) {
+        await deleteMessageImage(imageId);
+      }
+
+      io.to(room).emit("messageDeleted", {
+        messageId,
+      });
+    } catch (error) {
+      console.error("Error processing deleteMessage event:", error);
+    }
+  });
+
+  socket.on("typingStart", (data) => {
+    const { room, userId, username, alias } = data || {};
+    if (!room || !userId) {
+      console.log("typingStart: Missing room or userId", { room, userId });
+      return;
+    }
+
+    // Ensure userId is treated as a string for object key consistency
+    const userIdKey = String(userId);
+    
+    console.log("typingStart received:", { room, userId, userIdKey, username, alias, socketId: socket.id });
+
+    // Initialize room if it doesn't exist
+    if (!typingUsers[room]) {
+      typingUsers[room] = {};
+    }
+
+    // Add user to typing list (use string key for consistency)
+    typingUsers[room][userIdKey] = {
+      userId: Number(userId), // Store as number for consistency
+      username: username || "Unknown",
+      alias: alias || null,
+      socketId: socket.id,
+    };
+
+    console.log("After adding user, typingUsers[room]:", JSON.stringify(typingUsers[room], null, 2));
+    console.log("Object.keys(typingUsers[room]):", Object.keys(typingUsers[room]));
+    console.log("Object.values(typingUsers[room]):", Object.values(typingUsers[room]));
+
+    // Get all typing users in the room (including the one who just started typing)
+    const allTypingUsers = Object.values(typingUsers[room])
+      .map((user) => ({
+        userId: user.userId,
+        username: user.username,
+        alias: user.alias,
+      }));
+
+    console.log("All typing users in room:", room, allTypingUsers);
+    console.log("Array length:", allTypingUsers.length);
+    console.log("Broadcasting typing to room:", room, "excluding socket:", socket.id);
+
+    // Broadcast to other users in the room (excluding the sender)
+    // The frontend will filter out the current user
+    socket.to(room).emit("userTyping", {
+      room,
+      userId: Number(userId),
+      username: username || "Unknown",
+      alias: alias || null,
+      typingUsers: allTypingUsers, // Send all typing users, frontend will filter
+    });
+    
+    console.log("Emitted userTyping event to room:", room, "with typingUsers:", JSON.stringify(allTypingUsers));
+  });
+
+  socket.on("typingStop", (data) => {
+    const { room, userId } = data || {};
+    if (!room || !userId) return;
+
+    // Ensure userId is treated as a string for object key consistency
+    const userIdKey = String(userId);
+
+    console.log("typingStop received:", { room, userId, userIdKey, socketId: socket.id });
+
+    // Remove user from typing list (use string key)
+    if (typingUsers[room] && typingUsers[room][userIdKey]) {
+      delete typingUsers[room][userIdKey];
+
+      // Clean up empty rooms
+      if (Object.keys(typingUsers[room]).length === 0) {
+        delete typingUsers[room];
+      }
+    }
+
+    // Get all remaining typing users
+    const remainingTypingUsers = typingUsers[room]
+      ? Object.values(typingUsers[room]).map((user) => ({
+          userId: user.userId,
+          username: user.username,
+          alias: user.alias,
+        }))
+      : [];
+
+    console.log("Broadcasting typingStop to room:", room, "remaining users:", remainingTypingUsers);
+
+    // Broadcast to other users in the room
+    socket.to(room).emit("userStoppedTyping", {
+      room,
+      userId,
+      typingUsers: remainingTypingUsers,
     });
   });
-  socket.on("disconnect", () => console.log("Client disconnected"));
+
+  socket.on("disconnect", () => {
+    console.log("Socket disconnecting:", socket.id);
+    // Clean up typing state for this socket
+    Object.keys(typingUsers).forEach((room) => {
+      Object.keys(typingUsers[room]).forEach((userIdKey) => {
+        if (typingUsers[room][userIdKey].socketId === socket.id) {
+          const userId = typingUsers[room][userIdKey].userId;
+          delete typingUsers[room][userIdKey];
+          // Notify others in the room
+          socket.to(room).emit("userStoppedTyping", {
+            room,
+            userId,
+            typingUsers: Object.values(typingUsers[room]).map((user) => ({
+              userId: user.userId,
+              username: user.username,
+              alias: user.alias,
+            })),
+          });
+        }
+      });
+      // Clean up empty rooms
+      if (Object.keys(typingUsers[room]).length === 0) {
+        delete typingUsers[room];
+      }
+    });
+    console.log("Client disconnected:", socket.id);
+  });
 });
 
 // Check the database connection before starting the app

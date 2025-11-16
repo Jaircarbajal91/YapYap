@@ -1,5 +1,5 @@
 const express = require("express");
-const { Channel, Message, User } = require("../../db/models");
+const { Channel, Message, User, Image } = require("../../db/models");
 const { body, validationResult } = require('express-validator')
 const router = express.Router();
 
@@ -11,10 +11,24 @@ const checkAuth = (req, res, next) =>
 // Get all messages for a channel with user info attached
 router.get("/:channelId", async (req, res) => {
 	const { channelId } = req.params;
-	const messages = await Message.findAll({
-		include: [{ model: User }],
+	let messages = await Message.findAll({
+		include: [{ 
+			model: User,
+			include: [{ model: Image }]
+		}],
 		where: { channelId },
 	});
+	messages = await Promise.all(
+		messages.map(async (message) => {
+			const messageJson = message.toJSON();
+			let image = null;
+			if (messageJson.imageId) {
+				const imageRecord = await Image.findByPk(messageJson.imageId);
+				image = imageRecord ? imageRecord.url : null;
+			}
+			return { ...messageJson, image };
+		})
+	);
 	return res.json(messages);
 });
 

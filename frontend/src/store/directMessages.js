@@ -12,10 +12,17 @@ const setDirectMessages = directMessages => {
   };
 }
 
-const addDirectMessage = directMessage => {
+export const addDirectMessage = directMessage => {
   return {
     type: ADD_DIRECT_MESSAGE,
     payload: directMessage,
+  };
+}
+
+export const removeDirectMessage = (dmId) => {
+  return {
+    type: REMOVE_DIRECT_MESSAGE,
+    payload: dmId,
   };
 }
 
@@ -43,6 +50,16 @@ export const createDMRoom = (recipientIds) => async dispatch => {
   return data;
 }
 
+export const deleteDirectMessage = (dmId) => async dispatch => {
+  const response = await csrfFetch(`/api/directmessages/delete/${dmId}`, {
+    method: "DELETE",
+  });
+  if (response.ok) {
+    dispatch(removeDirectMessage(dmId));
+  }
+  return response;
+}
+
 const initialState = {};
 
 const directMessagesReducer = (state = initialState, action) => {
@@ -57,6 +74,11 @@ const directMessagesReducer = (state = initialState, action) => {
     case ADD_DIRECT_MESSAGE: {
       const newState = { ...state };
       newState[action.payload.id] = action.payload;
+      return newState;
+    }
+    case REMOVE_DIRECT_MESSAGE: {
+      const newState = { ...state };
+      delete newState[action.payload];
       return newState;
     }
     default:

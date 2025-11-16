@@ -37,14 +37,29 @@ router.get("/:dmId", async (req, res) => {
 router.post("/create", checkAuth, async (req, res) => {
 	const userId = req.user.id;
 	const { recipientIds } = req.body;
+	const io = req.app.get('io');
 	const dm = await DirectMessage.create();
 	await ChatMember.create({ userId, dmId: dm.id });
-	recipientIds.forEach(async recipientId => {
+	
+	// Create all chat members and collect their IDs
+	const allMemberIds = [userId, ...recipientIds];
+	for (const recipientId of recipientIds) {
 		await ChatMember.create({ userId: recipientId, dmId: dm.id });
-	});
+	}
+	
 	const message = await DirectMessage.findByPk(dm.id, {
 		include: [{ model: ChatMember, include: [{ model: User }] }]
 	});
+
+	// Emit socket event to all members for live DM creation
+	if (io && message) {
+		const dmData = message.toJSON ? message.toJSON() : message;
+		allMemberIds.forEach(memberId => {
+			io.to(`user-${memberId}`).emit("directMessageCreated", {
+				directMessage: dmData,
+			});
+		});
+	}
 
 	return res.json(message);
 });
@@ -52,9 +67,41 @@ router.post("/create", checkAuth, async (req, res) => {
 // Delete a DM
 router.delete("/delete/:dmId", checkAuth, async (req, res) => {
 	const { dmId } = req.params;
-	const dm = await DirectMessage.findByPk(dmId);
-	await dm.destroy();
-	return res.json({ message: `successfully deleted ${dm.dataValues.dm_name}` });
+	const userId = req.user.id;
+	const io = req.app.get('io');
+	try {
+		const dm = await DirectMessage.findByPk(dmId, {
+			include: [{ model: ChatMember }]
+		});
+		
+		if (!dm) {
+			return res.status(404).json({ error: "Direct message not found" });
+		}
+
+		// Check if user is a member of this DM
+		const isMember = dm.ChatMembers.some(member => member.userId === userId);
+		if (!isMember) {
+			return res.status(403).json({ error: "You are not a member of this direct message" });
+		}
+
+		// Get all member IDs before destroying
+		const memberIds = dm.ChatMembers.map(member => member.userId);
+
+		await dm.destroy();
+
+		// Emit socket event to all members for live DM deletion
+		if (io) {
+			memberIds.forEach(memberId => {
+				io.to(`user-${memberId}`).emit("directMessageDeleted", {
+					dmId,
+				});
+			});
+		}
+
+		return res.json({ message: "Direct message deleted successfully" });
+	} catch (error) {
+		return res.status(500).json({ error: error.message });
+	}
 });
 
 module.exports = router;

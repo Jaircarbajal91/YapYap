@@ -4,6 +4,8 @@ const SET_SERVERS = "servers/setServers";
 const ADD_SERVER = "servers/addServer";
 const REMOVE_SERVER = "servers/removeServer";
 const UPDATE_SERVER = "servers/updateServer";
+const MEMBER_ADDED_TO_SERVER = "servers/memberAddedToServer";
+const MEMBER_REMOVED_FROM_SERVER = "servers/memberRemovedFromServer";
 
 const setServers = servers => {
 	return {
@@ -29,6 +31,13 @@ const removeServer = serverId => {
 const updateServer = server => {
 	return {
 		type: UPDATE_SERVER,
+		payload: server,
+	};
+};
+
+const memberAddedToServer = (server) => {
+	return {
+		type: MEMBER_ADDED_TO_SERVER,
 		payload: server,
 	};
 };
@@ -64,7 +73,10 @@ export const deleteServer = serverId => async dispatch => {
 	});
 	if (response.ok) {
 		dispatch(removeServer(serverId));
-		return response;
+		return { ok: true };
+	} else {
+		const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+		return { ok: false, error: errorData.error || "Failed to delete server" };
 	}
 };
 
@@ -83,6 +95,42 @@ export const editServer = server => async dispatch => {
 		return response;
 	}
 };
+
+export const addFriendToServer = (serverId, friendId) => async dispatch => {
+	const response = await csrfFetch(`/api/servers/${serverId}/add-member`, {
+		method: "POST",
+		body: JSON.stringify({ friendId }),
+	});
+	if (response.ok) {
+		const data = await response.json();
+		return { ok: true, data };
+	} else {
+		const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+		return { ok: false, error: errorData.error || "Failed to add friend to server" };
+	}
+};
+
+export const leaveServer = (serverId) => async dispatch => {
+	const response = await csrfFetch(`/api/servers/${serverId}/leave`, {
+		method: "DELETE",
+	});
+	if (response.ok) {
+		dispatch(removeServer(serverId));
+		return { ok: true };
+	} else {
+		const errorData = await response.json().catch(() => ({ error: "Unknown error" }));
+		return { ok: false, error: errorData.error || "Failed to leave server" };
+	}
+};
+
+const memberRemovedFromServer = (serverId) => {
+	return {
+		type: MEMBER_REMOVED_FROM_SERVER,
+		payload: serverId,
+	};
+};
+
+export { memberAddedToServer, memberRemovedFromServer };
 
 const initialState = {};
 const serversReducer = (state = initialState, action) => {
@@ -107,6 +155,22 @@ const serversReducer = (state = initialState, action) => {
 		case UPDATE_SERVER: {
 			const newState = { ...state };
 			newState[action.payload.id] = action.payload;
+			return newState;
+		}
+		case MEMBER_ADDED_TO_SERVER: {
+			const newState = { ...state };
+			// If server data is provided, add/update it
+			if (action.payload && action.payload.id) {
+				newState[action.payload.id] = action.payload;
+			}
+			return newState;
+		}
+		case MEMBER_REMOVED_FROM_SERVER: {
+			const newState = { ...state };
+			// Remove server from state if user left
+			if (action.payload) {
+				delete newState[action.payload];
+			}
 			return newState;
 		}
 		default:

@@ -12,17 +12,23 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
   const directMessages = Object.values(useSelector((state) => state.dms));
   const sessionUser = useSelector((state) => state.session.user);
   const users = useSelector((state) => state.session.users);
+  const images = useSelector((state) => state.images);
 
-  const currentUser = users.find((user) => user.id === sessionUser.id);
+  const currentUser = users.find((user) => user.id === sessionUser?.id);
+  const displayUser = currentUser || sessionUser;
 
   useEffect(() => {
     dispatch(getDirectMessages()).then(() => setIsLoaded(true));
   }, [dispatch]);
 
+  const profileImageUrl =
+    currentUser?.Image?.url ||
+    (displayUser?.imageId ? images?.[displayUser.imageId]?.url : null);
+
   return (
     isLoaded && (
-      <div className="min-w-[18em] w-[18em] max-w-[18em] min-h-screen max-h-screen flex flex-col bg-midGray">
-        <div className="min-w-full scrollbar max-w-full py-2 px-3 min-h-[92%] max-h-[92%] overflow-auto flex flex-col items-start justify-between">
+      <div className="relative z-40 flex w-full flex-col border-borderMuted/60 border-r bg-surfaceLight/70 text-offWhite shadow-inner-card backdrop-blur md:min-w-[18rem] md:max-w-[19rem]">
+        <div className="scrollbar flex-1 overflow-x-visible overflow-y-auto px-4 py-4 relative z-0">
           {serverClicked ? (
             <Channels />
           ) : (
@@ -32,18 +38,19 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
             />
           )}
         </div>
-        <div className="fixed bottom-0 w-[18em] flex justify-between p-2 bg-demoButton">
-          <div className="flex items-center gap-2 text-offWhite text-sm font-medium">
+        <div className="sticky bottom-0 flex items-center justify-between gap-3 border-t border-borderMuted/60 bg-surface/95 px-4 py-3 shadow-inner-card">
+          <div className="flex items-center gap-3 text-sm font-medium text-offWhite">
             <img
-              className="w-[2em] h-[2em] min-w-[2em] min-h-[2em] rounded-full object-cover"
+              className="h-9 w-9 min-h-[2.25rem] min-w-[2.25rem] rounded-full object-cover shadow-soft-card"
               src={
-                currentUser?.Image
-                  ? currentUser.Image.url
-                  : `https://api.dicebear.com/5.x/identicon/svg?seed=Aneka&backgroundType=gradientLinear`
+                profileImageUrl ||
+                `https://api.dicebear.com/5.x/identicon/svg?seed=${encodeURIComponent(
+                  displayUser?.username || "Guest"
+                )}&backgroundType=gradientLinear`
               }
-              alt=""
+              alt={`${displayUser?.username || "Guest"} avatar`}
             />
-            <span>{currentUser.username}</span>
+            <span>{displayUser?.username || "Guest"}</span>
           </div>
           <Logout />
         </div>

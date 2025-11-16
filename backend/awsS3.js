@@ -1,43 +1,106 @@
 require("dotenv").config();
 const fs = require("fs");
+const path = require("path");
 const S3 = require("aws-sdk/clients/s3");
 
-const bucketName = process.env.S3_BUCKET
-const region = process.env.S3_REGION
-const accessKeyId = process.env.S3_KEY
-const secretAccessKey = process.env.S3_SECRET
+const bucketName = process.env.S3_BUCKET;
+const region = process.env.S3_REGION;
+const accessKeyId = process.env.S3_KEY;
+const secretAccessKey = process.env.S3_SECRET;
 
 const s3 = new S3({
   region,
   accessKeyId,
-  secretAccessKey
-})
+  secretAccessKey,
+});
 
-const uploadFile = (file) => {
-  console.log(file)
-  const fileStream = fs.createReadStream(file.path)
+const ensureConfigured = () => {
+  if (!bucketName || !region || !accessKeyId || !secretAccessKey) {
+    throw new Error(
+      "Missing AWS S3 configuration. Please set S3_BUCKET, S3_REGION, S3_KEY, and S3_SECRET environment variables."
+    );
+  }
+};
+
+const getObjectKey = (keyOrUrl) => {
+  if (!keyOrUrl || typeof keyOrUrl !== "string") return null;
+
+  if (/^https?:\/\//i.test(keyOrUrl)) {
+    try {
+      const parsed = new URL(keyOrUrl);
+      return decodeURIComponent(parsed.pathname.replace(/^\/+/, ""));
+    } catch (error) {
+      console.warn("Failed to parse S3 object URL.", error);
+      return null;
+    }
+  }
+
+  return keyOrUrl;
+};
+
+const uploadFile = async (file) => {
+  ensureConfigured();
+
+  if (!file || !file.path || !file.filename) {
+    throw new Error("Invalid file upload: missing multer file data.");
+  }
+
+  const fileStream = fs.createReadStream(file.path);
+  const extension = file.originalname ? path.extname(file.originalname) : "";
+  const key = `${file.filename}${extension}`;
 
   const uploadParams = {
     Bucket: bucketName,
     Body: fileStream,
-    Key: file.filename
-  }
-
-  return s3.upload(uploadParams).promise()
-}
-
-const downloadFile = (key) => {
-  const downloadParams = {
     Key: key,
-    Bucket: bucketName
+    ACL: "public-read",
+    ContentType: file.mimetype,
+  };
+
+  const uploadResult = await s3.upload(uploadParams).promise();
+
+  fs.unlink(file.path, (err) => {
+    if (err) {
+      console.warn("Unable to remove temporary upload after S3 transfer.", err);
+    }
+  });
+
+  return uploadResult;
+};
+
+const downloadFile = (keyOrUrl) => {
+  ensureConfigured();
+  const Key = getObjectKey(keyOrUrl);
+
+  if (!Key) {
+    throw new Error("Missing file key for S3 download.");
   }
 
-  return s3.getObject(downloadParams).createReadStream()
-}
+  const downloadParams = {
+    Key,
+    Bucket: bucketName,
+  };
 
+  return s3.getObject(downloadParams).createReadStream();
+};
 
+const deleteFile = async (keyOrUrl) => {
+  ensureConfigured();
+  const Key = getObjectKey(keyOrUrl);
 
-module.exports = { downloadFile, uploadFile }
+  if (!Key) {
+    throw new Error("Missing file key for S3 delete operation.");
+  }
+
+  const deleteParams = {
+    Bucket: bucketName,
+    Key,
+  };
+
+  return s3.deleteObject(deleteParams).promise();
+};
+
+module.exports = { downloadFile, uploadFile, deleteFile };
 
 
 

@@ -12,7 +12,7 @@ const setMessages = messages => {
 	};
 };
 
-const addMessage = message => {
+export const addMessage = message => {
 	return {
 		type: ADD_MESSAGE,
 		payload: message,
@@ -57,6 +57,34 @@ export const sendMessage =
 		}
 	};
 
+export const updateMessage = (messageId, message, { imageId, removeImage } = {}) => async dispatch => {
+	const response = await csrfFetch(`/api/messages/${messageId}`, {
+		method: "PUT",
+		body: JSON.stringify({ message, imageId, removeImage }),
+	});
+	const data = await response.json();
+	if (response.ok) {
+		dispatch({
+			type: UPDATE_MESSAGE,
+			payload: data,
+		});
+	}
+	return data;
+};
+
+export const removeMessage = messageId => async dispatch => {
+	const response = await csrfFetch(`/api/messages/${messageId}`, {
+		method: "DELETE",
+	});
+	if (response.ok) {
+		dispatch({
+			type: REMOVE_MESSAGE,
+			payload: messageId,
+		});
+	}
+	return response;
+};
+
 const initialState = {};
 const messagesReducer = (state = initialState, action) => {
 	switch (action.type) {
@@ -70,6 +98,16 @@ const messagesReducer = (state = initialState, action) => {
 		case ADD_MESSAGE: {
 			const newState = { ...state };
 			newState[action.payload.id] = action.payload;
+			return newState;
+		}
+		case UPDATE_MESSAGE: {
+			const newState = { ...state };
+			newState[action.payload.id] = action.payload;
+			return newState;
+		}
+		case REMOVE_MESSAGE: {
+			const newState = { ...state };
+			delete newState[action.payload];
 			return newState;
 		}
 		default:

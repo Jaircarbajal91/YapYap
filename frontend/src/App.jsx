@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Route, Switch } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { restoreUser, fetchAllUsers } from "./store/session";
+import { restoreUser, fetchAllUsers, fetchFriends } from "./store/session";
+import { restoreCSRF } from "./store/csrf";
 import LoginForm from "./auth/LoginForm";
 import Logout from "./auth/Logout";
 import Splash from "./components/splash";
@@ -18,7 +19,7 @@ import LoadingAnimation from "./components/LoadingAnimation";
 function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [serverClicked, setServerClicked] = useState(false);
-  const [room, setRoom] = useState(null);
+  const [activeDmId, setActiveDmId] = useState(null);
 
   const messages = Object.values(useSelector((state) => state.messages));
 
@@ -26,15 +27,21 @@ function App() {
   const dispatch = useDispatch();
   useEffect(() => {
     if (!isLoaded) {
-      setTimeout(() => {
-        dispatch(restoreUser()).then(() => setIsLoaded(true));
-        dispatch(fetchAllUsers());
-      }, 2000);
+      // Restore CSRF token first before any other API calls
+      restoreCSRF().then(() => {
+        setTimeout(() => {
+          dispatch(restoreUser()).then(() => {
+            setIsLoaded(true);
+            dispatch(fetchAllUsers());
+            dispatch(fetchFriends());
+          });
+        }, 2000);
+      });
     }
   }, [dispatch]);
 
   return isLoaded ? (
-    <div className="App flex relative w-screen">
+    <div className="App relative flex h-screen w-full flex-col bg-transparent md:flex-row overflow-hidden">
       <Switch>
         <Route path="/login" exact={true}>
           <LoginForm sessionUser={sessionUser} />
@@ -48,8 +55,14 @@ function App() {
         </ProtectedRoute>
         <ProtectedRoute path="/app">
           <Servers sessionUser={sessionUser} />
-          <MidSection setRoom={setRoom} serverClicked={serverClicked} />
-          <Messages room={room} messages={messages} />
+          <MidSection setRoom={setActiveDmId} serverClicked={serverClicked} />
+          <div className="flex-1 flex flex-col min-h-0">
+            <Messages
+              room={activeDmId ? `dm-${activeDmId}` : null}
+              dmId={activeDmId}
+              messages={messages}
+            />
+          </div>
         </ProtectedRoute>
         <Route path="/" exact={true}>
           <Splash sessionUser={sessionUser} />

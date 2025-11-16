@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
-import { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { addSingleImage } from '../store/aws_images';
 import { signupUser } from '../store/session';
+import { validateImageFile, ALLOWED_IMAGE_MIME_TYPES } from '../utils/fileValidation';
 
 const SignupForm = () => {
   const dispatch = useDispatch();
@@ -14,6 +14,7 @@ const SignupForm = () => {
   const [password, setPassword] = useState('');
   const [passwordErrors, setPasswordErrors] = useState([])
   const [image, setImage] = useState(null);
+  const [imageError, setImageError] = useState(null);
   const [errors, setErrors] = useState([]);
 
   useEffect(() => {
@@ -34,8 +35,40 @@ const SignupForm = () => {
 
 
   const history = useHistory();
+  const validateInputs = () => {
+    const localEmailErrors = [];
+    const localUsernameErrors = [];
+    const localPasswordErrors = [];
+    const localErrors = [];
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email.trim())) {
+      localEmailErrors.push('email must be a valid email address.');
+    }
+    if (username.trim().length < 4) {
+      localUsernameErrors.push('username must be at least 4 characters long.');
+    }
+    if (password.length < 6) {
+      localPasswordErrors.push('password must be at least 6 characters long.');
+    }
+
+    setEmailErrors(localEmailErrors);
+    setUsernameErrors(localUsernameErrors);
+    setPasswordErrors(localPasswordErrors);
+    setErrors(localErrors);
+
+    return (
+      localEmailErrors.length === 0 &&
+      localUsernameErrors.length === 0 &&
+      localPasswordErrors.length === 0 &&
+      localErrors.length === 0
+    );
+  };
+
   const handleSignUp = async (e) => {
     e.preventDefault();
+    if (!validateInputs()) return;
+
     let newImage;
     if (image) {
       newImage = await dispatch(addSingleImage({image, type: 'user'}));
@@ -47,10 +80,10 @@ const SignupForm = () => {
       const newErrors = await err.json()
       newErrors.errors.forEach((error) => {
         error = error.toLowerCase()
-        if (error.includes('email')) setEmailErrors([...emailErrors, error])
-        if (error.includes('username')) setUsernameErrors([...usernameErrors, error])
-        if (error.includes('password')) setPasswordErrors([...passwordErrors, error])
-        else setErrors([...errors, error])
+        if (error.includes('email')) setEmailErrors(prev => [...prev, error])
+        else if (error.includes('username')) setUsernameErrors(prev => [...prev, error])
+        else if (error.includes('password')) setPasswordErrors(prev => [...prev, error])
+        else setErrors(prev => [...prev, error])
       })
     }
   }
@@ -58,63 +91,137 @@ const SignupForm = () => {
 
   const updateFile = (e) => {
     const file = e.target.files[0];
-    if (file) setImage(file);
+    if (!file) return;
+
+    // Clear previous errors
+    setImageError(null);
+
+    // Validate file
+    const validation = validateImageFile(file);
+    if (!validation.isValid) {
+      setImageError(validation.error);
+      // Clear the file input
+      e.target.value = "";
+      return;
+    }
+
+    setImage(file);
   };
 
   return (
-    <div className="flex justify-center items-center w-screen h-screen bg-login-bg bg-center bg-no-repeat bg-cover ">
-      <form className='flex flex-col w-full h-full min-h-[30em] lg:max-w-[40em] justify-between bg-chatBg md:h-3/5 md:rounded-lg md:w-1/4 md:min-w-[30em] p-8 md:max-h-[40em]' onSubmit={handleSignUp}>
-        <div className="flex flex-col text-white w-full items-center mb-4">
-          <h1 className="text-2xl tracking-wide mb-2">Create an account</h1>
+    <div className="relative flex min-h-screen w-full items-center justify-center bg-login-bg bg-cover bg-center px-4 py-16 sm:px-8">
+      <div className="absolute inset-0 bg-[rgba(19,22,32,0.78)] backdrop-blur-md" />
+      <form
+        className="glass-card relative z-10 flex w-full max-w-2xl flex-col gap-6 rounded-3xl p-10 text-offWhite"
+        onSubmit={handleSignUp}
+      >
+        <div className="flex flex-col items-center gap-2 text-center">
+          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+            get started
+          </span>
+          <h1 className="text-3xl font-semibold tracking-tight">Create your YapYap account</h1>
+          <p className="text-sm text-white/70">
+            Customize your profile and invite your friends to your brand new server in minutes.
+          </p>
         </div>
-        {errors.length > 0 && <div>
-          {errors.map((error, idx) => <div className='uppercase text-lightRed -mt-6 w-full text-center' key={idx}>{error}</div>)}
-          </div>}
-        <div className='text-lightGray mb-3'>
-          <label className={`block uppercase text-xs mb-2 font-bold ${emailErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-email">{emailErrors.length > 0 ? `Email - ${emailErrors[0]}` : "Email"}</label>
-          <input
-            className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
-            type="text"
-            name="email"
-            id="signup-email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label className={`block uppercase text-xs mb-2 font-bold ${usernameErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-username">{usernameErrors.length > 0 ? `Username - ${usernameErrors[0]}` : "Username"}</label>
-          <input
-            className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
-            type="text"
-            name="username"
-            id="signup-username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <label className={`block uppercase text-xs mb-2 font-bold ${passwordErrors.length > 0 ?"text-lightRed" : ""}`} htmlFor="signup-password">{passwordErrors.length > 0 ? `Password - ${passwordErrors[0]}` : "Password"}</label>
-          <input
-            className='bg-darkGray w-full h-10 rounded-md px-2 focus:outline-none mb-4'
-            type="password"
-            name="password"
-            id="signup-password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+        {errors.length > 0 && (
+          <div className="rounded-2xl border border-lightRed/40 bg-lightRed/10 px-4 py-3 text-center text-xs uppercase tracking-[0.25em] text-lightRed">
+            {errors.map((error, idx) => (
+              <div key={idx}>{error}</div>
+            ))}
+          </div>
+        )}
+        <div className="grid gap-4 text-sm text-lightGray md:grid-cols-2">
+          <div className="space-y-2">
+            <label
+              className={`block text-xs font-semibold uppercase tracking-[0.2em] ${emailErrors.length > 0 ? "text-lightRed" : "text-white/70"}`}
+              htmlFor="signup-email"
+            >
+              {emailErrors.length > 0 ? `Email - ${emailErrors[0]}` : "Email"}
+            </label>
+            <input
+              className="w-full rounded-2xl border border-borderMuted/60 bg-surfaceLight/80 px-4 py-3 text-base text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary"
+              type="email"
+              name="email"
+              id="signup-email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
+            />
+          </div>
+          <div className="space-y-2">
+            <label
+              className={`block text-xs font-semibold uppercase tracking-[0.2em] ${usernameErrors.length > 0 ? "text-lightRed" : "text-white/70"}`}
+              htmlFor="signup-username"
+            >
+              {usernameErrors.length > 0 ? `Username - ${usernameErrors[0]}` : "Username"}
+            </label>
+            <input
+              className="w-full rounded-2xl border border-borderMuted/60 bg-surfaceLight/80 px-4 py-3 text-base text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary"
+              type="text"
+              name="username"
+              id="signup-username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              autoComplete="username"
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <label
+              className={`block text-xs font-semibold uppercase tracking-[0.2em] ${passwordErrors.length > 0 ? "text-lightRed" : "text-white/70"}`}
+              htmlFor="signup-password"
+            >
+              {passwordErrors.length > 0 ? `Password - ${passwordErrors[0]}` : "Password"}
+            </label>
+            <input
+              className="w-full rounded-2xl border border-borderMuted/60 bg-surfaceLight/80 px-4 py-3 text-base text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary"
+              type="password"
+              name="password"
+              id="signup-password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+            />
+          </div>
+          <div className="space-y-2 md:col-span-2">
+            <label
+              className={`block text-xs font-semibold uppercase tracking-[0.2em] ${imageError ? "text-lightRed" : "text-white/70"}`}
+              htmlFor="signup-image"
+            >
+              {imageError ? `Profile Image - ${imageError}` : "Profile Image"}
+            </label>
+            {imageError && (
+              <div className="rounded-2xl border border-lightRed/40 bg-lightRed/10 px-4 py-2 text-xs text-lightRed">
+                {imageError}
+              </div>
+            )}
+            <input
+              className="block w-full cursor-pointer rounded-2xl border border-borderMuted/60 bg-surfaceLight/60 px-4 py-3 text-sm text-white/70 shadow-inner-card outline-none transition-all duration-200 file:mr-4 file:rounded-xl file:border-0 file:bg-hero file:px-4 file:py-2 file:text-sm file:font-semibold file:uppercase file:text-white hover:file:bg-heroDark"
+              type="file"
+              name="image"
+              accept={ALLOWED_IMAGE_MIME_TYPES}
+              id="signup-image"
+              onChange={updateFile}
+            />
+          </div>
         </div>
-        <div>
-          <label className='block uppercase text-xs mb-2 font-bold text-lightGray' htmlFor="signup-image">Profile Image</label>
-          <input
-            className='mb-4 text-lightGray'
-            type="file"
-            name="image"
-            accept='.png, .jpg, .jpeg'
-            id="signup-image"
-            onChange={updateFile}
-          />
-        </div>
-        <button className='bg-navy text-white w-full h-10 rounded-md focus:outline-none' type="submit">Sign up</button>
-        <p onClick={() => {
-          history.push('/login')
-        }}
-          className='tracking-wide text-sm text-torqoise cursor-pointer hover:underline'>Already have an account?</p>
+        <button
+          className="rounded-2xl bg-hero px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          type="submit"
+        >
+          Sign up
+        </button>
+        <p
+          onClick={() => {
+            history.push('/login')
+          }}
+          className="text-center text-sm text-white/70"
+        >
+          Already have an account?{" "}
+          <span className="cursor-pointer font-semibold text-torqoise transition-colors duration-200 hover:text-white">
+            Log in
+          </span>
+        </p>
       </form>
     </div>
   )
