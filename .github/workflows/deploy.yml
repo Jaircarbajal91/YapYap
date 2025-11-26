@@ -38,6 +38,13 @@ jobs:
             echo "Error: HEROKU_API_KEY secret is not set"
             exit 1
           fi
-          heroku git:remote -a "$HEROKU_APP_NAME"
+          # Configure git with credentials
+          git config --global user.email "ci@github-actions"
+          git config --global user.name "GitHub Actions"
+          # Remove existing heroku remote if it exists
+          git remote remove heroku 2>/dev/null || true
+          # Set up git remote with authenticated URL
+          git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git
+          # Push to Heroku
           git push heroku HEAD:main --force
 
