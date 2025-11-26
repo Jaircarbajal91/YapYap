@@ -22,9 +22,8 @@ function App() {
   const [activeDmId, setActiveDmId] = useState(null);
   const [openDMDrawer, setOpenDMDrawer] = useState(false);
   const [isDMDrawerOpen, setIsDMDrawerOpen] = useState(false);
-  const [isDMHeaderVisible, setIsDMHeaderVisible] = useState(true);
+  const [dmHeaderOffset, setDmHeaderOffset] = useState(0);
   const [lastScrollTop, setLastScrollTop] = useState(0);
-  const hideDMHeaderTimeoutRef = useRef(null);
   const messagesContainerRef = useRef(null);
   const location = useLocation();
 
@@ -65,82 +64,65 @@ function App() {
     }
   }, [dispatch]);
 
-  // Handle scroll detection for auto-hiding DM list header
+  // Handle scroll detection for moving DM list header up smoothly - attached to chat messages container
   useEffect(() => {
     if (activeDmId || isDMDrawerOpen) {
-      // Reset visibility when DM is selected or drawer is open
-      setIsDMHeaderVisible(true);
-      if (hideDMHeaderTimeoutRef.current) {
-        clearTimeout(hideDMHeaderTimeoutRef.current);
-      }
+      // Reset position when DM is selected or drawer is open
+      setDmHeaderOffset(0);
       return;
     }
 
-    // Find the scrollable messages container
-    const scrollContainer = messagesContainerRef.current?.querySelector('.scrollbar.overflow-y-auto');
+    // Find the actual scrollable chat messages container inside Messages component
+    // The container has class "scrollbar" and "overflow-y-auto"
+    const findScrollContainer = () => {
+      return messagesContainerRef.current?.querySelector('.scrollbar.overflow-y-auto') || null;
+    };
+
+    const scrollContainer = findScrollContainer();
     if (!scrollContainer) {
-      // If no scrollable container, just hide after 3 seconds
-      hideDMHeaderTimeoutRef.current = setTimeout(() => {
-        setIsDMHeaderVisible(false);
-      }, 3000);
-      return () => {
-        if (hideDMHeaderTimeoutRef.current) {
-          clearTimeout(hideDMHeaderTimeoutRef.current);
+      // If no scrollable container found yet, wait a bit and try again
+      const timeoutId = setTimeout(() => {
+        const container = findScrollContainer();
+        if (container) {
+          // Found it, set up scroll detection
+          setupScrollDetection(container);
         }
+      }, 100);
+      
+      return () => {
+        clearTimeout(timeoutId);
       };
     }
 
-    const handleScroll = () => {
-      const currentScrollTop = scrollContainer.scrollTop;
-      const scrollHeight = scrollContainer.scrollHeight;
-      const clientHeight = scrollContainer.clientHeight;
-      const isAtBottom = scrollHeight - currentScrollTop - clientHeight < 50; // 50px threshold
+    const setupScrollDetection = (container) => {
+      const handleScroll = () => {
+        const currentScrollTop = container.scrollTop;
+        
+        // Move header up when scrolling down, bring it back when scrolling up
+        if (currentScrollTop > lastScrollTop && currentScrollTop > 50) {
+          // Scrolling down - move header up
+          setDmHeaderOffset(-100); // Move up by header height
+        } else if (currentScrollTop < lastScrollTop || currentScrollTop <= 50) {
+          // Scrolling up or near top - bring header back
+          setDmHeaderOffset(0);
+        }
 
-      // Show header when scrolling up
-      if (currentScrollTop < lastScrollTop) {
-        setIsDMHeaderVisible(true);
-        // Clear any pending hide timeout
-        if (hideDMHeaderTimeoutRef.current) {
-          clearTimeout(hideDMHeaderTimeoutRef.current);
-        }
-        // Hide again after 3 seconds if at bottom
-        if (isAtBottom) {
-          hideDMHeaderTimeoutRef.current = setTimeout(() => {
-            setIsDMHeaderVisible(false);
-          }, 3000);
-        }
-      } else if (currentScrollTop > lastScrollTop) {
-        // Scrolling down - hide header after 2 seconds
-        if (hideDMHeaderTimeoutRef.current) {
-          clearTimeout(hideDMHeaderTimeoutRef.current);
-        }
-        hideDMHeaderTimeoutRef.current = setTimeout(() => {
-          setIsDMHeaderVisible(false);
-        }, 2000);
-      }
+        setLastScrollTop(currentScrollTop);
+      };
 
-      setLastScrollTop(currentScrollTop);
+      // Attach scroll listener to the chat messages container
+      container.addEventListener('scroll', handleScroll, { passive: true });
+
+      return () => {
+        container.removeEventListener('scroll', handleScroll);
+      };
     };
 
-    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Initial hide after 3 seconds if at bottom
-    if (scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight < 50) {
-      hideDMHeaderTimeoutRef.current = setTimeout(() => {
-        setIsDMHeaderVisible(false);
-      }, 3000);
-    }
-
-    return () => {
-      scrollContainer.removeEventListener('scroll', handleScroll);
-      if (hideDMHeaderTimeoutRef.current) {
-        clearTimeout(hideDMHeaderTimeoutRef.current);
-      }
-    };
+    return setupScrollDetection(scrollContainer);
   }, [activeDmId, isDMDrawerOpen, lastScrollTop]);
 
   // Mobile App Header Component for /app route
-  const MobileAppHeader = ({ sessionUser, activeDmId, onOpenDM, isHeaderVisible }) => {
+  const MobileAppHeader = ({ sessionUser, activeDmId, onOpenDM, headerOffset, onShowHeader }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
     const images = useSelector((state) => state.images);
@@ -171,9 +153,25 @@ function App() {
 
 
     return (
-      <div className={`md:hidden fixed top-[4rem] left-0 right-0 z-[60] flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-300 ${
-        isHeaderVisible !== false ? 'translate-y-0' : '-translate-y-full'
-      }`}>
+      <div 
+        className="md:hidden fixed top-[4rem] left-0 right-0 z-[60] flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-500 ease-in-out"
+        style={{ transform: `translateY(${headerOffset}%)` }}
+      >
+        <button
+          onClick={() => {
+            // Bring header back down
+            if (onShowHeader) {
+              onShowHeader();
+            }
+          }}
+          className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
+          aria-label="Show header"
+          title="Show header"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
         <button
           onClick={onOpenDM}
           className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
@@ -264,7 +262,7 @@ function App() {
           <Servers sessionUser={sessionUser} />
           <MidSection setRoom={setActiveDmId} serverClicked={serverClicked} />
           <MidSectionMobile setRoom={setActiveDmId} serverClicked={serverClicked} activeDmId={activeDmId} openDMDrawer={openDMDrawer} setOpenDMDrawer={setOpenDMDrawer} onDrawerStateChange={setIsDMDrawerOpen} />
-          {!activeDmId && !isDMDrawerOpen && <MobileAppHeader sessionUser={sessionUser} activeDmId={activeDmId} onOpenDM={() => setOpenDMDrawer(true)} isHeaderVisible={isDMHeaderVisible} />}
+          {!activeDmId && !isDMDrawerOpen && <MobileAppHeader sessionUser={sessionUser} activeDmId={activeDmId} onOpenDM={() => setOpenDMDrawer(true)} headerOffset={dmHeaderOffset} onShowHeader={() => setDmHeaderOffset(0)} />}
           <div ref={messagesContainerRef} className="flex-1 flex flex-col min-h-0 w-full overflow-y-auto">
             <Messages
               room={activeDmId ? `dm-${activeDmId}` : null}

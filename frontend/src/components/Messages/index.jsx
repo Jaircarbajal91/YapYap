@@ -34,9 +34,8 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
   const [typingUsers, setTypingUsers] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
-  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
-  const hideHeaderTimeoutRef = useRef(null);
+  const [headerOffset, setHeaderOffset] = useState(0);
+  const lastScrollTopRef = useRef(0);
   const wrapperRef = useRef(null);
   const socketRef = useRef(null);
   const activeRoomRef = useRef(null);
@@ -195,63 +194,53 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
 
   useEffect(() => {
     if (wrapperRef.current) {
-      wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
+      // Only auto-scroll to bottom if user is already near the bottom
+      const container = wrapperRef.current;
+      const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
+      if (isNearBottom) {
+        container.scrollTop = container.scrollHeight;
+      }
     }
   }, [messages]);
 
-  // Handle scroll detection for auto-hiding header
+  // Handle scroll detection for moving header up smoothly - attached to chat messages container
   useEffect(() => {
+    // Only apply to DM conversations
+    if (!dmId) {
+      setHeaderOffset(0);
+      return;
+    }
+
+    // Get the actual scrollable chat container (wrapperRef is the messages container)
     const scrollContainer = wrapperRef.current;
-    if (!scrollContainer || !dmId) return;
+    if (!scrollContainer) return;
+
+    // Initialize lastScrollTop
+    lastScrollTopRef.current = scrollContainer.scrollTop;
 
     const handleScroll = () => {
       const currentScrollTop = scrollContainer.scrollTop;
-      const scrollHeight = scrollContainer.scrollHeight;
-      const clientHeight = scrollContainer.clientHeight;
-      const isAtBottom = scrollHeight - currentScrollTop - clientHeight < 50; // 50px threshold
-
-      // Show header when scrolling up
-      if (currentScrollTop < lastScrollTop) {
-        setIsHeaderVisible(true);
-        // Clear any pending hide timeout
-        if (hideHeaderTimeoutRef.current) {
-          clearTimeout(hideHeaderTimeoutRef.current);
-        }
-        // Hide again after 3 seconds if at bottom
-        if (isAtBottom) {
-          hideHeaderTimeoutRef.current = setTimeout(() => {
-            setIsHeaderVisible(false);
-          }, 3000);
-        }
-      } else if (currentScrollTop > lastScrollTop) {
-        // Scrolling down - hide header after 2 seconds
-        if (hideHeaderTimeoutRef.current) {
-          clearTimeout(hideHeaderTimeoutRef.current);
-        }
-        hideHeaderTimeoutRef.current = setTimeout(() => {
-          setIsHeaderVisible(false);
-        }, 2000);
+      const lastScrollTop = lastScrollTopRef.current;
+      
+      // Move header up when scrolling down, bring it back when scrolling up
+      if (currentScrollTop > lastScrollTop && currentScrollTop > 50) {
+        // Scrolling down - move header up
+        setHeaderOffset(-100); // Move up by header height
+      } else if (currentScrollTop < lastScrollTop || currentScrollTop <= 50) {
+        // Scrolling up or near top - bring header back
+        setHeaderOffset(0);
       }
 
-      setLastScrollTop(currentScrollTop);
+      lastScrollTopRef.current = currentScrollTop;
     };
 
+    // Attach scroll listener to the chat messages container
     scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-
-    // Initial hide after 3 seconds if at bottom
-    if (scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight < 50) {
-      hideHeaderTimeoutRef.current = setTimeout(() => {
-        setIsHeaderVisible(false);
-      }, 3000);
-    }
 
     return () => {
       scrollContainer.removeEventListener('scroll', handleScroll);
-      if (hideHeaderTimeoutRef.current) {
-        clearTimeout(hideHeaderTimeoutRef.current);
-      }
     };
-  }, [dmId, lastScrollTop]);
+  }, [dmId]); // Remove lastScrollTop from dependencies to prevent re-attaching
 
   useEffect(() => {
     if (editingMessageId && editInputRef.current) {
@@ -579,9 +568,23 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
       />
       {/* Mobile: Back button for DM view */}
       {dmId && (
-        <div className={`md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-300 ${
-          isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
-        }`}>
+        <div 
+          className="md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateY(${headerOffset}%)` }}
+        >
+          <button
+            onClick={() => {
+              // Bring header back down
+              setHeaderOffset(0);
+            }}
+            className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
+            aria-label="Show header"
+            title="Show header"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
           <button
             onClick={() => {
               // Clear the active DM to go back to DM list
