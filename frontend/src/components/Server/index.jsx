@@ -604,7 +604,7 @@ export default function ServerDetails({ sessionUser }) {
         )}
         <MobileUserMenu sessionUser={sessionUser} />
       </div>
-      <div className="bg-chatBg w-full flex flex-col min-h-0 pt-12 sm:pt-14 md:pt-0">
+      <div className="bg-chatBg w-full flex flex-col flex-1 min-h-0 md:min-h-0 pt-12 sm:pt-14 md:pt-0 overflow-hidden">
         {channelId && (
           <Messages
             messages={messages}

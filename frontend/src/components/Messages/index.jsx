@@ -544,7 +544,7 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
           </span>
         </div>
       )}
-      <div className={`relative z-30 flex w-full flex-1 flex-col min-h-0 bg-surfaceLight/70 px-2 pt-3 shadow-inner-card backdrop-blur sm:px-3 sm:pt-4 md:px-6 md:pt-6 ${dmId ? 'pt-12 sm:pt-14 md:pt-6' : 'pt-24 sm:pt-28 md:pt-6'}`}>
+      <div className={`relative z-30 flex w-full flex-1 flex-col min-h-0 max-h-full bg-surfaceLight/70 px-2 pt-3 shadow-inner-card backdrop-blur sm:px-3 sm:pt-4 md:px-6 md:pt-6 ${dmId ? 'pt-12 sm:pt-14 md:pt-6' : 'pt-24 sm:pt-28 md:pt-6'}`}>
         <div
           ref={wrapperRef}
           className="scrollbar flex-1 overflow-y-auto min-h-0 rounded-xl border border-borderMuted/40 bg-surfaceMuted/40 p-2 shadow-inner-card sm:rounded-2xl sm:p-3 md:rounded-3xl md:p-6 mb-2 sm:mb-3 md:mb-4"
@@ -733,7 +733,7 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
           </div>
         </div>
       )}
-      <div className="flex-shrink-0 pb-6">
+      <div className="flex-shrink-0 pb-2 sm:pb-4 md:pb-6 bg-surfaceLight/70">
         {fileError && (
           <div className="mb-4 rounded-2xl border border-red-500/50 bg-red-500/10 p-3">
             <p className="text-sm text-red-400">{fileError}</p>
