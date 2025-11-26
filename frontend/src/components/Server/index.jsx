@@ -139,7 +139,7 @@ export default function ServerDetails({ sessionUser }) {
 
   return (
     <div className="App flex relative w-full h-screen">
-      <div className="relative scrollbar z-0 min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex flex-col items-start">
+      <div className="relative scrollbar z-0 hidden md:flex min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex-col items-start">
         <div className="w-full flex items-center justify-between mb-5">
           <h1 className="text-offWhite text-lg ml-1">
             {server_name}
@@ -228,7 +228,141 @@ export default function ServerDetails({ sessionUser }) {
             );
           })}
       </div>
-      <div className="bg-chatBg w-full flex flex-col min-h-0">
+      {/* Mobile: Server sidebar overlay */}
+      <div className="md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm" style={{ display: 'none' }} id="mobile-server-overlay" />
+      {/* Mobile: Server sidebar drawer */}
+      <div className="md:hidden fixed left-0 top-0 z-50 h-full w-[85vw] max-w-[18em] bg-midGray transform -translate-x-full transition-transform duration-300 ease-in-out overflow-auto" id="mobile-server-drawer">
+        <div className="relative scrollbar py-2 px-3 min-h-screen flex flex-col items-start">
+          <div className="w-full flex items-center justify-between mb-5 pt-4">
+            <button
+              onClick={() => {
+                const drawer = document.getElementById('mobile-server-drawer');
+                const overlay = document.getElementById('mobile-server-overlay');
+                if (drawer) drawer.style.transform = 'translateX(-100%)';
+                if (overlay) overlay.style.display = 'none';
+              }}
+              className="text-lightGray hover:text-offWhite text-xl font-bold cursor-pointer transition-colors duration-200 mr-2"
+            >
+              ×
+            </button>
+            <h1 className="text-offWhite text-lg ml-1 flex-1">
+              {server_name}
+            </h1>
+            <div className="flex items-center gap-2">
+              <div className="relative">
+                <button
+                  ref={addFriendButtonRef}
+                  onClick={() => setShowAddFriendForm(true)}
+                  onMouseEnter={() => setShowAddFriendTooltip(true)}
+                  onMouseLeave={() => setShowAddFriendTooltip(false)}
+                  className="text-lightGray hover:text-offWhite text-xl font-bold cursor-pointer transition-colors duration-200"
+                >
+                  +
+                </button>
+                {showAddFriendTooltip && (
+                  <TooltipBubble title="Add Friend to Server" triggerRef={addFriendButtonRef} />
+                )}
+              </div>
+              {isOwner && (
+                <div className="relative">
+                  <button
+                    ref={deleteButtonRef}
+                    onClick={() => setShowDeleteModal(true)}
+                    onMouseEnter={() => setShowDeleteTooltip(true)}
+                    onMouseLeave={() => setShowDeleteTooltip(false)}
+                    className="text-lightGray hover:text-red-400 cursor-pointer transition-colors duration-200 p-1.5 rounded hover:bg-red-500/10 flex items-center justify-center"
+                    title="Delete Server"
+                  >
+                    <img 
+                      src={trashIcon} 
+                      alt="Delete Server" 
+                      className="w-4 h-4"
+                    />
+                  </button>
+                  {showDeleteTooltip && (
+                    <TooltipBubble title="Delete Server" triggerRef={deleteButtonRef} />
+                  )}
+                </div>
+              )}
+              {!isOwner && (
+                <div className="relative">
+                  <button
+                    ref={leaveButtonRef}
+                    onClick={() => setShowLeaveModal(true)}
+                    onMouseEnter={() => setShowLeaveTooltip(true)}
+                    onMouseLeave={() => setShowLeaveTooltip(false)}
+                    className="text-lightGray hover:text-red-400 cursor-pointer transition-colors duration-200 p-1.5 rounded hover:bg-red-500/10 flex items-center justify-center"
+                    title="Leave Server"
+                  >
+                    <img 
+                      src={signoutIcon} 
+                      alt="Leave Server" 
+                      className="w-4 h-4"
+                    />
+                  </button>
+                  {showLeaveTooltip && (
+                    <TooltipBubble title="Leave Server" triggerRef={leaveButtonRef} />
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="flex w-full justify-between">
+            <h1 className="text-offWhite text-lg ml-1">Text Channels</h1>
+            <ChannelModal formType='Create'/>
+          </div>
+          {channels &&
+            channels.map((channel) => {
+              return (
+                <div
+                  key={channel.id}
+                  className={`w-full flex justify-between text-offWhite text-left text-sm mb-1 pl-4 hover:bg-darkGray cursor-pointer rounded min-h-fit h-8 ${
+                    channelId === channel.id ? 'bg-darkGray text-bold' : ''
+                  }`}
+                  onClick={() => {
+                    selectChannel(channel.id);
+                    // Close drawer on mobile after selecting channel
+                    const drawer = document.getElementById('mobile-server-drawer');
+                    const overlay = document.getElementById('mobile-server-overlay');
+                    if (drawer) drawer.style.transform = 'translateX(-100%)';
+                    if (overlay) overlay.style.display = 'none';
+                  }}
+                >
+                  <div className='mt-1'>
+                    # {channel.channel_name}
+                  </div>
+                  <ChannelModal channel={channel} formType='Update' />
+                </div>
+              );
+            })}
+        </div>
+      </div>
+      {/* Mobile: Server header */}
+      <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center gap-3 bg-midGray/95 backdrop-blur-sm border-b border-borderMuted/60 px-4 py-3 shadow-soft-card">
+        <button
+          onClick={() => {
+            const drawer = document.getElementById('mobile-server-drawer');
+            const overlay = document.getElementById('mobile-server-overlay');
+            if (drawer) drawer.style.transform = 'translateX(0)';
+            if (overlay) overlay.style.display = 'block';
+          }}
+          className="flex items-center justify-center w-8 h-8 rounded-lg text-offWhite hover:bg-darkGray transition-colors"
+          aria-label="Open server menu"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+        <h1 className="text-offWhite text-base font-semibold flex-1 truncate">
+          {server_name}
+        </h1>
+        {channelId && channels.find(c => c.id === channelId) && (
+          <span className="text-lightGray text-sm truncate max-w-[40%]">
+            #{channels.find(c => c.id === channelId)?.channel_name}
+          </span>
+        )}
+      </div>
+      <div className="bg-chatBg w-full flex flex-col min-h-0 pt-14 md:pt-0">
         {channelId && (
           <Messages
             messages={messages}
@@ -236,6 +370,14 @@ export default function ServerDetails({ sessionUser }) {
             room={channelId ? `channel-${channelId}` : null}
             isServerView={true}
           />
+        )}
+        {!channelId && (
+          <div className="flex-1 flex items-center justify-center text-center px-4">
+            <div className="text-white/60">
+              <p className="text-lg font-semibold mb-2">No channel selected</p>
+              <p className="text-sm">Open the menu to select a channel</p>
+            </div>
+          </div>
         )}
       </div>
       {showAddFriendForm && (

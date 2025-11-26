@@ -57,7 +57,7 @@ router.post("/", checkAuth, async (req, res) => {
   });
 
   const messageWithUser = await Message.findByPk(newMessage.id, {
-    include: [{ model: User }],
+    include: [{ model: User, include: [{ model: Image }] }],
   });
 
   const messageJson = messageWithUser?.toJSON() || newMessage.toJSON();
@@ -154,7 +154,7 @@ router.put("/:messageId", checkAuth, async (req, res) => {
     await messageRecord.save();
 
     const messageWithUser = await Message.findByPk(messageRecord.id, {
-      include: [{ model: User }],
+      include: [{ model: User, include: [{ model: Image }] }],
     });
 
     const messageJson = messageWithUser?.toJSON() || messageRecord.toJSON();

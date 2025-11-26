@@ -76,7 +76,7 @@ export const restoreUser = () => async dispatch => {
 	const response = await csrfFetch("/api/session/restore");
 	const data = await response.json();
 	dispatch(setUser(data.user));
-	return response.arrayBuffer;
+	return data;
 };
 
 export const signupUser = user => async dispatch => {

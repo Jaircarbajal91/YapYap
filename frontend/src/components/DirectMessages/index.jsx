@@ -86,7 +86,7 @@ const DirectMessagesList = ({ directMessages, setMessages, setRoom }) => {
 
   const isProduction = process.env.NODE_ENV === "production";
   const REACT_APP_SOCKET_IO_URL = isProduction
-    ? "https://yapyap.herokuapp.com"
+    ? (process.env.REACT_APP_SOCKET_IO_URL || window.location.origin)
     : "http://localhost:8000";
 
   useEffect(() => {

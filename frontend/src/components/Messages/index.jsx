@@ -14,11 +14,11 @@ const REMOVE_MESSAGE = "messages/removeMessage";
 const isProduction = process.env.NODE_ENV === "production";
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-export default function Messages({ messages, room, channelId, dmId }) {
+export default function Messages({ messages, room, channelId, dmId, onBack }) {
   const sessionUser = useSelector((state) => state.session.user);
   const images = useSelector((state) => state.images);
   const REACT_APP_SOCKET_IO_URL = isProduction
-    ? "https://yapyap.herokuapp.com"
+    ? (process.env.REACT_APP_SOCKET_IO_URL || window.location.origin)
     : "http://localhost:8000";
   const dispatch = useDispatch();
   const [newMessage, setNewMessage] = useState("");
@@ -520,10 +520,34 @@ export default function Messages({ messages, room, channelId, dmId }) {
         message="Are you sure you want to delete this message? This action cannot be undone."
         confirmText="Delete"
       />
-      <div className="relative z-30 flex w-full flex-1 flex-col min-h-0 bg-surfaceLight/70 px-4 pt-6 shadow-inner-card backdrop-blur md:px-6">
+      {/* Mobile: Back button for DM view */}
+      {dmId && (
+        <div className="md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-3 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-4 py-3 shadow-soft-card">
+          <button
+            onClick={() => {
+              // Clear the active DM to go back to DM list
+              if (onBack) {
+                onBack();
+              } else if (window.history.length > 1) {
+                window.history.back();
+              }
+            }}
+            className="flex items-center justify-center w-8 h-8 rounded-lg text-offWhite hover:bg-surfaceMuted/50 transition-colors"
+            aria-label="Go back"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <span className="text-offWhite text-base font-semibold flex-1 truncate">
+            Direct Message
+          </span>
+        </div>
+      )}
+      <div className={`relative z-30 flex w-full flex-1 flex-col min-h-0 bg-surfaceLight/70 px-3 pt-4 shadow-inner-card backdrop-blur sm:px-4 sm:pt-6 md:px-6 ${dmId ? 'pt-14 md:pt-6' : ''}`}>
         <div
           ref={wrapperRef}
-          className="scrollbar flex-1 overflow-y-auto min-h-0 rounded-3xl border border-borderMuted/40 bg-surfaceMuted/40 p-4 shadow-inner-card md:p-6 mb-4"
+          className="scrollbar flex-1 overflow-y-auto min-h-0 rounded-2xl border border-borderMuted/40 bg-surfaceMuted/40 p-3 shadow-inner-card sm:p-4 sm:rounded-3xl md:p-6 mb-3 sm:mb-4"
         >
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-white/70">
@@ -557,10 +581,10 @@ export default function Messages({ messages, room, channelId, dmId }) {
             return (
               <div
                 key={message.id}
-                className="group relative mb-4 flex items-start gap-4 rounded-3xl border border-borderMuted/40 bg-surface/90 p-4 shadow-inner-card transition-all duration-200 hover:border-accent/40 hover:shadow-glow"
+                className="group relative mb-3 flex items-start gap-3 rounded-2xl border border-borderMuted/40 bg-surface/90 p-3 shadow-inner-card transition-all duration-200 hover:border-accent/40 hover:shadow-glow sm:mb-4 sm:gap-4 sm:rounded-3xl sm:p-4"
               >
                 <img
-                  className="h-12 w-12 rounded-full border border-borderMuted/40 object-cover shadow-soft-card"
+                  className="h-10 w-10 rounded-full border border-borderMuted/40 object-cover shadow-soft-card sm:h-12 sm:w-12"
                   src={
                     userAvatar ||
                     `https://api.dicebear.com/5.x/identicon/svg?seed=${encodeURIComponent(
@@ -737,7 +761,7 @@ export default function Messages({ messages, room, channelId, dmId }) {
           </div>
         )}
         <form
-          className="flex w-full items-center gap-3 px-4 py-3"
+          className="flex w-full items-center gap-2 px-3 py-2 sm:gap-3 sm:px-4 sm:py-3"
           onSubmit={send}
         >
         <input
@@ -752,7 +776,7 @@ export default function Messages({ messages, room, channelId, dmId }) {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploadingImage}
-          className="flex h-11 w-11 items-center justify-center rounded-2xl bg-accentSoft text-accent shadow-inner-card transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex h-9 w-9 items-center justify-center rounded-xl bg-accentSoft text-accent shadow-inner-card transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:w-11 sm:rounded-2xl"
         >
           {uploadingImage ? (
             <div className="h-5 w-5 animate-spin rounded-full border-2 border-accent border-t-transparent"></div>
@@ -763,7 +787,7 @@ export default function Messages({ messages, room, channelId, dmId }) {
         <input
           type="text"
           value={newMessage}
-          className="flex-1 rounded-2xl bg-transparent px-4 py-3 text-base text-offWhite placeholder-white/30 outline-none transition-all duration-200 focus:bg-white/5 focus:placeholder-white/20"
+          className="flex-1 rounded-xl bg-transparent px-3 py-2 text-sm text-offWhite placeholder-white/30 outline-none transition-all duration-200 focus:bg-white/5 focus:placeholder-white/20 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
           placeholder="Send a message..."
           onChange={(e) => {
             setNewMessage(e.target.value);
@@ -786,7 +810,7 @@ export default function Messages({ messages, room, channelId, dmId }) {
         />
         <button
           type="submit"
-          className="rounded-2xl bg-hero px-5 py-2 text-sm font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-xl bg-hero px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-40 sm:rounded-2xl sm:px-5 sm:py-2 sm:text-sm"
           disabled={!newMessage.trim() && !selectedImage}
         >
           Send

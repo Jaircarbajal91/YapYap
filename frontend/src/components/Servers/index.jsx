@@ -102,7 +102,7 @@ const Servers = ({ sessionUser }) => {
 
   const isProduction = process.env.NODE_ENV === "production";
   const REACT_APP_SOCKET_IO_URL = isProduction
-    ? "https://yapyap.herokuapp.com"
+    ? (process.env.REACT_APP_SOCKET_IO_URL || window.location.origin)
     : "http://localhost:8000";
 
   useEffect(() => {
@@ -188,6 +188,8 @@ const Servers = ({ sessionUser }) => {
         </Modal>
       )}
         <div className="scrollbar relative z-50 flex w-full flex-row items-center gap-3 overflow-x-auto border-b border-borderMuted/50 bg-serverBg/80 px-3 py-2 text-lightGray shadow-soft-card backdrop-blur md:h-screen md:w-[5.25rem] md:flex-col md:items-center md:justify-start md:gap-4 md:overflow-x-visible md:overflow-y-auto md:border-b-0 md:border-r md:border-borderMuted/60 md:px-2 md:py-4 md:shadow-none">
+          {/* Mobile: Add padding at start for better scroll UX */}
+          <div className="md:hidden min-w-[0.5rem]" />
           <div
             ref={dmButtonRef}
             onClick={goBackToDMs}
@@ -248,6 +250,8 @@ const Servers = ({ sessionUser }) => {
               alt=""
             />
           </div>
+          {/* Mobile: Add padding at end for better scroll UX */}
+          <div className="md:hidden min-w-[0.5rem]" />
         </div>
       </>
     )

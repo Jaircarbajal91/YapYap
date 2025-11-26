@@ -44,13 +44,13 @@ const Splash = ({ sessionUser }) => {
   return (
     <div className="relative min-h-screen w-full bg-transparent text-white">
       <Navbar />
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-6 pb-24 pt-32 md:pt-36">
-        <section className="relative grid gap-14 md:grid-cols-[1.1fr_0.9fr] md:items-center">
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pb-16 pt-24 sm:gap-16 sm:px-6 sm:pb-20 sm:pt-28 md:gap-24 md:pb-24 md:pt-32">
+        <section className="relative grid gap-8 sm:gap-12 md:gap-14 md:grid-cols-[1.1fr_0.9fr] md:items-center">
           <div className="flex flex-col items-center gap-8 text-center md:items-start md:text-left">
             <span className="inline-flex items-center rounded-full border border-white/15 bg-white/5 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-slate shadow-inner-card">
               built for real connection
             </span>
-            <h1 className="font-display text-4xl font-black leading-[1.05] tracking-tight text-offWhite drop-shadow lg:text-[3.5rem]">
+            <h1 className="font-display text-3xl font-black leading-[1.05] tracking-tight text-offWhite drop-shadow sm:text-4xl lg:text-[3.5rem]">
               A digital hangout that feels like home.
             </h1>
             <p className="max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
@@ -114,11 +114,11 @@ const Splash = ({ sessionUser }) => {
 
         <section className="relative">
           <div className="absolute inset-0 -z-10 rounded-[3rem] bg-surfaceLight/40 blur-3xl" />
-          <div className="grid gap-10 rounded-[2.5rem] border border-white/10 bg-surface/70 p-10 backdrop-blur-xl shadow-soft-card md:grid-cols-3">
+          <div className="grid w-full gap-6 rounded-2xl border border-white/10 bg-surface/70 p-6 backdrop-blur-xl shadow-soft-card sm:gap-8 sm:rounded-3xl sm:p-8 md:grid-cols-3 md:gap-10 md:rounded-[2.5rem] md:p-10">
             {featureCards.map((card) => (
               <article
                 key={card.id}
-                className="flex h-full flex-col gap-6 rounded-3xl border border-white/5 bg-surfaceMuted/50 p-6 shadow-inner-card transition-transform duration-200 hover:-translate-y-2 hover:shadow-glow"
+                className="flex h-full flex-col gap-4 rounded-2xl border border-white/5 bg-surfaceMuted/50 p-4 shadow-inner-card transition-transform duration-200 hover:-translate-y-2 hover:shadow-glow sm:gap-6 sm:rounded-3xl sm:p-6"
               >
                 <img
                   className="w-full rounded-2xl border border-white/5 bg-surfaceLight/70 p-6"

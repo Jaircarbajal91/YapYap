@@ -109,10 +109,10 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-login-bg bg-cover bg-center px-4 py-16 sm:px-8">
+    <div className="relative flex min-h-screen w-full items-center justify-center bg-login-bg bg-cover bg-center px-4 py-8 sm:px-8 sm:py-16">
       <div className="absolute inset-0 bg-[rgba(19,22,32,0.78)] backdrop-blur-md" />
       <form
-        className="glass-card relative z-10 flex w-full max-w-2xl flex-col gap-6 rounded-3xl p-10 text-offWhite"
+        className="glass-card relative z-10 flex w-full max-w-2xl flex-col gap-4 rounded-2xl p-6 text-offWhite sm:gap-6 sm:rounded-3xl sm:p-8 md:p-10"
         onSubmit={handleSignUp}
       >
         <div className="flex flex-col items-center gap-2 text-center">
@@ -131,7 +131,7 @@ const SignupForm = () => {
             ))}
           </div>
         )}
-        <div className="grid gap-4 text-sm text-lightGray md:grid-cols-2">
+        <div className="grid gap-4 text-sm text-lightGray sm:grid-cols-2">
           <div className="space-y-2">
             <label
               className={`block text-xs font-semibold uppercase tracking-[0.2em] ${emailErrors.length > 0 ? "text-lightRed" : "text-white/70"}`}
@@ -166,7 +166,7 @@ const SignupForm = () => {
               autoComplete="username"
             />
           </div>
-          <div className="space-y-2 md:col-span-2">
+          <div className="space-y-2 sm:col-span-2">
             <label
               className={`block text-xs font-semibold uppercase tracking-[0.2em] ${passwordErrors.length > 0 ? "text-lightRed" : "text-white/70"}`}
               htmlFor="signup-password"
@@ -183,7 +183,7 @@ const SignupForm = () => {
               autoComplete="new-password"
             />
           </div>
-          <div className="space-y-2 md:col-span-2">
+          <div className="space-y-2 sm:col-span-2">
             <label
               className={`block text-xs font-semibold uppercase tracking-[0.2em] ${imageError ? "text-lightRed" : "text-white/70"}`}
               htmlFor="signup-image"

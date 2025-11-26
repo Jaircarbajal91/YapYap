@@ -27,7 +27,7 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
 
   return (
     isLoaded && (
-      <div className="relative z-40 flex w-full flex-col border-borderMuted/60 border-r bg-surfaceLight/70 text-offWhite shadow-inner-card backdrop-blur md:min-w-[18rem] md:max-w-[19rem]">
+      <div className="relative z-40 flex w-full flex-col border-borderMuted/60 border-r bg-surfaceLight/70 text-offWhite shadow-inner-card backdrop-blur md:min-w-[18rem] md:max-w-[19rem] hidden md:flex">
         <div className="scrollbar flex-1 overflow-x-visible overflow-y-auto px-4 py-4 relative z-0">
           {serverClicked ? (
             <Channels />
@@ -55,6 +55,102 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
           <Logout />
         </div>
       </div>
+    )
+  );
+};
+
+// Mobile version of MidSection for DM list
+export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDmId }) => {
+  const dispatch = useDispatch();
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const directMessages = Object.values(useSelector((state) => state.dms));
+  const sessionUser = useSelector((state) => state.session.user);
+  const users = useSelector((state) => state.session.users);
+  const images = useSelector((state) => state.images);
+
+  const currentUser = users.find((user) => user.id === sessionUser?.id);
+  const displayUser = currentUser || sessionUser;
+
+  useEffect(() => {
+    dispatch(getDirectMessages()).then(() => setIsLoaded(true));
+  }, [dispatch]);
+
+  const profileImageUrl =
+    currentUser?.Image?.url ||
+    (displayUser?.imageId ? images?.[displayUser.imageId]?.url : null);
+
+  return (
+    isLoaded && (
+      <>
+        {/* Mobile overlay */}
+        <div 
+          className={`md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
+            isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+          onClick={() => setIsOpen(false)}
+        />
+        {/* Mobile drawer */}
+        <div className={`md:hidden fixed left-0 top-0 z-50 h-full w-[85vw] max-w-[19rem] bg-surfaceLight/95 transform transition-transform duration-300 ease-in-out overflow-auto ${
+          isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}>
+          {/* Mobile drawer header */}
+          <div className="sticky top-0 z-10 flex items-center justify-between gap-3 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-4 py-3 shadow-soft-card">
+            <h2 className="text-offWhite text-base font-semibold">Direct Messages</h2>
+            <button
+              onClick={() => setIsOpen(false)}
+              className="flex items-center justify-center w-8 h-8 rounded-lg text-offWhite hover:bg-surfaceMuted/50 transition-colors"
+              aria-label="Close"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="scrollbar flex-1 overflow-x-visible overflow-y-auto px-4 py-4 relative z-0">
+            {serverClicked ? (
+              <Channels />
+            ) : (
+              <DirectMessagesList
+                setRoom={(id) => {
+                  setRoom(id);
+                  setIsOpen(false);
+                }}
+                directMessages={directMessages}
+              />
+            )}
+          </div>
+          <div className="sticky bottom-0 flex items-center justify-between gap-3 border-t border-borderMuted/60 bg-surface/95 px-4 py-3 shadow-inner-card">
+            <div className="flex items-center gap-3 text-sm font-medium text-offWhite">
+              <img
+                className="h-9 w-9 min-h-[2.25rem] min-w-[2.25rem] rounded-full object-cover shadow-soft-card"
+                src={
+                  profileImageUrl ||
+                  `https://api.dicebear.com/5.x/identicon/svg?seed=${encodeURIComponent(
+                    displayUser?.username || "Guest"
+                  )}&backgroundType=gradientLinear`
+                }
+                alt={`${displayUser?.username || "Guest"} avatar`}
+              />
+              <span>{displayUser?.username || "Guest"}</span>
+            </div>
+            <Logout />
+          </div>
+        </div>
+        {/* Mobile button to open DM list - only show when no DM is active */}
+        {!activeDmId && (
+          <button
+            onClick={() => setIsOpen(true)}
+            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center justify-center w-14 h-14 rounded-full bg-hero text-white shadow-glow backdrop-blur-sm border-2 border-white/20 hover:bg-heroDark transition-all duration-200"
+            aria-label="Open direct messages"
+          >
+          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </button>
+        )}
+      </>
     )
   );
 };
