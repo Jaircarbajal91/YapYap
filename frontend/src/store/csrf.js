@@ -41,5 +41,10 @@ export async function csrfFetch(url, options = {}) {
 
 
 export function restoreCSRF() {
+  // In production, CSRF token is already set via cookies when HTML is served
+  // Only fetch it in development
+  if (process.env.NODE_ENV === 'production') {
+    return Promise.resolve({ ok: true, status: 200 });
+  }
   return csrfFetch('/api/csrf/restore');
 }

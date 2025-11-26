@@ -33,11 +33,23 @@ function App() {
   useEffect(() => {
     if (!isLoaded) {
       // Restore CSRF token first before any other API calls
+      // In production, CSRF token is already set via cookies
       restoreCSRF().then(() => {
         setTimeout(async () => {
           const restoreData = await dispatch(restoreUser());
           setIsLoaded(true);
           // Only fetch data if user is logged in
+          if (restoreData?.user) {
+            dispatch(fetchAllUsers());
+            dispatch(fetchFriends());
+          }
+        }, 2000);
+      }).catch(() => {
+        // If CSRF restore fails (e.g., in production where endpoint doesn't exist),
+        // continue anyway since token might already be in cookies
+        setTimeout(async () => {
+          const restoreData = await dispatch(restoreUser());
+          setIsLoaded(true);
           if (restoreData?.user) {
             dispatch(fetchAllUsers());
             dispatch(fetchFriends());
