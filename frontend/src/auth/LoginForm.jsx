@@ -44,18 +44,18 @@ const LoginForm = ({ sessionUser }) => {
   }
 
   return !sessionUser && (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-login-bg bg-cover bg-center px-4 py-8 sm:px-8 sm:py-16">
+    <div className="relative flex min-h-screen w-full items-center justify-center bg-login-bg bg-cover bg-center px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-16">
       <div className="absolute inset-0 bg-[rgba(19,22,32,0.75)] backdrop-blur-sm" />
       <form
-        className="glass-card relative z-10 flex w-full max-w-xl flex-col gap-4 rounded-2xl p-6 text-offWhite sm:gap-6 sm:rounded-3xl sm:p-8 md:p-10"
+        className="glass-card relative z-10 flex w-full max-w-xl flex-col gap-4 rounded-xl p-5 text-offWhite sm:gap-5 sm:rounded-2xl sm:p-6 md:gap-6 md:rounded-3xl md:p-8 lg:p-10"
         onSubmit={onLogin}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/80 sm:px-4 sm:text-xs">
             welcome back
           </span>
-          <h1 className="text-3xl font-semibold tracking-tight">Log into YapYap</h1>
-          <p className="text-sm text-white/70">
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Log into YapYap</h1>
+          <p className="text-xs text-white/70 sm:text-sm">
             We're so excited to see you again—pick up right where you left off.
           </p>
         </div>
@@ -71,7 +71,7 @@ const LoginForm = ({ sessionUser }) => {
               </span>
             </label>
             <input
-              className="w-full rounded-2xl border border-borderMuted/60 bg-surfaceLight/80 px-4 py-3 text-base text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary"
+              className="w-full rounded-xl border border-borderMuted/60 bg-surfaceLight/80 px-3 py-2.5 text-sm text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
               type="text"
               name="email"
               id="login-email"
@@ -91,7 +91,7 @@ const LoginForm = ({ sessionUser }) => {
               </span>
             </label>
             <input
-              className="w-full rounded-2xl border border-borderMuted/60 bg-surfaceLight/80 px-4 py-3 text-base text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary"
+              className="w-full rounded-xl border border-borderMuted/60 bg-surfaceLight/80 px-3 py-2.5 text-sm text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
               type="password"
               name="password"
               id="login-password"
@@ -103,14 +103,14 @@ const LoginForm = ({ sessionUser }) => {
         </div>
         <div className="grid gap-3 sm:grid-cols-2">
           <button
-            className="rounded-2xl border border-white/15 bg-white/12 px-4 py-3 text-sm font-semibold uppercase tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20"
+            className="rounded-xl border border-white/15 bg-white/12 px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/20 active:scale-95 sm:rounded-2xl sm:py-3 sm:text-sm"
             onClick={demoLogin}
             type="button"
           >
             Demo login
           </button>
           <button
-            className="rounded-2xl bg-hero px-4 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="rounded-xl bg-hero px-4 py-2.5 text-xs font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:scale-95 sm:rounded-2xl sm:py-3 sm:text-sm"
             type="submit"
           >
             Log in

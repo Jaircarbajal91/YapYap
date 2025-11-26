@@ -38,7 +38,12 @@ export const getAllChannelsForServer = (serverId) => async (dispatch) => {
 
 	const data = await response.json()
 	if (response.ok) {
-		dispatch(setChannelsForServer(data))
+		// Ensure data is an array
+		const channelsArray = Array.isArray(data) ? data : [];
+		console.log('Fetched channels for server', serverId, ':', channelsArray);
+		dispatch(setChannelsForServer(channelsArray))
+	} else {
+		console.error('Failed to fetch channels:', data);
 	}
 }
 

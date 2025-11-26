@@ -187,7 +187,7 @@ const Servers = ({ sessionUser }) => {
             <AddServerForm setShowNewServerModal={setShowNewServerModal}/>
         </Modal>
       )}
-        <div className="scrollbar relative z-50 flex w-full flex-row items-center gap-3 overflow-x-auto border-b border-borderMuted/50 bg-serverBg/80 px-3 py-2 text-lightGray shadow-soft-card backdrop-blur md:h-screen md:w-[5.25rem] md:flex-col md:items-center md:justify-start md:gap-4 md:overflow-x-visible md:overflow-y-auto md:border-b-0 md:border-r md:border-borderMuted/60 md:px-2 md:py-4 md:shadow-none">
+        <div className="scrollbar relative z-50 flex w-full flex-row items-center gap-2 overflow-x-auto border-b border-borderMuted/50 bg-serverBg/80 px-2 py-2 text-lightGray shadow-soft-card backdrop-blur sm:gap-3 sm:px-3 md:h-screen md:w-[5.25rem] md:flex-col md:items-center md:justify-start md:gap-4 md:overflow-x-visible md:overflow-y-auto md:border-b-0 md:border-r md:border-borderMuted/60 md:px-2 md:py-4 md:shadow-none">
           {/* Mobile: Add padding at start for better scroll UX */}
           <div className="md:hidden min-w-[0.5rem]" />
           <div
@@ -196,12 +196,12 @@ const Servers = ({ sessionUser }) => {
             id="DMs"
             onMouseEnter={() => setShowDMSpan(true)}
             onMouseLeave={() => setShowDMSpan(false)}
-            className="group relative flex h-[3.4em] w-[3.4em] min-w-[3.4em] cursor-pointer items-center justify-center rounded-[50%] bg-chatBg/70 shadow-inner-card transition-all duration-300 hover:rounded-[30%] hover:bg-chatBg"
+            className="group relative flex h-12 w-12 min-w-[3rem] cursor-pointer items-center justify-center rounded-[50%] bg-chatBg/70 shadow-inner-card transition-all duration-300 hover:rounded-[30%] hover:bg-chatBg active:scale-95 sm:h-[3.4em] sm:w-[3.4em] sm:min-w-[3.4em]"
           >
             {showDMSpan && (
               <TooltipBubble title="Direct Messages" subtitle="Home base" triggerRef={dmButtonRef} />
             )}
-            <img className="h-[2.3em] w-[2.3em] rounded-full object-cover transition-all duration-300 hover:rounded-[30%]" src={discordIcon} alt="direct messages" />
+            <img className="h-8 w-8 rounded-full object-cover transition-all duration-300 hover:rounded-[30%] sm:h-[2.3em] sm:w-[2.3em]" src={discordIcon} alt="direct messages" />
           </div>
           <hr className="hidden w-full border border-solid border-borderMuted/30 md:block" />
           {servers.map((server, i) => {
@@ -220,7 +220,7 @@ const Servers = ({ sessionUser }) => {
                   setShowChannelName(false)
                   setChannelIdx(-1)
                 }}
-                className="group relative flex h-[3.4em] w-[3.4em] min-w-[3.4em] cursor-pointer items-center justify-center rounded-[50%] bg-chatBg/70 shadow-inner-card transition-all duration-300 hover:rounded-[30%] hover:bg-chatBg"
+                className="group relative flex h-12 w-12 min-w-[3rem] cursor-pointer items-center justify-center rounded-[50%] bg-chatBg/70 shadow-inner-card transition-all duration-300 hover:rounded-[30%] hover:bg-chatBg active:scale-95 sm:h-[3.4em] sm:w-[3.4em] sm:min-w-[3.4em]"
               >
                 {showChannelName && channelIdx === i && (
                   <TooltipBubble title={server.server_name} triggerRef={serverRefs.current[server.id]} />
@@ -229,7 +229,7 @@ const Servers = ({ sessionUser }) => {
                   to={`/app/${server.id}`}
                   className="flex h-full w-full items-center justify-center"
                 >
-                  <img className={`${!server.imageId ? 'h-[2.3em] w-[2.3em]' : 'h-full w-full'} rounded-full object-cover transition-all duration-300 hover:rounded-[30%]`} src={server.imageId ? images[server.imageId]?.url : discordIcon} alt={`${server.server_name}`} />
+                  <img className={`${!server.imageId ? 'h-8 w-8 sm:h-[2.3em] sm:w-[2.3em]' : 'h-full w-full'} rounded-full object-cover transition-all duration-300 hover:rounded-[30%]`} src={server.imageId ? images[server.imageId]?.url : discordIcon} alt={`${server.server_name}`} />
                 </Link>
               </div>
             );
@@ -239,13 +239,13 @@ const Servers = ({ sessionUser }) => {
             onClick={() => setShowNewServerModal(true)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
-            className="group relative flex h-[3.4em] w-[3.4em] min-w-[3.4em] cursor-pointer items-center justify-center rounded-[50%] bg-chatBg/70 shadow-inner-card transition-all duration-300 hover:rounded-[30%] hover:bg-serverGreen"
+            className="group relative flex h-12 w-12 min-w-[3rem] cursor-pointer items-center justify-center rounded-[50%] bg-chatBg/70 shadow-inner-card transition-all duration-300 hover:rounded-[30%] hover:bg-serverGreen active:scale-95 sm:h-[3.4em] sm:w-[3.4em] sm:min-w-[3.4em]"
           >
             {isHovered && (
               <TooltipBubble title="Add a Server" subtitle="Create space" triggerRef={addServerRef} />
             )}
             <img
-              className="h-[2em] w-[2em] transition-transform duration-200 group-hover:rotate-90"
+              className="h-6 w-6 transition-transform duration-200 group-hover:rotate-90 sm:h-[2em] sm:w-[2em]"
               src={isHovered ? whitePlusIcon : greenPlusIcon}
               alt=""
             />

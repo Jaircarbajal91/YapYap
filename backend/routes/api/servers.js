@@ -102,7 +102,7 @@ router.get('/:serverId/channels', checkAuth, async (req, res) => {
 	const { serverId } = req.params;
 	const channels = await Channel.findAll({
 		where: {
-			serverId: serverId
+			serverId: parseInt(serverId)
 		}
 	})
 	return res.json(channels)

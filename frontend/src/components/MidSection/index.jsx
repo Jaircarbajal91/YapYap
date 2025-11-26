@@ -60,7 +60,7 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
 };
 
 // Mobile version of MidSection for DM list
-export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDmId }) => {
+export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDmId, openDMDrawer, setOpenDMDrawer, onDrawerStateChange }) => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
@@ -81,6 +81,23 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
     currentUser?.Image?.url ||
     (displayUser?.imageId ? images?.[displayUser.imageId]?.url : null);
 
+  // Open drawer when openDMDrawer is triggered from header
+  useEffect(() => {
+    if (openDMDrawer) {
+      setIsOpen(true);
+      if (setOpenDMDrawer) {
+        setOpenDMDrawer(false);
+      }
+    }
+  }, [openDMDrawer, setOpenDMDrawer]);
+
+  // Notify parent component of drawer state changes
+  useEffect(() => {
+    if (onDrawerStateChange) {
+      onDrawerStateChange(isOpen);
+    }
+  }, [isOpen, onDrawerStateChange]);
+
   return (
     isLoaded && (
       <>
@@ -90,17 +107,18 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
             isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
           onClick={() => setIsOpen(false)}
+          onTouchStart={() => setIsOpen(false)}
         />
         {/* Mobile drawer */}
-        <div className={`md:hidden fixed left-0 top-0 z-50 h-full w-[85vw] max-w-[19rem] bg-surfaceLight/95 transform transition-transform duration-300 ease-in-out overflow-auto ${
+        <div className={`md:hidden fixed left-0 top-0 z-50 h-full w-[85vw] max-w-[19rem] bg-surfaceLight/95 transform transition-transform duration-300 ease-in-out overflow-auto shadow-2xl ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
           {/* Mobile drawer header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between gap-3 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-4 py-3 shadow-soft-card">
-            <h2 className="text-offWhite text-base font-semibold">Direct Messages</h2>
+          <div className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3">
+            <h2 className="text-offWhite text-sm font-semibold sm:text-base">Direct Messages</h2>
             <button
               onClick={() => setIsOpen(false)}
-              className="flex items-center justify-center w-8 h-8 rounded-lg text-offWhite hover:bg-surfaceMuted/50 transition-colors"
+              className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
               aria-label="Close"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -121,10 +139,10 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
               />
             )}
           </div>
-          <div className="sticky bottom-0 flex items-center justify-between gap-3 border-t border-borderMuted/60 bg-surface/95 px-4 py-3 shadow-inner-card">
-            <div className="flex items-center gap-3 text-sm font-medium text-offWhite">
+          <div className="sticky bottom-0 flex items-center justify-between gap-2 border-t border-borderMuted/60 bg-surface/95 px-3 py-2.5 shadow-inner-card sm:gap-3 sm:px-4 sm:py-3">
+            <div className="flex items-center gap-2 text-xs font-medium text-offWhite min-w-0 sm:gap-3 sm:text-sm">
               <img
-                className="h-9 w-9 min-h-[2.25rem] min-w-[2.25rem] rounded-full object-cover shadow-soft-card"
+                className="h-8 w-8 min-h-[2rem] min-w-[2rem] rounded-full object-cover shadow-soft-card shrink-0 sm:h-9 sm:w-9"
                 src={
                   profileImageUrl ||
                   `https://api.dicebear.com/5.x/identicon/svg?seed=${encodeURIComponent(
@@ -133,16 +151,18 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
                 }
                 alt={`${displayUser?.username || "Guest"} avatar`}
               />
-              <span>{displayUser?.username || "Guest"}</span>
+              <span className="truncate">{displayUser?.username || "Guest"}</span>
             </div>
-            <Logout />
+            <div className="shrink-0">
+              <Logout />
+            </div>
           </div>
         </div>
         {/* Mobile button to open DM list - only show when no DM is active */}
         {!activeDmId && (
           <button
             onClick={() => setIsOpen(true)}
-            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center justify-center w-14 h-14 rounded-full bg-hero text-white shadow-glow backdrop-blur-sm border-2 border-white/20 hover:bg-heroDark transition-all duration-200"
+            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center justify-center w-14 h-14 rounded-full bg-hero text-white shadow-glow backdrop-blur-sm border-2 border-white/20 hover:bg-heroDark active:scale-95 transition-all duration-200 touch-manipulation"
             aria-label="Open direct messages"
           >
           <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">

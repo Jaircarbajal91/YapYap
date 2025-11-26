@@ -109,18 +109,18 @@ const SignupForm = () => {
   };
 
   return (
-    <div className="relative flex min-h-screen w-full items-center justify-center bg-login-bg bg-cover bg-center px-4 py-8 sm:px-8 sm:py-16">
+    <div className="relative flex min-h-screen w-full items-center justify-center bg-login-bg bg-cover bg-center px-4 py-6 sm:px-6 sm:py-8 md:px-8 md:py-16">
       <div className="absolute inset-0 bg-[rgba(19,22,32,0.78)] backdrop-blur-md" />
       <form
-        className="glass-card relative z-10 flex w-full max-w-2xl flex-col gap-4 rounded-2xl p-6 text-offWhite sm:gap-6 sm:rounded-3xl sm:p-8 md:p-10"
+        className="glass-card relative z-10 flex w-full max-w-2xl flex-col gap-4 rounded-xl p-5 text-offWhite sm:gap-5 sm:rounded-2xl sm:p-6 md:gap-6 md:rounded-3xl md:p-8 lg:p-10"
         onSubmit={handleSignUp}
       >
         <div className="flex flex-col items-center gap-2 text-center">
-          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-4 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-white/80">
+          <span className="inline-flex items-center rounded-full border border-white/10 bg-white/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-white/80 sm:px-4 sm:text-xs">
             get started
           </span>
-          <h1 className="text-3xl font-semibold tracking-tight">Create your YapYap account</h1>
-          <p className="text-sm text-white/70">
+          <h1 className="text-2xl font-semibold tracking-tight sm:text-3xl">Create your YapYap account</h1>
+          <p className="text-xs text-white/70 sm:text-sm">
             Customize your profile and invite your friends to your brand new server in minutes.
           </p>
         </div>
@@ -140,7 +140,7 @@ const SignupForm = () => {
               {emailErrors.length > 0 ? `Email - ${emailErrors[0]}` : "Email"}
             </label>
             <input
-              className="w-full rounded-2xl border border-borderMuted/60 bg-surfaceLight/80 px-4 py-3 text-base text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary"
+              className="w-full rounded-xl border border-borderMuted/60 bg-surfaceLight/80 px-3 py-2.5 text-sm text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
               type="email"
               name="email"
               id="signup-email"
@@ -157,7 +157,7 @@ const SignupForm = () => {
               {usernameErrors.length > 0 ? `Username - ${usernameErrors[0]}` : "Username"}
             </label>
             <input
-              className="w-full rounded-2xl border border-borderMuted/60 bg-surfaceLight/80 px-4 py-3 text-base text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary"
+              className="w-full rounded-xl border border-borderMuted/60 bg-surfaceLight/80 px-3 py-2.5 text-sm text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
               type="text"
               name="username"
               id="signup-username"
@@ -174,7 +174,7 @@ const SignupForm = () => {
               {passwordErrors.length > 0 ? `Password - ${passwordErrors[0]}` : "Password"}
             </label>
             <input
-              className="w-full rounded-2xl border border-borderMuted/60 bg-surfaceLight/80 px-4 py-3 text-base text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary"
+              className="w-full rounded-xl border border-borderMuted/60 bg-surfaceLight/80 px-3 py-2.5 text-sm text-offWhite shadow-inner-card outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-primary sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
               type="password"
               name="password"
               id="signup-password"
@@ -196,7 +196,7 @@ const SignupForm = () => {
               </div>
             )}
             <input
-              className="block w-full cursor-pointer rounded-2xl border border-borderMuted/60 bg-surfaceLight/60 px-4 py-3 text-sm text-white/70 shadow-inner-card outline-none transition-all duration-200 file:mr-4 file:rounded-xl file:border-0 file:bg-hero file:px-4 file:py-2 file:text-sm file:font-semibold file:uppercase file:text-white hover:file:bg-heroDark"
+              className="block w-full cursor-pointer rounded-xl border border-borderMuted/60 bg-surfaceLight/60 px-3 py-2.5 text-xs text-white/70 shadow-inner-card outline-none transition-all duration-200 file:mr-3 file:rounded-lg file:border-0 file:bg-hero file:px-3 file:py-1.5 file:text-xs file:font-semibold file:uppercase file:text-white hover:file:bg-heroDark sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm sm:file:mr-4 sm:file:rounded-xl sm:file:px-4 sm:file:py-2 sm:file:text-sm"
               type="file"
               name="image"
               accept={ALLOWED_IMAGE_MIME_TYPES}
@@ -206,7 +206,7 @@ const SignupForm = () => {
           </div>
         </div>
         <button
-          className="rounded-2xl bg-hero px-6 py-3 text-sm font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="rounded-xl bg-hero px-5 py-2.5 text-xs font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary active:scale-95 sm:rounded-2xl sm:px-6 sm:py-3 sm:text-sm"
           type="submit"
         >
           Sign up

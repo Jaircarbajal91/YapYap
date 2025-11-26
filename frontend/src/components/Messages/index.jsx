@@ -522,7 +522,7 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
       />
       {/* Mobile: Back button for DM view */}
       {dmId && (
-        <div className="md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-3 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-4 py-3 shadow-soft-card">
+        <div className="md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3">
           <button
             onClick={() => {
               // Clear the active DM to go back to DM list
@@ -532,22 +532,22 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
                 window.history.back();
               }
             }}
-            className="flex items-center justify-center w-8 h-8 rounded-lg text-offWhite hover:bg-surfaceMuted/50 transition-colors"
+            className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
             aria-label="Go back"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <span className="text-offWhite text-base font-semibold flex-1 truncate">
+          <span className="text-offWhite text-sm font-semibold flex-1 truncate sm:text-base">
             Direct Message
           </span>
         </div>
       )}
-      <div className={`relative z-30 flex w-full flex-1 flex-col min-h-0 bg-surfaceLight/70 px-3 pt-4 shadow-inner-card backdrop-blur sm:px-4 sm:pt-6 md:px-6 ${dmId ? 'pt-14 md:pt-6' : ''}`}>
+      <div className={`relative z-30 flex w-full flex-1 flex-col min-h-0 bg-surfaceLight/70 px-2 pt-3 shadow-inner-card backdrop-blur sm:px-3 sm:pt-4 md:px-6 md:pt-6 ${dmId ? 'pt-12 sm:pt-14 md:pt-6' : 'pt-24 sm:pt-28 md:pt-6'}`}>
         <div
           ref={wrapperRef}
-          className="scrollbar flex-1 overflow-y-auto min-h-0 rounded-2xl border border-borderMuted/40 bg-surfaceMuted/40 p-3 shadow-inner-card sm:p-4 sm:rounded-3xl md:p-6 mb-3 sm:mb-4"
+          className="scrollbar flex-1 overflow-y-auto min-h-0 rounded-xl border border-borderMuted/40 bg-surfaceMuted/40 p-2 shadow-inner-card sm:rounded-2xl sm:p-3 md:rounded-3xl md:p-6 mb-2 sm:mb-3 md:mb-4"
         >
         {messages.length === 0 ? (
           <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-white/70">
@@ -581,10 +581,10 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
             return (
               <div
                 key={message.id}
-                className="group relative mb-3 flex items-start gap-3 rounded-2xl border border-borderMuted/40 bg-surface/90 p-3 shadow-inner-card transition-all duration-200 hover:border-accent/40 hover:shadow-glow sm:mb-4 sm:gap-4 sm:rounded-3xl sm:p-4"
+                className="group relative mb-2 flex items-start gap-2 rounded-xl border border-borderMuted/40 bg-surface/90 p-2 shadow-inner-card transition-all duration-200 hover:border-accent/40 hover:shadow-glow sm:mb-3 sm:gap-3 sm:rounded-2xl sm:p-3 md:mb-4 md:gap-4 md:rounded-3xl md:p-4"
               >
                 <img
-                  className="h-10 w-10 rounded-full border border-borderMuted/40 object-cover shadow-soft-card sm:h-12 sm:w-12"
+                  className="h-8 w-8 shrink-0 rounded-full border border-borderMuted/40 object-cover shadow-soft-card sm:h-10 sm:w-10 md:h-12 md:w-12"
                   src={
                     userAvatar ||
                     `https://api.dicebear.com/5.x/identicon/svg?seed=${encodeURIComponent(
@@ -593,26 +593,26 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
                   }
                   alt={`${alias || username} avatar`}
                 />
-                <div className="flex flex-1 flex-col gap-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-sm font-semibold text-offWhite tracking-wide">
+                <div className="flex flex-1 flex-col gap-1 min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <span className="text-xs font-semibold text-offWhite tracking-wide sm:text-sm">
                       {alias || username}
                     </span>
-                    <span className="text-xs uppercase tracking-wide text-slate">
+                    <span className="text-[10px] uppercase tracking-wide text-slate sm:text-xs">
                       {formattedDate}
                     </span>
                     {isOwnMessage && !isEditing && (
-                      <div className="ml-auto flex items-center gap-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      <div className="ml-auto flex items-center gap-1 opacity-0 transition-opacity duration-200 group-hover:opacity-100 sm:gap-2">
                         <button
                           onClick={() => handleEditMessage(message)}
-                          className="rounded-lg px-2 py-1 text-xs text-white/60 transition-colors duration-200 hover:bg-white/10 hover:text-white/90"
+                          className="rounded-lg px-1.5 py-0.5 text-[10px] text-white/60 transition-colors duration-200 hover:bg-white/10 hover:text-white/90 active:scale-95 touch-manipulation sm:px-2 sm:py-1 sm:text-xs"
                           title="Edit message"
                         >
                           Edit
                         </button>
                         <button
                           onClick={() => handleDeleteMessage(message.id)}
-                          className="rounded-lg px-2 py-1 text-xs text-red-400/60 transition-colors duration-200 hover:bg-red-500/10 hover:text-red-400"
+                          className="rounded-lg px-1.5 py-0.5 text-[10px] text-red-400/60 transition-colors duration-200 hover:bg-red-500/10 hover:text-red-400 active:scale-95 touch-manipulation sm:px-2 sm:py-1 sm:text-xs"
                           title="Delete message"
                         >
                           Delete
@@ -692,15 +692,15 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
                   ) : (
                     <>
                       {message.message && (
-                        <p className="text-base leading-relaxed text-white/85">{message.message}</p>
+                        <p className="text-sm leading-relaxed text-white/85 break-words sm:text-base">{message.message}</p>
                       )}
                       {messageAttachment && (
                         <div className="mt-2">
                           <img
                             src={messageAttachment}
                             alt="Message attachment"
-                            className="max-w-md rounded-2xl border border-borderMuted/40 shadow-soft-card"
-                            style={{ maxHeight: "400px", objectFit: "contain" }}
+                            className="max-w-full rounded-xl border border-borderMuted/40 shadow-soft-card sm:max-w-md sm:rounded-2xl"
+                            style={{ maxHeight: "300px", objectFit: "contain" }}
                           />
                         </div>
                       )}
@@ -761,7 +761,7 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
           </div>
         )}
         <form
-          className="flex w-full items-center gap-2 px-3 py-2 sm:gap-3 sm:px-4 sm:py-3"
+          className="flex w-full items-center gap-1.5 px-2 py-1.5 sm:gap-2 sm:px-3 sm:py-2 md:gap-3 md:px-4 md:py-3"
           onSubmit={send}
         >
         <input
@@ -776,18 +776,18 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={uploadingImage}
-          className="flex h-9 w-9 items-center justify-center rounded-xl bg-accentSoft text-accent shadow-inner-card transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:w-11 sm:rounded-2xl"
+          className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-accentSoft text-accent shadow-inner-card transition-transform duration-200 hover:-translate-y-0.5 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 touch-manipulation sm:h-9 sm:w-9 sm:rounded-xl md:h-11 md:w-11 md:rounded-2xl"
         >
           {uploadingImage ? (
-            <div className="h-5 w-5 animate-spin rounded-full border-2 border-accent border-t-transparent"></div>
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-accent border-t-transparent sm:h-5 sm:w-5"></div>
           ) : (
-            <img className="h-5 w-5" src={plus} alt="Add attachment" />
+            <img className="h-4 w-4 sm:h-5 sm:w-5" src={plus} alt="Add attachment" />
           )}
         </button>
         <input
           type="text"
           value={newMessage}
-          className="flex-1 rounded-xl bg-transparent px-3 py-2 text-sm text-offWhite placeholder-white/30 outline-none transition-all duration-200 focus:bg-white/5 focus:placeholder-white/20 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-base"
+          className="flex-1 rounded-lg bg-transparent px-2 py-1.5 text-xs text-offWhite placeholder-white/30 outline-none transition-all duration-200 focus:bg-white/5 focus:placeholder-white/20 sm:rounded-xl sm:px-3 sm:py-2 sm:text-sm md:rounded-2xl md:px-4 md:py-3 md:text-base"
           placeholder="Send a message..."
           onChange={(e) => {
             setNewMessage(e.target.value);
@@ -810,7 +810,7 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
         />
         <button
           type="submit"
-          className="rounded-xl bg-hero px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-40 sm:rounded-2xl sm:px-5 sm:py-2 sm:text-sm"
+          className="rounded-lg bg-hero px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wide text-white shadow-soft-card transition-all duration-200 hover:-translate-y-0.5 hover:bg-heroDark focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-40 active:scale-95 touch-manipulation sm:rounded-xl sm:px-3 sm:py-2 sm:text-xs md:rounded-2xl md:px-5 md:py-2 md:text-sm"
           disabled={!newMessage.trim() && !selectedImage}
         >
           Send
