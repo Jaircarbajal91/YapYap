@@ -94,18 +94,26 @@ heroku addons:plans heroku-postgresql
 
 ### 3. Configure GitHub Secrets
 
+These secrets are required for automated deployment via GitHub Actions.
+
 **Option A: Using GitHub CLI (`gh`)**
 
 ```bash
 # Install GitHub CLI if needed: brew install gh (macOS) or apt install gh (Linux)
 gh auth login
 
+# Get your Heroku app name (if you don't know it)
+heroku apps:info | grep "Name:" | awk '{print $2}'
+
 # Set secrets
 gh secret set HEROKU_API_KEY --body "$(heroku auth:token)"
-gh secret set HEROKU_APP_NAME --body "$(heroku apps:info | grep 'Name:' | awk '{print $2}')"
+gh secret set HEROKU_APP_NAME --body "your-actual-app-name"
+
+# Verify secrets are set
+gh secret list
 ```
 
-**Option B: Manual setup via command line**
+**Option B: Manual setup via web interface**
 
 Get the values you need:
 ```bash
@@ -116,7 +124,23 @@ heroku auth:token
 heroku apps:info | grep "Name:"
 ```
 
-Then add them manually at: GitHub repository → Settings → Secrets and variables → Actions
+Then add them manually:
+1. Go to your GitHub repository
+2. Settings → Secrets and variables → Actions
+3. Click "New repository secret"
+4. Add both:
+   - Name: `HEROKU_API_KEY`, Value: (paste your API key from step above)
+   - Name: `HEROKU_APP_NAME`, Value: (your app name, e.g., `yap-yap`)
+
+**Important:** Make sure the app name matches exactly (case-sensitive). You can verify your app name with:
+```bash
+heroku apps:info
+```
+
+Or list all your apps:
+```bash
+heroku apps
+```
 
 ### 4. Configure Heroku Environment Variables
 

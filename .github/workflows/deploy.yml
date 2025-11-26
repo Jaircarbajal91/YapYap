@@ -28,7 +28,16 @@ jobs:
       - name: Deploy to Heroku
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
         run: |
-          heroku git:remote -a ${{ secrets.HEROKU_APP_NAME }}
+          if [ -z "$HEROKU_APP_NAME" ]; then
+            echo "Error: HEROKU_APP_NAME secret is not set"
+            exit 1
+          fi
+          if [ -z "$HEROKU_API_KEY" ]; then
+            echo "Error: HEROKU_API_KEY secret is not set"
+            exit 1
+          fi
+          heroku git:remote -a "$HEROKU_APP_NAME"
           git push heroku HEAD:main --force
 
