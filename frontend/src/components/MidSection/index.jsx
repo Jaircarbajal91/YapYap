@@ -110,7 +110,7 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
           onTouchStart={() => setIsOpen(false)}
         />
         {/* Mobile drawer */}
-        <div className={`md:hidden fixed left-0 top-0 z-50 h-full w-[85vw] max-w-[19rem] bg-surfaceLight/95 transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${
+        <div className={`md:hidden fixed left-0 top-0 z-50 h-screen h-[100dvh] w-[85vw] max-w-[19rem] bg-surfaceLight/95 transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
           {/* Mobile drawer header */}
