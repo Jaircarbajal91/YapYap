@@ -22,6 +22,10 @@ function App() {
   const [activeDmId, setActiveDmId] = useState(null);
   const [openDMDrawer, setOpenDMDrawer] = useState(false);
   const [isDMDrawerOpen, setIsDMDrawerOpen] = useState(false);
+  const [isDMHeaderVisible, setIsDMHeaderVisible] = useState(true);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const hideDMHeaderTimeoutRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const location = useLocation();
 
   const messages = Object.values(useSelector((state) => state.messages));
@@ -61,8 +65,82 @@ function App() {
     }
   }, [dispatch]);
 
+  // Handle scroll detection for auto-hiding DM list header
+  useEffect(() => {
+    if (activeDmId || isDMDrawerOpen) {
+      // Reset visibility when DM is selected or drawer is open
+      setIsDMHeaderVisible(true);
+      if (hideDMHeaderTimeoutRef.current) {
+        clearTimeout(hideDMHeaderTimeoutRef.current);
+      }
+      return;
+    }
+
+    // Find the scrollable messages container
+    const scrollContainer = messagesContainerRef.current?.querySelector('.scrollbar.overflow-y-auto');
+    if (!scrollContainer) {
+      // If no scrollable container, just hide after 3 seconds
+      hideDMHeaderTimeoutRef.current = setTimeout(() => {
+        setIsDMHeaderVisible(false);
+      }, 3000);
+      return () => {
+        if (hideDMHeaderTimeoutRef.current) {
+          clearTimeout(hideDMHeaderTimeoutRef.current);
+        }
+      };
+    }
+
+    const handleScroll = () => {
+      const currentScrollTop = scrollContainer.scrollTop;
+      const scrollHeight = scrollContainer.scrollHeight;
+      const clientHeight = scrollContainer.clientHeight;
+      const isAtBottom = scrollHeight - currentScrollTop - clientHeight < 50; // 50px threshold
+
+      // Show header when scrolling up
+      if (currentScrollTop < lastScrollTop) {
+        setIsDMHeaderVisible(true);
+        // Clear any pending hide timeout
+        if (hideDMHeaderTimeoutRef.current) {
+          clearTimeout(hideDMHeaderTimeoutRef.current);
+        }
+        // Hide again after 3 seconds if at bottom
+        if (isAtBottom) {
+          hideDMHeaderTimeoutRef.current = setTimeout(() => {
+            setIsDMHeaderVisible(false);
+          }, 3000);
+        }
+      } else if (currentScrollTop > lastScrollTop) {
+        // Scrolling down - hide header after 2 seconds
+        if (hideDMHeaderTimeoutRef.current) {
+          clearTimeout(hideDMHeaderTimeoutRef.current);
+        }
+        hideDMHeaderTimeoutRef.current = setTimeout(() => {
+          setIsDMHeaderVisible(false);
+        }, 2000);
+      }
+
+      setLastScrollTop(currentScrollTop);
+    };
+
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Initial hide after 3 seconds if at bottom
+    if (scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight < 50) {
+      hideDMHeaderTimeoutRef.current = setTimeout(() => {
+        setIsDMHeaderVisible(false);
+      }, 3000);
+    }
+
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll);
+      if (hideDMHeaderTimeoutRef.current) {
+        clearTimeout(hideDMHeaderTimeoutRef.current);
+      }
+    };
+  }, [activeDmId, isDMDrawerOpen, lastScrollTop]);
+
   // Mobile App Header Component for /app route
-  const MobileAppHeader = ({ sessionUser, activeDmId, onOpenDM }) => {
+  const MobileAppHeader = ({ sessionUser, activeDmId, onOpenDM, isHeaderVisible }) => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const menuRef = useRef(null);
     const images = useSelector((state) => state.images);
@@ -93,7 +171,9 @@ function App() {
 
 
     return (
-      <div className="md:hidden fixed top-[4rem] left-0 right-0 z-[60] flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3">
+      <div className={`md:hidden fixed top-[4rem] left-0 right-0 z-[60] flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-300 ${
+        isHeaderVisible !== false ? 'translate-y-0' : '-translate-y-full'
+      }`}>
         <button
           onClick={onOpenDM}
           className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
@@ -104,9 +184,14 @@ function App() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
         </button>
-        <h1 className="text-offWhite text-sm font-semibold flex-1 truncate sm:text-base">
+        <button
+          onClick={onOpenDM}
+          className="text-offWhite text-sm font-semibold flex-1 truncate sm:text-base text-left hover:opacity-80 active:opacity-60 transition-opacity touch-manipulation"
+          aria-label="Open direct messages"
+          title="Open Direct Messages"
+        >
           {activeDmId ? 'Direct Message' : 'Direct Messages'}
-        </h1>
+        </button>
         <div className="relative" ref={menuRef}>
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -179,13 +264,14 @@ function App() {
           <Servers sessionUser={sessionUser} />
           <MidSection setRoom={setActiveDmId} serverClicked={serverClicked} />
           <MidSectionMobile setRoom={setActiveDmId} serverClicked={serverClicked} activeDmId={activeDmId} openDMDrawer={openDMDrawer} setOpenDMDrawer={setOpenDMDrawer} onDrawerStateChange={setIsDMDrawerOpen} />
-          {!activeDmId && !isDMDrawerOpen && <MobileAppHeader sessionUser={sessionUser} activeDmId={activeDmId} onOpenDM={() => setOpenDMDrawer(true)} />}
-          <div className="flex-1 flex flex-col min-h-0 w-full">
+          {!activeDmId && !isDMDrawerOpen && <MobileAppHeader sessionUser={sessionUser} activeDmId={activeDmId} onOpenDM={() => setOpenDMDrawer(true)} isHeaderVisible={isDMHeaderVisible} />}
+          <div ref={messagesContainerRef} className="flex-1 flex flex-col min-h-0 w-full overflow-y-auto">
             <Messages
               room={activeDmId ? `dm-${activeDmId}` : null}
               dmId={activeDmId}
               messages={messages}
               onBack={() => setActiveDmId(null)}
+              onOpenDM={() => setOpenDMDrawer(true)}
             />
           </div>
         </ProtectedRoute>

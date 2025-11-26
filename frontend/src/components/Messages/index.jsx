@@ -14,7 +14,7 @@ const REMOVE_MESSAGE = "messages/removeMessage";
 const isProduction = process.env.NODE_ENV === "production";
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-export default function Messages({ messages, room, channelId, dmId, onBack }) {
+export default function Messages({ messages, room, channelId, dmId, onBack, onOpenDM }) {
   const sessionUser = useSelector((state) => state.session.user);
   const images = useSelector((state) => state.images);
   const REACT_APP_SOCKET_IO_URL = isProduction
@@ -34,6 +34,9 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
   const [typingUsers, setTypingUsers] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const hideHeaderTimeoutRef = useRef(null);
   const wrapperRef = useRef(null);
   const socketRef = useRef(null);
   const activeRoomRef = useRef(null);
@@ -195,6 +198,60 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
       wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
     }
   }, [messages]);
+
+  // Handle scroll detection for auto-hiding header
+  useEffect(() => {
+    const scrollContainer = wrapperRef.current;
+    if (!scrollContainer || !dmId) return;
+
+    const handleScroll = () => {
+      const currentScrollTop = scrollContainer.scrollTop;
+      const scrollHeight = scrollContainer.scrollHeight;
+      const clientHeight = scrollContainer.clientHeight;
+      const isAtBottom = scrollHeight - currentScrollTop - clientHeight < 50; // 50px threshold
+
+      // Show header when scrolling up
+      if (currentScrollTop < lastScrollTop) {
+        setIsHeaderVisible(true);
+        // Clear any pending hide timeout
+        if (hideHeaderTimeoutRef.current) {
+          clearTimeout(hideHeaderTimeoutRef.current);
+        }
+        // Hide again after 3 seconds if at bottom
+        if (isAtBottom) {
+          hideHeaderTimeoutRef.current = setTimeout(() => {
+            setIsHeaderVisible(false);
+          }, 3000);
+        }
+      } else if (currentScrollTop > lastScrollTop) {
+        // Scrolling down - hide header after 2 seconds
+        if (hideHeaderTimeoutRef.current) {
+          clearTimeout(hideHeaderTimeoutRef.current);
+        }
+        hideHeaderTimeoutRef.current = setTimeout(() => {
+          setIsHeaderVisible(false);
+        }, 2000);
+      }
+
+      setLastScrollTop(currentScrollTop);
+    };
+
+    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
+
+    // Initial hide after 3 seconds if at bottom
+    if (scrollContainer.scrollHeight - scrollContainer.scrollTop - scrollContainer.clientHeight < 50) {
+      hideHeaderTimeoutRef.current = setTimeout(() => {
+        setIsHeaderVisible(false);
+      }, 3000);
+    }
+
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll);
+      if (hideHeaderTimeoutRef.current) {
+        clearTimeout(hideHeaderTimeoutRef.current);
+      }
+    };
+  }, [dmId, lastScrollTop]);
 
   useEffect(() => {
     if (editingMessageId && editInputRef.current) {
@@ -522,7 +579,9 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
       />
       {/* Mobile: Back button for DM view */}
       {dmId && (
-        <div className="md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3">
+        <div className={`md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-300 ${
+          isHeaderVisible ? 'translate-y-0' : '-translate-y-full'
+        }`}>
           <button
             onClick={() => {
               // Clear the active DM to go back to DM list
@@ -537,6 +596,21 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button
+            onClick={() => {
+              // Open DM drawer to switch to another DM
+              if (onOpenDM) {
+                onOpenDM();
+              }
+            }}
+            className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
+            aria-label="Open direct messages"
+            title="Switch Direct Message"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
           </button>
           <span className="text-offWhite text-sm font-semibold flex-1 truncate sm:text-base">
