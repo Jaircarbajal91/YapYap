@@ -110,11 +110,11 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
           onTouchStart={() => setIsOpen(false)}
         />
         {/* Mobile drawer */}
-        <div className={`md:hidden fixed left-0 top-0 z-50 h-full w-[85vw] max-w-[19rem] bg-surfaceLight/95 transform transition-transform duration-300 ease-in-out overflow-auto shadow-2xl ${
+        <div className={`md:hidden fixed left-0 top-0 z-50 h-full w-[85vw] max-w-[19rem] bg-surfaceLight/95 transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}>
           {/* Mobile drawer header */}
-          <div className="sticky top-0 z-10 flex items-center justify-between gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3">
+          <div className="flex-shrink-0 flex items-center justify-between gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3">
             <h2 className="text-offWhite text-sm font-semibold sm:text-base">Direct Messages</h2>
             <button
               onClick={() => setIsOpen(false)}
@@ -126,7 +126,7 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
               </svg>
             </button>
           </div>
-          <div className="scrollbar flex-1 overflow-x-visible overflow-y-auto px-4 py-4 relative z-0">
+          <div className="flex-1 min-h-0 overflow-y-auto scrollbar overflow-x-visible px-4 py-4">
             {serverClicked ? (
               <Channels />
             ) : (
@@ -139,7 +139,7 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
               />
             )}
           </div>
-          <div className="sticky bottom-0 flex items-center justify-between gap-2 border-t border-borderMuted/60 bg-surface/95 px-3 py-2.5 shadow-inner-card sm:gap-3 sm:px-4 sm:py-3">
+          <div className="flex-shrink-0 flex items-center justify-between gap-2 border-t border-borderMuted/60 bg-surface/95 px-3 py-2.5 shadow-inner-card sm:gap-3 sm:px-4 sm:py-3">
             <div className="flex items-center gap-2 text-xs font-medium text-offWhite min-w-0 sm:gap-3 sm:text-sm">
               <img
                 className="h-8 w-8 min-h-[2rem] min-w-[2rem] rounded-full object-cover shadow-soft-card shrink-0 sm:h-9 sm:w-9"
