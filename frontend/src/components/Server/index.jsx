@@ -266,7 +266,7 @@ export default function ServerDetails({ sessionUser }) {
     };
 
   return (
-    <div className="App flex relative w-full h-screen">
+    <div className="App flex relative w-full h-screen h-[100dvh]">
       <div className="relative scrollbar z-0 hidden md:flex min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex-col items-start">
         <div className="w-full flex items-center justify-between mb-5">
           <h1 className="text-offWhite text-lg ml-1">

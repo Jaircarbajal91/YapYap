@@ -638,6 +638,7 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
                         className="rounded-xl border border-accent/40 bg-surfaceLight/80 px-3 py-2 text-base text-offWhite outline-none transition-all duration-200 focus:border-accent focus:ring-2 focus:ring-accent/20"
                         maxLength={256}
                         placeholder="Message text (optional if image is present)"
+                        style={{ fontSize: '16px' }}
                       />
                       {editingImagePreview && (
                         <div className="relative inline-block">
@@ -789,6 +790,7 @@ export default function Messages({ messages, room, channelId, dmId, onBack }) {
           value={newMessage}
           className="flex-1 rounded-lg bg-transparent px-2 py-1.5 text-xs text-offWhite placeholder-white/30 outline-none transition-all duration-200 focus:bg-white/5 focus:placeholder-white/20 sm:rounded-xl sm:px-3 sm:py-2 sm:text-sm md:rounded-2xl md:px-4 md:py-3 md:text-base"
           placeholder="Send a message..."
+          style={{ fontSize: '16px' }}
           onChange={(e) => {
             setNewMessage(e.target.value);
             if (e.target.value.trim()) {

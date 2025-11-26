@@ -6,6 +6,21 @@
   color-scheme: dark;
 }
 
+html {
+  height: 100%;
+  height: -webkit-fill-available;
+  overflow: hidden;
+}
+
+#root {
+  height: 100%;
+  height: -webkit-fill-available;
+  height: 100dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 body {
   margin: 0;
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -14,11 +29,18 @@ body {
     radial-gradient(circle at bottom, rgba(124, 58, 237, 0.12), transparent 60%);
   color: #f6f6f6;
   min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
   overflow-x: hidden;
+  overflow-y: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Improve touch scrolling on mobile */
   -webkit-overflow-scrolling: touch;
+  /* Prevent pull-to-refresh on mobile */
+  overscroll-behavior-y: none;
+  /* Prevent zoom on input focus */
+  touch-action: pan-x pan-y;
 }
 
 /* Improve touch targets on mobile */
@@ -33,6 +55,23 @@ body {
     -moz-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     text-size-adjust: 100%;
+  }
+  
+  /* Prevent zoom on input focus */
+  input, textarea, select {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Prevent double-tap zoom on interactive elements */
+  button, a, input, textarea, select {
+    touch-action: manipulation;
+  }
+  
+  /* Allow scrolling in specific containers */
+  .scrollable, .scrollbar {
+    touch-action: pan-y;
   }
 }
 

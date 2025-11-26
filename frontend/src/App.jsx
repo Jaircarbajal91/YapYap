@@ -163,7 +163,7 @@ function App() {
   };
 
   return isLoaded ? (
-    <div className={`App relative flex w-full flex-col bg-transparent ${isAppRoute ? 'h-screen md:flex-row overflow-hidden touch-pan-y' : 'min-h-screen'}`}>
+    <div className={`App relative flex w-full flex-col bg-transparent ${isAppRoute ? 'h-screen h-[100dvh] md:flex-row overflow-hidden touch-pan-y' : 'min-h-screen min-h-[100dvh]'}`}>
       <Switch>
         <Route path="/login" exact={true}>
           <LoginForm sessionUser={sessionUser} />
