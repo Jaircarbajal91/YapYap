@@ -153,10 +153,24 @@ function App() {
 
 
     return (
-      <div 
-        className="md:hidden fixed top-[4rem] left-0 right-0 z-[60] flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-500 ease-in-out"
-        style={{ transform: `translateY(${headerOffset}%)` }}
-      >
+      <>
+        {/* Mobile: Floating button to show header when hidden */}
+        {headerOffset < 0 && (
+          <button
+            onClick={() => onShowHeader && onShowHeader()}
+            className="md:hidden fixed top-[4.5rem] left-2 z-[100] flex items-center justify-center w-10 h-10 rounded-full bg-surfaceLight/95 backdrop-blur-sm border border-borderMuted/60 shadow-soft-card text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
+            aria-label="Show header"
+            title="Show header"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          </button>
+        )}
+        <div 
+          className="md:hidden fixed top-[4rem] left-0 right-0 z-[60] flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateY(${headerOffset}%)` }}
+        >
         <button
           onClick={() => {
             // Bring header back down
@@ -241,7 +255,8 @@ function App() {
             </div>
           )}
         </div>
-      </div>
+        </div>
+      </>
     );
   };
 

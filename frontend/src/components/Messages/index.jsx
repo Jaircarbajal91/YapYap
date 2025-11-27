@@ -211,14 +211,25 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
       return;
     }
 
+    // Reset header when DM changes - always start visible
+    setHeaderOffset(0);
+
     // Get the actual scrollable chat container (wrapperRef is the messages container)
     const scrollContainer = wrapperRef.current;
     if (!scrollContainer) return;
 
-    // Initialize lastScrollTop
-    lastScrollTopRef.current = scrollContainer.scrollTop;
+    // Wait for auto-scroll to complete before enabling scroll detection
+    let scrollDetectionEnabled = false;
+    const enableTimeout = setTimeout(() => {
+      scrollDetectionEnabled = true;
+      // Initialize lastScrollTop after auto-scroll completes
+      lastScrollTopRef.current = scrollContainer.scrollTop;
+    }, 1000); // Wait 1 second for auto-scroll to finish
 
     const handleScroll = () => {
+      // Don't process scroll events until detection is enabled (after auto-scroll)
+      if (!scrollDetectionEnabled) return;
+
       const currentScrollTop = scrollContainer.scrollTop;
       const lastScrollTop = lastScrollTopRef.current;
       
@@ -238,9 +249,10 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
     scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
 
     return () => {
+      clearTimeout(enableTimeout);
       scrollContainer.removeEventListener('scroll', handleScroll);
     };
-  }, [dmId]); // Remove lastScrollTop from dependencies to prevent re-attaching
+  }, [dmId]); // Reset when DM changes
 
   useEffect(() => {
     if (editingMessageId && editInputRef.current) {
@@ -566,6 +578,27 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
         message="Are you sure you want to delete this message? This action cannot be undone."
         confirmText="Delete"
       />
+      {/* Mobile: Floating button to open DM drawer when header is hidden */}
+      {dmId && headerOffset < 0 && (
+        <button
+          onClick={() => {
+            // Open DM drawer to switch DMs
+            if (onOpenDM) {
+              onOpenDM();
+            }
+            // Also bring header back
+            setHeaderOffset(0);
+          }}
+          className="md:hidden fixed top-2 left-2 z-[100] flex items-center justify-center w-12 h-12 rounded-full bg-hero/95 backdrop-blur-sm border-2 border-white/20 shadow-glow text-white hover:bg-heroDark active:scale-95 transition-all touch-manipulation"
+          aria-label="Open direct messages"
+          title="Switch Direct Message"
+          style={{ zIndex: 100 }}
+        >
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        </button>
+      )}
       {/* Mobile: Back button for DM view */}
       {dmId && (
         <div 
