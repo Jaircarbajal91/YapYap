@@ -14,7 +14,7 @@ const REMOVE_MESSAGE = "messages/removeMessage";
 const isProduction = process.env.NODE_ENV === "production";
 const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-export default function Messages({ messages, room, channelId, dmId, onBack, onOpenDM }) {
+export default function Messages({ messages, room, channelId, dmId, onBack, onToggleDM, isDMDrawerOpen = false }) {
   const sessionUser = useSelector((state) => state.session.user);
   const images = useSelector((state) => state.images);
   const REACT_APP_SOCKET_IO_URL = isProduction
@@ -34,8 +34,7 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
   const [typingUsers, setTypingUsers] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
-  const [headerOffset, setHeaderOffset] = useState(0);
-  const lastScrollTopRef = useRef(0);
+  const arrowButtonRef = useRef(null);
   const wrapperRef = useRef(null);
   const socketRef = useRef(null);
   const activeRoomRef = useRef(null);
@@ -203,56 +202,6 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
     }
   }, [messages]);
 
-  // Handle scroll detection for moving header up smoothly - attached to chat messages container
-  useEffect(() => {
-    // Only apply to DM conversations
-    if (!dmId) {
-      setHeaderOffset(0);
-      return;
-    }
-
-    // Reset header when DM changes - always start visible
-    setHeaderOffset(0);
-
-    // Get the actual scrollable chat container (wrapperRef is the messages container)
-    const scrollContainer = wrapperRef.current;
-    if (!scrollContainer) return;
-
-    // Wait for auto-scroll to complete before enabling scroll detection
-    let scrollDetectionEnabled = false;
-    const enableTimeout = setTimeout(() => {
-      scrollDetectionEnabled = true;
-      // Initialize lastScrollTop after auto-scroll completes
-      lastScrollTopRef.current = scrollContainer.scrollTop;
-    }, 1000); // Wait 1 second for auto-scroll to finish
-
-    const handleScroll = () => {
-      // Don't process scroll events until detection is enabled (after auto-scroll)
-      if (!scrollDetectionEnabled) return;
-
-      const currentScrollTop = scrollContainer.scrollTop;
-      const lastScrollTop = lastScrollTopRef.current;
-      
-      // Move header up when scrolling down, bring it back when scrolling up
-      if (currentScrollTop > lastScrollTop && currentScrollTop > 50) {
-        // Scrolling down - move header up
-        setHeaderOffset(-100); // Move up by header height
-      } else if (currentScrollTop < lastScrollTop || currentScrollTop <= 50) {
-        // Scrolling up or near top - bring header back
-        setHeaderOffset(0);
-      }
-
-      lastScrollTopRef.current = currentScrollTop;
-    };
-
-    // Attach scroll listener to the chat messages container
-    scrollContainer.addEventListener('scroll', handleScroll, { passive: true });
-
-    return () => {
-      clearTimeout(enableTimeout);
-      scrollContainer.removeEventListener('scroll', handleScroll);
-    };
-  }, [dmId]); // Reset when DM changes
 
   useEffect(() => {
     if (editingMessageId && editInputRef.current) {
@@ -578,83 +527,42 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onOp
         message="Are you sure you want to delete this message? This action cannot be undone."
         confirmText="Delete"
       />
-      {/* Mobile: Floating button to open DM drawer when header is hidden */}
-      {dmId && headerOffset < 0 && (
-        <button
-          onClick={() => {
-            // Open DM drawer to switch DMs
-            if (onOpenDM) {
-              onOpenDM();
-            }
-            // Also bring header back
-            setHeaderOffset(0);
-          }}
-          className="md:hidden fixed top-2 left-2 z-[100] flex items-center justify-center w-12 h-12 rounded-full bg-hero/95 backdrop-blur-sm border-2 border-white/20 shadow-glow text-white hover:bg-heroDark active:scale-95 transition-all touch-manipulation"
-          aria-label="Open direct messages"
-          title="Switch Direct Message"
-          style={{ zIndex: 100 }}
+      {/* Mobile: Clickable arrow icon to toggle DM drawer */}
+      <button
+        ref={arrowButtonRef}
+        onClick={(e) => {
+          e.stopPropagation();
+          e.preventDefault();
+          // Toggle DM drawer
+          if (onToggleDM) {
+            onToggleDM();
+          }
+        }}
+        onTouchStart={(e) => {
+          e.stopPropagation();
+        }}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+        }}
+        className="md:hidden fixed top-1/2 left-0 z-[100] flex items-center justify-center w-12 h-16 rounded-r-full bg-surfaceLight backdrop-blur-sm border-r border-t border-b border-borderMuted/60 shadow-soft-card text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
+        style={{ 
+          zIndex: 100,
+          transform: `translateY(-50%)`,
+          userSelect: 'none'
+        }}
+        aria-label={isDMDrawerOpen ? "Close direct messages" : "Open direct messages"}
+        title={isDMDrawerOpen ? "Close drawer" : "Open drawer"}
+      >
+        <svg 
+          className={`w-5 h-5 transition-transform duration-300 ${isDMDrawerOpen ? 'rotate-180' : ''}`}
+          fill="none" 
+          stroke="currentColor" 
+          viewBox="0 0 24 24"
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
-        </button>
-      )}
-      {/* Mobile: Back button for DM view */}
-      {dmId && (
-        <div 
-          className="md:hidden fixed top-0 left-0 right-0 z-20 flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateY(${headerOffset}%)` }}
-        >
-          <button
-            onClick={() => {
-              // Bring header back down
-              setHeaderOffset(0);
-            }}
-            className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
-            aria-label="Show header"
-            title="Show header"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <button
-            onClick={() => {
-              // Clear the active DM to go back to DM list
-              if (onBack) {
-                onBack();
-              } else if (window.history.length > 1) {
-                window.history.back();
-              }
-            }}
-            className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
-            aria-label="Go back"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-          </button>
-          <button
-            onClick={() => {
-              // Open DM drawer to switch to another DM
-              if (onOpenDM) {
-                onOpenDM();
-              }
-            }}
-            className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
-            aria-label="Open direct messages"
-            title="Switch Direct Message"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-            </svg>
-          </button>
-          <span className="text-offWhite text-sm font-semibold flex-1 truncate sm:text-base">
-            Direct Message
-          </span>
-        </div>
-      )}
-      <div className={`relative z-30 flex w-full flex-1 flex-col min-h-0 max-h-full bg-surfaceLight/70 px-2 pt-3 shadow-inner-card backdrop-blur sm:px-3 sm:pt-4 md:px-6 md:pt-6 ${dmId ? 'pt-12 sm:pt-14 md:pt-6' : 'pt-24 sm:pt-28 md:pt-6'}`}>
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+      <div className={`relative z-30 flex w-full flex-1 flex-col min-h-0 max-h-full bg-surfaceLight/70 px-2 pt-3 shadow-inner-card backdrop-blur sm:px-3 sm:pt-4 md:px-6 md:pt-6`}>
         <div
           ref={wrapperRef}
           className="scrollbar flex-1 overflow-y-auto min-h-0 rounded-xl border border-borderMuted/40 bg-surfaceMuted/40 p-2 shadow-inner-card sm:rounded-2xl sm:p-3 md:rounded-3xl md:p-6 mb-2 sm:mb-3 md:mb-4"

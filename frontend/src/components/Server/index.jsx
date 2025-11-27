@@ -195,6 +195,14 @@ export default function ServerDetails({ sessionUser }) {
     const [showDeleteModal, setShowDeleteModal] = useState(false);
     const [showDeleteTooltip, setShowDeleteTooltip] = useState(false);
     const [hasAutoOpened, setHasAutoOpened] = useState(false);
+    const [headerOffset, setHeaderOffset] = useState(0);
+    const [isDragging, setIsDragging] = useState(false);
+    const [isServerDrawerOpen, setIsServerDrawerOpen] = useState(false);
+    const dragStartYRef = useRef(0);
+    const dragStartOffsetRef = useRef(0);
+    const isDraggingRef = useRef(false);
+    const currentOffsetRef = useRef(0);
+    const arrowButtonRef = useRef(null);
     const addFriendFormRef = useRef(null);
     const addFriendButtonRef = useRef(null);
     const leaveButtonRef = useRef(null);
@@ -204,7 +212,119 @@ export default function ServerDetails({ sessionUser }) {
     useEffect(() => {
         setChannelId(null);
         setHasAutoOpened(false);
+        setHeaderOffset(0);
     }, [serverId])
+
+    // Update ref when headerOffset changes
+    useEffect(() => {
+        currentOffsetRef.current = headerOffset;
+    }, [headerOffset]);
+
+    // Handle drag functionality for header on right side of screen
+    useEffect(() => {
+        if (!channelId) return;
+
+        const handleTouchMove = (e) => {
+            if (!isDraggingRef.current) return;
+            
+            const touch = e.touches[0];
+            const deltaY = touch.clientY - dragStartYRef.current;
+            const headerHeight = 60; // Approximate header height
+            const newOffset = dragStartOffsetRef.current + (deltaY / headerHeight) * 100;
+            
+            // Clamp between -100 (fully hidden) and 0 (fully visible)
+            const clampedOffset = Math.max(-100, Math.min(0, newOffset));
+            setHeaderOffset(clampedOffset);
+            e.preventDefault();
+        };
+
+        const handleTouchEnd = () => {
+            if (!isDraggingRef.current) return;
+            isDraggingRef.current = false;
+            setIsDragging(false);
+            
+            // Snap to nearest position (fully visible or fully hidden)
+            const currentOffset = currentOffsetRef.current;
+            if (currentOffset < -50) {
+                setHeaderOffset(-100);
+            } else {
+                setHeaderOffset(0);
+            }
+        };
+
+        const handleMouseMove = (e) => {
+            if (!isDraggingRef.current) return;
+            
+            const deltaY = e.clientY - dragStartYRef.current;
+            const headerHeight = 60; // Approximate header height
+            const newOffset = dragStartOffsetRef.current + (deltaY / headerHeight) * 100;
+            
+            // Clamp between -100 (fully hidden) and 0 (fully visible)
+            const clampedOffset = Math.max(-100, Math.min(0, newOffset));
+            setHeaderOffset(clampedOffset);
+            e.preventDefault();
+        };
+
+        const handleMouseUp = () => {
+            if (!isDraggingRef.current) return;
+            isDraggingRef.current = false;
+            setIsDragging(false);
+            
+            // Snap to nearest position (fully visible or fully hidden)
+            const currentOffset = currentOffsetRef.current;
+            if (currentOffset < -50) {
+                setHeaderOffset(-100);
+            } else {
+                setHeaderOffset(0);
+            }
+        };
+
+        // Also allow dragging on right side of screen
+        const handleRightSideTouchStart = (e) => {
+            // Only activate drag on the right side of the screen (last 20% of width)
+            const touch = e.touches[0];
+            const screenWidth = window.innerWidth;
+            if (touch.clientX < screenWidth * 0.8) return; // Not on right side
+            // Don't activate if clicking on arrow button
+            if (arrowButtonRef.current && arrowButtonRef.current.contains(e.target)) return;
+
+            isDraggingRef.current = true;
+            setIsDragging(true);
+            dragStartYRef.current = touch.clientY;
+            dragStartOffsetRef.current = currentOffsetRef.current;
+            e.preventDefault();
+        };
+
+        const handleRightSideMouseDown = (e) => {
+            // Only activate drag on the right side of the screen (last 20% of width)
+            const screenWidth = window.innerWidth;
+            if (e.clientX < screenWidth * 0.8) return; // Not on right side
+            // Don't activate if clicking on arrow button
+            if (arrowButtonRef.current && arrowButtonRef.current.contains(e.target)) return;
+
+            isDraggingRef.current = true;
+            setIsDragging(true);
+            dragStartYRef.current = e.clientY;
+            dragStartOffsetRef.current = currentOffsetRef.current;
+            e.preventDefault();
+        };
+
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('touchend', handleTouchEnd);
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('touchstart', handleRightSideTouchStart, { passive: false });
+        document.addEventListener('mousedown', handleRightSideMouseDown);
+
+        return () => {
+            document.removeEventListener('touchmove', handleTouchMove);
+            document.removeEventListener('touchend', handleTouchEnd);
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+            document.removeEventListener('touchstart', handleRightSideTouchStart);
+            document.removeEventListener('mousedown', handleRightSideMouseDown);
+        };
+    }, [channelId, headerOffset]);
 
     // fetches channels for selected server
     useEffect(() => {
@@ -224,6 +344,7 @@ export default function ServerDetails({ sessionUser }) {
                     overlay.style.display = 'block';
                     setTimeout(() => overlay.style.opacity = '1', 10);
                     setHasAutoOpened(true);
+                    setIsServerDrawerOpen(true);
                 }, 100);
             }
         }
@@ -369,6 +490,7 @@ export default function ServerDetails({ sessionUser }) {
         onClick={() => {
           const drawer = document.getElementById('mobile-server-drawer');
           const overlay = document.getElementById('mobile-server-overlay');
+          setIsServerDrawerOpen(false);
           if (drawer) drawer.style.transform = 'translateX(-100%)';
           if (overlay) {
             overlay.style.opacity = '0';
@@ -384,6 +506,7 @@ export default function ServerDetails({ sessionUser }) {
               onClick={() => {
                 const drawer = document.getElementById('mobile-server-drawer');
                 const overlay = document.getElementById('mobile-server-overlay');
+                setIsServerDrawerOpen(false);
                 if (drawer) drawer.style.transform = 'translateX(-100%)';
                 if (overlay) {
                   overlay.style.opacity = '0';
@@ -493,6 +616,7 @@ export default function ServerDetails({ sessionUser }) {
                       // Close drawer on mobile after selecting channel
                       const drawer = document.getElementById('mobile-server-drawer');
                       const overlay = document.getElementById('mobile-server-overlay');
+                      setIsServerDrawerOpen(false);
                       if (drawer) drawer.style.transform = 'translateX(-100%)';
                       if (overlay) {
                         overlay.style.opacity = '0';
@@ -544,6 +668,7 @@ export default function ServerDetails({ sessionUser }) {
                 history.push('/app');
                 const drawer = document.getElementById('mobile-server-drawer');
                 const overlay = document.getElementById('mobile-server-overlay');
+                setIsServerDrawerOpen(false);
                 if (drawer) drawer.style.transform = 'translateX(-100%)';
                 if (overlay) {
                   overlay.style.opacity = '0';
@@ -564,11 +689,15 @@ export default function ServerDetails({ sessionUser }) {
         </div>
       </div>
       {/* Mobile: Server header */}
-      <div className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center gap-2 bg-midGray/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3">
+      <div 
+        className="md:hidden fixed top-0 left-0 right-0 z-30 flex items-center gap-2 bg-midGray/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-500 ease-in-out"
+        style={{ transform: `translateY(${headerOffset}%)` }}
+      >
         <button
           onClick={() => {
             const drawer = document.getElementById('mobile-server-drawer');
             const overlay = document.getElementById('mobile-server-overlay');
+            setIsServerDrawerOpen(true);
             if (drawer) {
               drawer.style.transform = 'translateX(0)';
             }
@@ -604,6 +733,59 @@ export default function ServerDetails({ sessionUser }) {
         )}
         <MobileUserMenu sessionUser={sessionUser} />
       </div>
+      {/* Mobile: Clickable arrow icon to toggle server drawer */}
+      {channelId && (
+        <button
+          ref={arrowButtonRef}
+          onClick={(e) => {
+            e.stopPropagation();
+            e.preventDefault();
+            // Toggle server drawer
+            const drawer = document.getElementById('mobile-server-drawer');
+            const overlay = document.getElementById('mobile-server-overlay');
+            const newState = !isServerDrawerOpen;
+            setIsServerDrawerOpen(newState);
+            
+            if (drawer) {
+              drawer.style.transform = newState ? 'translateX(0)' : 'translateX(-100%)';
+            }
+            if (overlay) {
+              if (newState) {
+                overlay.style.display = 'block';
+                setTimeout(() => overlay.style.opacity = '1', 10);
+              } else {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.style.display = 'none', 300);
+              }
+            }
+            // Also bring header back
+            setHeaderOffset(0);
+          }}
+          onTouchStart={(e) => {
+            e.stopPropagation();
+          }}
+          onMouseDown={(e) => {
+            e.stopPropagation();
+          }}
+          className="md:hidden fixed top-1/2 left-0 z-[100] flex items-center justify-center w-12 h-16 rounded-r-full bg-midGray backdrop-blur-sm border-r border-t border-b border-borderMuted/60 shadow-soft-card text-offWhite hover:bg-darkGray active:scale-95 transition-all touch-manipulation"
+          style={{ 
+            zIndex: 100,
+            transform: `translateY(-50%)`,
+            userSelect: 'none'
+          }}
+          aria-label={isServerDrawerOpen ? "Close text channels" : "Open text channels"}
+          title={isServerDrawerOpen ? "Close drawer" : "Open drawer"}
+        >
+          <svg 
+            className={`w-5 h-5 transition-transform duration-300 ${isServerDrawerOpen ? 'rotate-180' : ''}`}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
+      )}
       <div className="bg-chatBg w-full flex flex-col flex-1 min-h-0 md:min-h-0 pt-12 sm:pt-14 md:pt-0 overflow-hidden">
         {channelId && (
           <Messages
@@ -622,6 +804,7 @@ export default function ServerDetails({ sessionUser }) {
                 onClick={() => {
                   const drawer = document.getElementById('mobile-server-drawer');
                   const overlay = document.getElementById('mobile-server-overlay');
+                  setIsServerDrawerOpen(true);
                   if (drawer) {
                     drawer.style.transform = 'translateX(0)';
                   }

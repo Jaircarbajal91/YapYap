@@ -20,14 +20,13 @@ function App() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [serverClicked, setServerClicked] = useState(false);
   const [activeDmId, setActiveDmId] = useState(null);
-  const [openDMDrawer, setOpenDMDrawer] = useState(false);
   const [isDMDrawerOpen, setIsDMDrawerOpen] = useState(false);
-  const [dmHeaderOffset, setDmHeaderOffset] = useState(0);
-  const [lastScrollTop, setLastScrollTop] = useState(0);
+  const [hasAutoOpenedDM, setHasAutoOpenedDM] = useState(false);
   const messagesContainerRef = useRef(null);
   const location = useLocation();
 
   const messages = Object.values(useSelector((state) => state.messages));
+  const directMessages = Object.values(useSelector((state) => state.dms || {}));
 
   const sessionUser = useSelector((state) => state.session.user);
   const dispatch = useDispatch();
@@ -64,201 +63,17 @@ function App() {
     }
   }, [dispatch]);
 
-  // Handle scroll detection for moving DM list header up smoothly - attached to chat messages container
+  // Auto-open DM drawer when no active DM (similar to text channels)
   useEffect(() => {
-    if (activeDmId || isDMDrawerOpen) {
-      // Reset position when DM is selected or drawer is open
-      setDmHeaderOffset(0);
-      return;
-    }
-
-    // Find the actual scrollable chat messages container inside Messages component
-    // The container has class "scrollbar" and "overflow-y-auto"
-    const findScrollContainer = () => {
-      return messagesContainerRef.current?.querySelector('.scrollbar.overflow-y-auto') || null;
-    };
-
-    const scrollContainer = findScrollContainer();
-    if (!scrollContainer) {
-      // If no scrollable container found yet, wait a bit and try again
-      const timeoutId = setTimeout(() => {
-        const container = findScrollContainer();
-        if (container) {
-          // Found it, set up scroll detection
-          setupScrollDetection(container);
-        }
+    if (!activeDmId && directMessages.length > 0 && !hasAutoOpenedDM && window.innerWidth < 768) {
+      // Small delay to ensure drawer is rendered
+      setTimeout(() => {
+        setIsDMDrawerOpen(true);
+        setHasAutoOpenedDM(true);
       }, 100);
-      
-      return () => {
-        clearTimeout(timeoutId);
-      };
     }
+  }, [activeDmId, directMessages.length, hasAutoOpenedDM]);
 
-    const setupScrollDetection = (container) => {
-      const handleScroll = () => {
-        const currentScrollTop = container.scrollTop;
-        
-        // Move header up when scrolling down, bring it back when scrolling up
-        if (currentScrollTop > lastScrollTop && currentScrollTop > 50) {
-          // Scrolling down - move header up
-          setDmHeaderOffset(-100); // Move up by header height
-        } else if (currentScrollTop < lastScrollTop || currentScrollTop <= 50) {
-          // Scrolling up or near top - bring header back
-          setDmHeaderOffset(0);
-        }
-
-        setLastScrollTop(currentScrollTop);
-      };
-
-      // Attach scroll listener to the chat messages container
-      container.addEventListener('scroll', handleScroll, { passive: true });
-
-      return () => {
-        container.removeEventListener('scroll', handleScroll);
-      };
-    };
-
-    return setupScrollDetection(scrollContainer);
-  }, [activeDmId, isDMDrawerOpen, lastScrollTop]);
-
-  // Mobile App Header Component for /app route
-  const MobileAppHeader = ({ sessionUser, activeDmId, onOpenDM, headerOffset, onShowHeader }) => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-    const menuRef = useRef(null);
-    const images = useSelector((state) => state.images);
-    const users = useSelector((state) => state.session.users);
-    const currentUser = users?.find((user) => user.id === sessionUser?.id);
-    const displayUser = currentUser || sessionUser;
-
-    const profileImageUrl =
-      currentUser?.Image?.url ||
-      (displayUser?.imageId && images?.[displayUser.imageId]?.url) ||
-      null;
-
-    useEffect(() => {
-      function handleClickOutside(event) {
-        if (menuRef.current && !menuRef.current.contains(event.target)) {
-          setIsMenuOpen(false);
-        }
-      }
-      if (isMenuOpen) {
-        document.addEventListener('mousedown', handleClickOutside);
-        document.addEventListener('touchstart', handleClickOutside);
-      }
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside);
-        document.removeEventListener('touchstart', handleClickOutside);
-      };
-    }, [isMenuOpen]);
-
-
-    return (
-      <>
-        {/* Mobile: Floating button to show header when hidden */}
-        {headerOffset < 0 && (
-          <button
-            onClick={() => onShowHeader && onShowHeader()}
-            className="md:hidden fixed top-[4.5rem] left-2 z-[100] flex items-center justify-center w-10 h-10 rounded-full bg-surfaceLight/95 backdrop-blur-sm border border-borderMuted/60 shadow-soft-card text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
-            aria-label="Show header"
-            title="Show header"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-        )}
-        <div 
-          className="md:hidden fixed top-[4rem] left-0 right-0 z-[60] flex items-center gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3 transition-transform duration-500 ease-in-out"
-          style={{ transform: `translateY(${headerOffset}%)` }}
-        >
-        <button
-          onClick={() => {
-            // Bring header back down
-            if (onShowHeader) {
-              onShowHeader();
-            }
-          }}
-          className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
-          aria-label="Show header"
-          title="Show header"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
-        </button>
-        <button
-          onClick={onOpenDM}
-          className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
-          aria-label="Open direct messages"
-          title="Direct Messages"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
-        </button>
-        <button
-          onClick={onOpenDM}
-          className="text-offWhite text-sm font-semibold flex-1 truncate sm:text-base text-left hover:opacity-80 active:opacity-60 transition-opacity touch-manipulation"
-          aria-label="Open direct messages"
-          title="Open Direct Messages"
-        >
-          {activeDmId ? 'Direct Message' : 'Direct Messages'}
-        </button>
-        <div className="relative" ref={menuRef}>
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
-            aria-label="User menu"
-          >
-            <img
-              className="h-7 w-7 rounded-full object-cover border border-borderMuted/40 sm:h-8 sm:w-8"
-              src={
-                profileImageUrl ||
-                `https://api.dicebear.com/5.x/identicon/svg?seed=${encodeURIComponent(
-                  displayUser?.username || "Guest"
-                )}&backgroundType=gradientLinear`
-              }
-              alt={`${displayUser?.username || "Guest"} avatar`}
-            />
-          </button>
-          {isMenuOpen && (
-            <div className="absolute right-0 top-11 w-48 rounded-lg border border-borderMuted/60 bg-midGray shadow-soft-card overflow-hidden z-[60]">
-              <div className="px-4 py-3 border-b border-borderMuted/60">
-                <div className="flex items-center gap-3">
-                  <img
-                    className="h-10 w-10 rounded-full object-cover border border-borderMuted/40"
-                    src={
-                      profileImageUrl ||
-                      `https://api.dicebear.com/5.x/identicon/svg?seed=${encodeURIComponent(
-                        displayUser?.username || "Guest"
-                      )}&backgroundType=gradientLinear`
-                    }
-                    alt={`${displayUser?.username || "Guest"} avatar`}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-offWhite truncate">
-                      {displayUser?.username || "Guest"}
-                    </p>
-                    {displayUser?.alias && (
-                      <p className="text-xs text-lightGray truncate">
-                        {displayUser.alias}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
-              <div className="py-1">
-                <div className="px-4 py-2.5">
-                  <Logout />
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        </div>
-      </>
-    );
-  };
 
   return isLoaded ? (
     <div className={`App relative flex w-full flex-col bg-transparent ${isAppRoute ? 'h-screen h-[100dvh] md:flex-row overflow-hidden touch-pan-y' : 'min-h-screen min-h-[100dvh]'}`}>
@@ -276,15 +91,18 @@ function App() {
         <ProtectedRoute path="/app">
           <Servers sessionUser={sessionUser} />
           <MidSection setRoom={setActiveDmId} serverClicked={serverClicked} />
-          <MidSectionMobile setRoom={setActiveDmId} serverClicked={serverClicked} activeDmId={activeDmId} openDMDrawer={openDMDrawer} setOpenDMDrawer={setOpenDMDrawer} onDrawerStateChange={setIsDMDrawerOpen} />
-          {!activeDmId && !isDMDrawerOpen && <MobileAppHeader sessionUser={sessionUser} activeDmId={activeDmId} onOpenDM={() => setOpenDMDrawer(true)} headerOffset={dmHeaderOffset} onShowHeader={() => setDmHeaderOffset(0)} />}
+          <MidSectionMobile setRoom={setActiveDmId} serverClicked={serverClicked} activeDmId={activeDmId} isDMDrawerOpen={isDMDrawerOpen} setIsDMDrawerOpen={setIsDMDrawerOpen} />
           <div ref={messagesContainerRef} className="flex-1 flex flex-col min-h-0 w-full overflow-y-auto">
             <Messages
               room={activeDmId ? `dm-${activeDmId}` : null}
               dmId={activeDmId}
               messages={messages}
               onBack={() => setActiveDmId(null)}
-              onOpenDM={() => setOpenDMDrawer(true)}
+              onToggleDM={() => {
+                // Toggle the drawer (for arrow button)
+                setIsDMDrawerOpen(prev => !prev);
+              }}
+              isDMDrawerOpen={isDMDrawerOpen}
             />
           </div>
         </ProtectedRoute>

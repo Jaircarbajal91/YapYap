@@ -60,10 +60,9 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
 };
 
 // Mobile version of MidSection for DM list
-export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDmId, openDMDrawer, setOpenDMDrawer, onDrawerStateChange }) => {
+export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDmId, isDMDrawerOpen, setIsDMDrawerOpen }) => {
   const dispatch = useDispatch();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
   const directMessages = Object.values(useSelector((state) => state.dms));
   const sessionUser = useSelector((state) => state.session.user);
@@ -81,22 +80,9 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
     currentUser?.Image?.url ||
     (displayUser?.imageId ? images?.[displayUser.imageId]?.url : null);
 
-  // Open drawer when openDMDrawer is triggered from header
-  useEffect(() => {
-    if (openDMDrawer) {
-      setIsOpen(true);
-      if (setOpenDMDrawer) {
-        setOpenDMDrawer(false);
-      }
-    }
-  }, [openDMDrawer, setOpenDMDrawer]);
-
-  // Notify parent component of drawer state changes
-  useEffect(() => {
-    if (onDrawerStateChange) {
-      onDrawerStateChange(isOpen);
-    }
-  }, [isOpen, onDrawerStateChange]);
+  const handleCloseDrawer = () => {
+    setIsDMDrawerOpen(false);
+  };
 
   return (
     isLoaded && (
@@ -104,20 +90,20 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
         {/* Mobile overlay */}
         <div 
           className={`md:hidden fixed inset-0 z-40 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-            isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+            isDMDrawerOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
           }`}
-          onClick={() => setIsOpen(false)}
-          onTouchStart={() => setIsOpen(false)}
+          onClick={handleCloseDrawer}
+          onTouchStart={handleCloseDrawer}
         />
         {/* Mobile drawer */}
         <div className={`md:hidden fixed left-0 top-0 bottom-0 z-50 w-[85vw] max-w-[19rem] bg-surfaceLight/95 transform transition-transform duration-300 ease-in-out shadow-2xl flex flex-col ${
-          isOpen ? 'translate-x-0' : '-translate-x-full'
-        }`} style={{ height: '100vh', height: '100dvh' }}>
+          isDMDrawerOpen ? 'translate-x-0' : '-translate-x-full'
+        }`} style={{ height: '100dvh' }}>
           {/* Mobile drawer header */}
           <div className="flex-shrink-0 flex items-center justify-between gap-2 bg-surfaceLight/95 backdrop-blur-sm border-b border-borderMuted/60 px-3 py-2.5 shadow-soft-card sm:gap-3 sm:px-4 sm:py-3">
             <h2 className="text-offWhite text-sm font-semibold sm:text-base">Direct Messages</h2>
             <button
-              onClick={() => setIsOpen(false)}
+              onClick={handleCloseDrawer}
               className="flex items-center justify-center w-9 h-9 rounded-lg text-offWhite hover:bg-surfaceMuted/50 active:scale-95 transition-all touch-manipulation"
               aria-label="Close"
             >
@@ -133,7 +119,7 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
               <DirectMessagesList
                 setRoom={(id) => {
                   setRoom(id);
-                  setIsOpen(false);
+                  handleCloseDrawer();
                 }}
                 directMessages={directMessages}
               />
@@ -158,18 +144,6 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
             </div>
           </div>
         </div>
-        {/* Mobile button to open DM list - only show when no DM is active */}
-        {!activeDmId && (
-          <button
-            onClick={() => setIsOpen(true)}
-            className="md:hidden fixed bottom-20 right-4 z-30 flex items-center justify-center w-14 h-14 rounded-full bg-hero text-white shadow-glow backdrop-blur-sm border-2 border-white/20 hover:bg-heroDark active:scale-95 transition-all duration-200 touch-manipulation"
-            aria-label="Open direct messages"
-          >
-          <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-          </svg>
-        </button>
-        )}
       </>
     )
   );
