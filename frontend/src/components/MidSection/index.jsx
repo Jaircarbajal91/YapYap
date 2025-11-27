@@ -126,7 +126,7 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
               </svg>
             </button>
           </div>
-          <div className="flex-1 min-h-0 overflow-y-auto scrollbar overflow-x-visible px-4 py-4" style={{ paddingBottom: '80px' }}>
+          <div className="flex-1 min-h-0 overflow-y-auto scrollbar overflow-x-visible px-4 py-4 relative z-0" style={{ paddingBottom: '80px' }}>
             {serverClicked ? (
               <Channels />
             ) : (
@@ -139,7 +139,7 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
               />
             )}
           </div>
-          <div className="absolute bottom-0 left-0 right-0 flex items-center justify-between gap-2 border-t border-borderMuted/60 bg-surface/95 px-3 py-2.5 shadow-inner-card sm:gap-3 sm:px-4 sm:py-3">
+          <div className="absolute bottom-0 left-0 right-0 z-[60] flex items-center justify-between gap-2 border-t border-borderMuted/60 bg-surface/95 px-3 py-2.5 shadow-inner-card sm:gap-3 sm:px-4 sm:py-3">
             <div className="flex items-center gap-2 text-xs font-medium text-offWhite min-w-0 sm:gap-3 sm:text-sm">
               <img
                 className="h-8 w-8 min-h-[2rem] min-w-[2rem] rounded-full object-cover shadow-soft-card shrink-0 sm:h-9 sm:w-9"
