@@ -74,6 +74,25 @@ function App() {
     }
   }, [activeDmId, directMessages.length, hasAutoOpenedDM]);
 
+  // Toggle overflow on html/body based on route
+  useEffect(() => {
+    if (isAppRoute) {
+      // Prevent scrolling at document level for app routes
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Allow scrolling for splash/login/register pages
+      document.documentElement.style.overflow = 'auto';
+      document.body.style.overflow = 'auto';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    };
+  }, [isAppRoute]);
+
 
   return isLoaded ? (
     <div className={`App relative flex w-full flex-col bg-transparent ${isAppRoute ? 'h-screen h-[100dvh] md:flex-row overflow-hidden touch-pan-y' : 'min-h-screen min-h-[100dvh]'}`}>
@@ -92,7 +111,7 @@ function App() {
           <Servers sessionUser={sessionUser} />
           <MidSection setRoom={setActiveDmId} serverClicked={serverClicked} />
           <MidSectionMobile setRoom={setActiveDmId} serverClicked={serverClicked} activeDmId={activeDmId} isDMDrawerOpen={isDMDrawerOpen} setIsDMDrawerOpen={setIsDMDrawerOpen} />
-          <div ref={messagesContainerRef} className="flex-1 flex flex-col min-h-0 w-full overflow-y-auto">
+          <div ref={messagesContainerRef} className="flex-1 flex flex-col min-h-0 w-full overflow-y-auto scrollbar">
             <Messages
               room={activeDmId ? `dm-${activeDmId}` : null}
               dmId={activeDmId}

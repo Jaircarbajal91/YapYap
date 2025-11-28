@@ -28,7 +28,7 @@ const MidSection = ({ serverClicked, setMessages, setRoom }) => {
   return (
     isLoaded && (
       <div className="relative z-40 flex w-full flex-col border-borderMuted/60 border-r bg-surfaceLight/70 text-offWhite shadow-inner-card backdrop-blur md:min-w-[18rem] md:max-w-[19rem] hidden md:flex">
-        <div className="scrollbar flex-1 overflow-x-visible overflow-y-auto px-4 py-4 relative z-0">
+        <div className="scrollbar flex-1 min-h-0 overflow-x-visible overflow-y-auto px-4 py-4 relative z-0">
           {serverClicked ? (
             <Channels />
           ) : (
@@ -112,7 +112,7 @@ export const MidSectionMobile = ({ serverClicked, setMessages, setRoom, activeDm
               </svg>
             </button>
           </div>
-          <div className="flex-1 min-h-0 overflow-y-auto scrollbar overflow-x-visible px-4 py-4 relative z-0" style={{ paddingBottom: '80px' }}>
+          <div className="flex-1 min-h-0 overflow-y-auto scrollbar overflow-x-visible px-4 py-4 relative z-0" style={{ paddingBottom: '80px', touchAction: 'pan-y' }}>
             {serverClicked ? (
               <Channels />
             ) : (

@@ -9,16 +9,23 @@
 html {
   height: 100%;
   height: -webkit-fill-available;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #root {
   height: 100%;
   height: -webkit-fill-available;
   height: 100dvh;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
+}
+
+/* Restrict overflow for app routes */
+.App.h-screen {
+  overflow: hidden;
 }
 
 body {
@@ -32,15 +39,15 @@ body {
   min-height: -webkit-fill-available;
   min-height: 100dvh;
   overflow-x: hidden;
-  overflow-y: hidden;
+  overflow-y: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Improve touch scrolling on mobile */
   -webkit-overflow-scrolling: touch;
   /* Prevent pull-to-refresh on mobile */
   overscroll-behavior-y: none;
-  /* Prevent zoom on input focus */
-  touch-action: pan-x pan-y;
+  /* Allow scrolling gestures */
+  touch-action: pan-x pan-y pinch-zoom;
 }
 
 /* Improve touch targets on mobile */
@@ -64,9 +71,14 @@ body {
     -webkit-tap-highlight-color: transparent;
   }
   
-  /* Prevent double-tap zoom on interactive elements */
-  button, a, input, textarea, select {
+  /* Prevent double-tap zoom on interactive elements, but allow scrolling */
+  button, a {
     touch-action: manipulation;
+  }
+  
+  /* Allow scrolling in inputs and textareas */
+  input, textarea, select {
+    touch-action: auto;
   }
   
   /* Allow scrolling in specific containers */

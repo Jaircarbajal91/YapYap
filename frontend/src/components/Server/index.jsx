@@ -388,7 +388,7 @@ export default function ServerDetails({ sessionUser }) {
 
   return (
     <div className="App flex relative w-full h-screen h-[100dvh]">
-      <div className="relative scrollbar z-0 hidden md:flex min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-auto bg-midGray flex-col items-start">
+      <div className="relative scrollbar z-0 hidden md:flex min-w-[18em] w-[18em] max-w-[18em] py-2 px-3 min-h-screen max-h-screen overflow-y-auto overflow-x-hidden bg-midGray flex-col items-start">
         <div className="w-full flex items-center justify-between mb-5">
           <h1 className="text-offWhite text-lg ml-1">
             {server_name}
@@ -601,7 +601,7 @@ export default function ServerDetails({ sessionUser }) {
             <h1 className="text-offWhite text-lg ml-1 font-semibold">Text Channels</h1>
             <ChannelModal formType='Create'/>
           </div>
-          <div className="w-full space-y-1 flex-1 min-h-0 overflow-y-auto">
+          <div className="w-full space-y-1 flex-1 min-h-0 overflow-y-auto scrollbar">
             {channels && channels.length > 0 ? (
               channels.map((channel) => {
                 if (!channel || !channel.id) return null;

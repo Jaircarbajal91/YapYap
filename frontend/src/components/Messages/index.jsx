@@ -34,6 +34,9 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onTo
   const [typingUsers, setTypingUsers] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [messageToDelete, setMessageToDelete] = useState(null);
+  const [isAtBottom, setIsAtBottom] = useState(true);
+  const [hasNewMessages, setHasNewMessages] = useState(false);
+  const [lastMessageCount, setLastMessageCount] = useState(0);
   const arrowButtonRef = useRef(null);
   const wrapperRef = useRef(null);
   const socketRef = useRef(null);
@@ -43,6 +46,8 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onTo
   const editFileInputRef = useRef(null);
   const typingTimeoutRef = useRef(null);
   const isTypingRef = useRef(false);
+  const isAutoScrollingRef = useRef(false);
+  const hasInitiallyScrolledRef = useRef(false);
 
   useEffect(() => {
     socketRef.current = io(REACT_APP_SOCKET_IO_URL, {
@@ -100,6 +105,15 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onTo
     }
   }, [room]);
 
+  // Check if user is at bottom of scroll container
+  const checkIfAtBottom = () => {
+    if (!wrapperRef.current) return false;
+    const container = wrapperRef.current;
+    const threshold = 100; // pixels from bottom
+    const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < threshold;
+    return isNearBottom;
+  };
+
   useEffect(() => {
     const socketInstance = socketRef.current;
     if (!socketInstance) return;
@@ -113,6 +127,12 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onTo
       if (!dmId && !channelId) return;
 
       dispatch(addMessage(incomingMessage));
+      
+      // Show new messages indicator when new message arrives
+      // Only if we've done the initial scroll (to avoid showing on initial load)
+      if (hasInitiallyScrolledRef.current) {
+        setHasNewMessages(true);
+      }
     };
 
     const handleMessageUpdated = (data) => {
@@ -191,16 +211,72 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onTo
     };
   }, [dispatch, dmId, channelId, editingMessageId, sessionUser.id]);
 
+  // Handle scroll events to track if user is at bottom
+  useEffect(() => {
+    const container = wrapperRef.current;
+    if (!container) return;
+
+    const handleScroll = () => {
+      // Only process if this is a manual scroll (not programmatic)
+      if (isAutoScrollingRef.current) {
+        isAutoScrollingRef.current = false;
+        return;
+      }
+
+      const atBottom = checkIfAtBottom();
+      setIsAtBottom(atBottom);
+      
+      // If user manually scrolls to bottom, clear new messages indicator
+      if (atBottom && hasNewMessages) {
+        setHasNewMessages(false);
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+    return () => {
+      container.removeEventListener('scroll', handleScroll);
+    };
+  }, [hasNewMessages]);
+
   useEffect(() => {
     if (wrapperRef.current) {
-      // Only auto-scroll to bottom if user is already near the bottom
       const container = wrapperRef.current;
-      const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 100;
-      if (isNearBottom) {
+      const wasAtBottom = checkIfAtBottom();
+      
+      // Only auto-scroll to bottom if user is already near the bottom
+      if (wasAtBottom) {
+        // Mark that we're auto-scrolling
+        isAutoScrollingRef.current = true;
         container.scrollTop = container.scrollHeight;
+        setIsAtBottom(true);
+        // Don't clear hasNewMessages here - let user manually scroll to clear it
       }
+      
+      // Mark that we've done initial scroll if this is the first time messages are loaded
+      if (!hasInitiallyScrolledRef.current && messages.length > 0) {
+        hasInitiallyScrolledRef.current = true;
+      }
+      
+      setLastMessageCount(messages.length);
     }
-  }, [messages]);
+  }, [messages, lastMessageCount]);
+
+  // Reset new messages indicator when room changes
+  useEffect(() => {
+    setIsAtBottom(true);
+    setHasNewMessages(false);
+    setLastMessageCount(0);
+    hasInitiallyScrolledRef.current = false;
+    if (wrapperRef.current) {
+      // Scroll to bottom when switching rooms
+      isAutoScrollingRef.current = true;
+      wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
+      // Mark that we've done initial scroll after a brief delay
+      setTimeout(() => {
+        hasInitiallyScrolledRef.current = true;
+      }, 100);
+    }
+  }, [room]);
 
 
   useEffect(() => {
@@ -729,6 +805,36 @@ export default function Messages({ messages, room, channelId, dmId, onBack, onTo
               </div>
             );
           })
+        )}
+        {/* New messages indicator */}
+        {hasNewMessages && (
+          <button
+            onClick={() => {
+              if (wrapperRef.current) {
+                isAutoScrollingRef.current = true;
+                wrapperRef.current.scrollTop = wrapperRef.current.scrollHeight;
+                setIsAtBottom(true);
+                setHasNewMessages(false);
+              }
+            }}
+            className="sticky bottom-4 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 rounded-full bg-accent px-4 py-2 text-sm font-semibold text-white shadow-lg transition-all duration-200 hover:bg-accentDark hover:scale-105 active:scale-95 touch-manipulation"
+            aria-label="Scroll to new messages"
+          >
+            <svg
+              className="h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+            <span>New messages</span>
+          </button>
         )}
       </div>
       {/* Typing indicator - fixed at bottom, above input form */}
