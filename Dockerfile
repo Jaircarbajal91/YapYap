@@ -7,16 +7,15 @@ COPY frontend/ ./
 RUN npm run build
 
 FROM node:18-alpine AS runtime
-RUN adduser -D -u 1000 appuser
 WORKDIR /app
 
 COPY backend/package.json backend/package-lock.json ./backend/
 RUN cd backend && npm ci --omit=dev
 
-COPY --chown=appuser:appuser backend ./backend
-COPY --from=frontend --chown=appuser:appuser /frontend/build ./frontend/build
+COPY --chown=node:node backend ./backend
+COPY --from=frontend --chown=node:node /frontend/build ./frontend/build
 
-USER appuser
+USER node
 
 ENV NODE_ENV=production \
     PORT=8000
