@@ -53,5 +53,6 @@ jobs:
             cd /opt/deploy
             docker compose pull ${{ env.SERVICE }}
             docker compose up -d ${{ env.SERVICE }}
-            docker compose exec -T ${{ env.SERVICE }} sh -c "cd backend && npx sequelize db:migrate"
+            sleep 8
+            docker compose exec -T -e NODE_OPTIONS=--max-old-space-size=128 ${{ env.SERVICE }} sh -c "cd backend && npx sequelize db:migrate"
             docker image prune -f

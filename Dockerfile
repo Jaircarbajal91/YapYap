@@ -15,6 +15,9 @@ RUN cd backend && npm ci --omit=dev
 COPY --chown=node:node backend ./backend
 COPY --from=frontend --chown=node:node /frontend/build ./frontend/build
 
+# Multer writes temp files to /app/uploads (cwd = /app)
+RUN mkdir -p /app/uploads && chown node:node /app/uploads
+
 USER node
 
 ENV NODE_ENV=production \
